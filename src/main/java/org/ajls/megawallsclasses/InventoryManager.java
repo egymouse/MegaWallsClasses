@@ -1,5 +1,8 @@
 package org.ajls.megawallsclasses;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.commands.Order;
 import org.ajls.megawallsclasses.utils.InventoryU;
@@ -55,42 +58,72 @@ public class InventoryManager {
         Inventory inventory = Bukkit.createInventory(player, 36, "Select Class");
         ItemStack zombie = new ItemStack(Material.ROTTEN_FLESH, 1);
         setDisplayName(zombie,"免费送的满级");
+        setDisplayName(zombie, "僵尸坦克");
         ItemStack herobrine = new ItemStack(Material.DIAMOND_SWORD, 1);
         setDisplayName(herobrine, "雷神");
+        setDisplayName(herobrine, "HIM战士");
         ItemStack skeleton = new ItemStack(Material.BONE, 1);
         setDisplayName(skeleton, "抢钻工具人");
+        setDisplayName(skeleton, "骷髅弓箭手");
         ItemStack enderman = new ItemStack(Material.ENDER_PEARL, 1);
         setDisplayName(enderman, "小心你背后快");
+        setDisplayName(enderman, "传送末影人");
         ItemStack skeleton_lord = new ItemStack(Material.SKELETON_SKULL, 1);
         setDisplayName(skeleton_lord, "骷髅王");
+        setDisplayName(skeleton_lord, "骷髅王召唤师");
         ItemStack n5ll = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE);
         setDisplayName(n5ll, "跑男");
+        setDisplayName(n5ll, "黑暗君主刺客");
         ItemStack dreadlord = new ItemStack(Material.WITHER_SKELETON_SKULL, 1);
         setDisplayName(dreadlord, "死亡加载");
+        setDisplayName(dreadlord, "恐惧魔王战士");
         ItemStack entity_303 = new ItemStack(Material.TOTEM_OF_UNDYING, 1);
         setDisplayName(entity_303, "15HP爆炸伤害你拿什么扛");
+        setDisplayName(entity_303, "实体303弓箭手");
         ItemStack creeper = new ItemStack(Material.GUNPOWDER, 1);
         setDisplayName(creeper, "夜yeye也");
+        setDisplayName(creeper, "苦力怕坦克");
         ItemStack undead_knight = new ItemStack(Material.STONE_SWORD, 1);
         setDisplayName(undead_knight, "凋零弓");
+        setDisplayName(undead_knight, "死灵骑士射手");
         ItemStack drown_king = new ItemStack(Material.TRIDENT, 1);
         setDisplayName(drown_king, "14HP是我的斩杀线");
+        setDisplayName(drown_king, "溺尸王战士");
         ItemStack spider = new ItemStack(Material.STRING, 1);
         setDisplayName(spider, "卡伤大神");
+        setDisplayName(spider, "蜘蛛反伤");
         ItemStack shaman = new ItemStack(Material.WIND_CHARGE, 1);
         setDisplayName(shaman, "我是萨满小姐的狗");
+        setDisplayName(shaman, "萨满战士");
         ItemStack snowman = new ItemStack(Material.SNOW_BLOCK, 1);
         setDisplayName(snowman, "血人");
+        setDisplayName(snowman, "雪人坦克");
         ItemStack mole = new ItemStack(Material.DIRT, 1);
         setDisplayName(mole, "摩尔");
+        setDisplayName(mole, "鼹鼠战士");
         ItemStack elaina = new ItemStack(Material.DEBUG_STICK, 1);
         setDisplayName(elaina, "伊雷娜");
+        setDisplayName(elaina, "灰之魔女伊雷娜");
         ItemStack squid = new ItemStack(Material.INK_SAC, 1);
         setDisplayName(squid, "我不是药神");
+        setDisplayName(squid, "鱿鱼坦克");
         ItemStack transformation_master = new ItemStack(Material.SUSPICIOUS_STEW);
         setDisplayName(transformation_master, "变化之神"); //幻变大师
+        setDisplayName(transformation_master, "变化之神"); //幻变大师
+
+        ItemMeta meta = transformation_master.getItemMeta();
+
+        // 2. 设置混淆名称（§k效果）
+        Component obfuscatedName = Component.text("变化之神")
+                .decoration(TextDecoration.OBFUSCATED, true) // 核心：开启混淆效果
+                .color(NamedTextColor.RED); // 可选：添加颜色
+
+        meta.displayName(obfuscatedName);
+        transformation_master.setItemMeta(meta);
+
         ItemStack warden = new ItemStack(Material.SCULK_SHRIEKER);
         setDisplayName(warden, "监守者");
+        setDisplayName(warden, "监守者战士");
         inventory.setItem(0,zombie);
         inventory.setItem(1,herobrine);
         inventory.setItem(2,skeleton);

@@ -89,10 +89,15 @@ public class Rating {
             String winnerName = Bukkit.getOfflinePlayer(uuid).getName();
             double winnerRating = getRating(winnerName);
             double diff = (winnerRating - loserRating)/100; //add a hundred makes it look nicer  // winner: novice loser: master odds really small 1/10000 opposite 10000/1 prob=1/{1+1/opposite} = 1/{1+odd}
+            //可以直接通分啊，衡量的是落后的人赢的概率，这是预计，实际是0，所以给它实际减去预计的分，也就是扣输掉的人的分
+            //赢的人的话预计是1-p，实际是1（因为赢了），差值也是p，但是是正的
             double expDiff = Math.pow(10, diff);
             double probability = 1 / (1+expDiff);
-            double amount = probability * weight * 10; // * k which is 1, can be changed later  // now k = 0.1 or else grow too fast
-            //by default is 10/2 =5, so if you score less than 5 pts you are better than the other
+            double amount = probability * weight * 10; // * k which is 1, can be changed later  // now k = 0.1 or else grow too fast  //k其实应该调到5，或者按照没缩放的分就算0.05，也就是砍半，国际象棋缩放等级是400，然后K是40（新手）20（中手）10（老手），刚好对应我们缩放的0.05如果是中手（20/400 = 1/20 = 0.05）
+            //FIDE其实还有规定，如果差值大于400（强10倍），那么也按400算  以后ai uhc出了也可以搞机器人然后评价elo
+            //lichess默认1500，缩放等级是400，我们缩放是100，所以我们的分数*4+1500就是lichess等级
+
+            //by default is 10/2 =5, so if you score less than 5 pts you are better than the other 言外之意是如果打一局 赢了 变化少于5分表示你比对面强， 或者输了变化大于5分也同理
             totalAmount += amount;
             addRating(winnerName, amount);
             Player winner = Bukkit.getPlayer(uuid);

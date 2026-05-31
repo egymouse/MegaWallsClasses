@@ -49,8 +49,10 @@ public class CustomEventsOld {
         Location location = player.getLocation();
         Location bodyLocation = eyeLocation.clone().add(location).multiply(0.5);
         World world = player.getWorld();
+
         registerPlayerDeath(player);
         Rating.loser_winnerMap.settle(player);
+
         player.setGameMode(GameMode.SPECTATOR);
         player.setHealth(player.getMaxHealth());
 //        EnergyAccumulate.disableAutoEnergyAccumulation(player);
@@ -202,6 +204,7 @@ public class CustomEventsOld {
                     fleshRecreateTask.cancel();
                     for (Item item : deathItems) {
                         item.remove();
+                        //这里item还在haxhmap里面，会不会导致内存泄露
                     }
                     world.spawnParticle(Particle.CLOUD, player.getLocation(), 10);  //0.5, 0.5, 0.5, 0.1
                     world.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
