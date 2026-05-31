@@ -541,6 +541,7 @@ public class ActiveSkills {
 //        }
     }
 
+    //todo 研究一下新旧版溺尸王区别 制作一个回忆版本（说人话就是dk old)  还有研究ec溺尸王机制 比如冷却内投出还是插到人，还有投出后什么时候归还
     public static boolean drownking_retrieve_trident(Player player) {
 //        int slotIndex = drownking_tridentThrownSlot.remove(playerUUID);
 //        if (slotIndex == -1) {

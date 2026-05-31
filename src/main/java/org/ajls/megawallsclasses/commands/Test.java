@@ -41,7 +41,7 @@ public class Test implements CommandExecutor {
             Player player = (Player) sender;
             Color color = Color.fromRGB(255, 255, 255);
             double pixelSize = 0.5F;
-            Location location = player.getLocation();
+            Location location = player.getLocation();  //todo 用textdisplay制作血液效果
             Location locationRounded = new Location(location.getWorld(), location.getBlockX() + pixelSize/16, location.getBlockY() + 0.001, location.getBlockZ(), 180, -90);
             spawnPixel(
                     color, // Bukkit Color
@@ -162,7 +162,7 @@ public class Test implements CommandExecutor {
         textDisplay.setBrightness(new Display.Brightness(15, 15));
 
         Transformation transformation = textDisplay.getTransformation();
-        transformation.getScale().set(pixelSize, pixelSize / 2, pixelSize);
+        transformation.getScale().set(pixelSize, pixelSize / 2, pixelSize);  //todo 为什么这里有一个除以2
         textDisplay.setTransformation(transformation);
         return textDisplay;
     }

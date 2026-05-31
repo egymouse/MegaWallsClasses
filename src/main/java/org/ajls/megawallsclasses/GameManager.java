@@ -150,6 +150,18 @@ public class GameManager {
 //                }
 //            }
         }
+        for (Player otherPlayer: players) {
+//            if (otherPlayer.getGameMode() == GameMode.SPECTATOR) {
+//                players.remove(otherPlayer);
+//            }
+//            else if (ScoreboardsAndTeams.isPlayerSameTeam(player,  otherPlayer)) {
+//                players.remove(otherPlayer);
+//            }
+//
+            if (!GamemodeUtils.isPlayer2PlayableEnemy(player, otherPlayer)) {
+                players.remove(otherPlayer);
+            }
+        }
         if (players.size() > 0) {
 //            Random random = new Random();
 //            int randomIndex = random.nextInt(players.size());

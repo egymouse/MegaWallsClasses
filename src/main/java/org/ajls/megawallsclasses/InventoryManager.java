@@ -109,12 +109,12 @@ public class InventoryManager {
         setDisplayName(squid, "鱿鱼坦克");
         ItemStack transformation_master = new ItemStack(Material.SUSPICIOUS_STEW);
         setDisplayName(transformation_master, "变化之神"); //幻变大师
-        setDisplayName(transformation_master, "变化之神"); //幻变大师
+//        setDisplayName(transformation_master, "幻变大师"); //幻变大师
 
         ItemMeta meta = transformation_master.getItemMeta();
 
         // 2. 设置混淆名称（§k效果）
-        Component obfuscatedName = Component.text("变化之神")
+        Component obfuscatedName = Component.text("幻变大师")
                 .decoration(TextDecoration.OBFUSCATED, true) // 核心：开启混淆效果
                 .color(NamedTextColor.RED); // 可选：添加颜色
 

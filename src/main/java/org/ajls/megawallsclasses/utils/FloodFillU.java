@@ -14,6 +14,8 @@ public class FloodFillU {
 
     }
 
+
+    //todo 研究这个算法经历了什么历史更迭 比如birth direction算法 还有学习网上洪水填充算法
     public static HashSet<Location> floodFillRespawn(Location location, int distance) {
         HashSet<Vector> directions = new HashSet<>();
         directions.add(new Vector(-1 ,0, 0));

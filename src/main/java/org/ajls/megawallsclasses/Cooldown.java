@@ -69,15 +69,16 @@ public class Cooldown {
                     if (index == 0) {  //passive1
                         switch (classIndex) {
                             case 5: //null
-                                int null_mode = PassiveSkills.null_invisibility_mode.get(uuid);
-                                PassiveSkills.null_invisibility_mode.pageUp(uuid); //switch mode
+                                int null_mode = PassiveSkills.nullInvisibilityMode.get(uuid);
+//                                PassiveSkills.null_invisibility_mode.pageUp(uuid); //switch mode
+
                                 if (null_mode == 0) {
                                     PassiveSkills.null_passive_skill_1(player);
                                     n5ll_invisibility.decrement(uuid);
                                     hashMap.put(uuid, 70);
                                 }
-                                else if (null_mode == 1) {
-                                    PassiveSkills.null_passive_skill_disable(player);
+                                else {
+                                    PassiveSkills.null_passive_skill_disable(player, 0);
                                     if (MyListener.n5ll_invisibility.get(uuid) == 0) {
 //                                        hashMap.remove(uuid); //dont need because default is remove
                                     }
@@ -85,6 +86,7 @@ public class Cooldown {
                                         hashMap.put(uuid, 130);
                                     }
                                 }
+                                PassiveSkills.nullInvisibilityMode.switchMode(uuid);  //放最后，这样给disable 时可以判断是否需要disable，比如1，2就需要，3就不需要，如果改了再disable就丢信息了，而且disable也没handle正常情况下取消的逻辑，本质上就是世界本应该同时变化的但是因为代码必然有先后所以导致的问题
 //                                if (player.getHealth() < 16) {
 //                                    PassiveSkills.null_passive_skill_1(player);
 //                                }
@@ -238,12 +240,18 @@ public class Cooldown {
                 String a11 = "";
                 switch (ScoreboardsAndTeams.getScore(player, "class")) {
                     case 5:
-                        int null_mode = PassiveSkills.null_invisibility_mode.get(uuid);
-                        ChatColor defaultColor = RED;
-                        if (null_mode == 1) {
-                            defaultColor = GREEN;
+//                        int null_mode = PassiveSkills.null_invisibility_mode.get(uuid);
+//                        ChatColor defaultColor = RED;
+//                        if (null_mode == 1) {
+//                            defaultColor = GREEN;
+//                        }
+                        ChatColor defaultColor = PassiveSkills.nullInvisibilityMode.getColor(uuid);
+                        boolean isDefaultColorForced = false;
+                        int mode = PassiveSkills.nullInvisibilityMode.get(uuid);
+                        if (mode == 2 || mode == 3) {
+                            isDefaultColorForced = true;
                         }
-                        p11 = getCooldownTime(player, player_passiveSkill1Cooldown, false, defaultColor,false)+ChatColor.DARK_GRAY+"/"+ChatColor.AQUA+ n5ll_invisibility.get(player.getUniqueId());
+                        p11 = getCooldownTime(player, player_passiveSkill1Cooldown, false, defaultColor,false, isDefaultColorForced)+ChatColor.DARK_GRAY+"/"+ChatColor.AQUA+ n5ll_invisibility.get(player.getUniqueId());
                         break;
                     case 9:
                         p11 = getCooldownTime(player, player_passiveSkill1Cooldown);// passive skill 1 first word
@@ -272,6 +280,8 @@ public class Cooldown {
                     case 30:
                         p21 = getCooldownTime(player, player_passiveSkill2Cooldown);
                 }
+
+                //todo 用list来存储这些吧，这样也好分辨什么时候需要空格，未设置的c就跳过，相邻两个自动加空格
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(finalA1c + a11 + finalP1c + p11 + finalP2c + p21));
             }
         },0 , 1);
@@ -290,13 +300,15 @@ public class Cooldown {
         }
     }
 
-    public static String getCooldownTime(Player player, HashMap<UUID, Integer> player_cooldown, boolean tick_or_cross, ChatColor defaultColor, boolean isActive) {
+
+    //todo 改更customize一点，比如传入default color 和lowtimcolor，如果都传一样的就是Forced
+    public static String getCooldownTime(Player player, HashMap<UUID, Integer> player_cooldown, boolean tick_or_cross, ChatColor defaultColor, boolean isActive, boolean isDefaultColorForced) {
         UUID uuid = player.getUniqueId();
         String p1n;
         if (isActive) {
             tick_or_cross = EnergyAccumulate.isFullEnergy(player);
         }
-        if (tick_or_cross) {
+        if (tick_or_cross) {  //对应死灵这种冷却好了才能用的，所以默认是tick，但是也有黑军这种需要客制化的
             p1n = ChatColor.GREEN + " ✔";
         }
         else {
@@ -309,11 +321,15 @@ public class Cooldown {
             if (cooldownShow >= 1) {
                 cooldownShow = (int) Math.ceil(cooldownShow);
                 DecimalFormat format = new DecimalFormat("0.#");
-                p1n = " " + defaultColor + format.format(cooldownShow) + "s";
+                p1n = " " + defaultColor + format.format(cooldownShow) + "s";  //当有冷却时的默认颜色，一般是RED，比如死灵表示冷却没好不能用，但是也有溺尸王这种只有在冷却中才有用的职业
             }
             else {
                 cooldownShow = (Math.ceil(cooldownShow * 10) / 10);
-                p1n = " " + ChatColor.YELLOW + cooldownShow + "s";
+                ChatColor lowTimeColor = ChatColor.YELLOW;
+                if (isDefaultColorForced) {
+                    lowTimeColor = defaultColor;
+                }
+                p1n = " " + lowTimeColor + cooldownShow + "s";
             }
         }
         return p1n;
@@ -321,6 +337,10 @@ public class Cooldown {
 
     public static String getCooldownTime(Player player, HashMap<UUID, Integer> player_cooldown) {
         return getCooldownTime(player, player_cooldown, true, RED, false);
+    }
+
+    public static String getCooldownTime(Player player, HashMap<UUID, Integer> player_cooldown, boolean tick_or_cross, ChatColor defaultColor, boolean isActive) {
+        return getCooldownTime(player, player_cooldown, tick_or_cross, defaultColor, isActive, false);
     }
 
 //    public static String getCooldownTime(Player player, HashMap<UUID, Integer> player_cooldown) {

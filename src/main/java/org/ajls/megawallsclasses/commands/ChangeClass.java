@@ -34,7 +34,7 @@ public class ChangeClass implements CommandExecutor {
             inventory.setItem(3,enderman);
             inventory.setItem(4,n5ll);
 //            player.openInventory(inventory);
-            null_passive_skill_disable(player);
+//            null_passive_skill_disable(player);
         }
         return true;
     }

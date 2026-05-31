@@ -8,6 +8,7 @@ import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.commands.Energetic;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
+import org.ajls.megawallsclasses.customclasses.NullInvisibilityMode;
 import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
 import org.ajls.megawallsclasses.nmsmodify.TamedTeleport;
 import org.ajls.megawallsclasses.rating.Rating;
@@ -822,6 +823,8 @@ public class MyListener implements Listener {
                                 player.sendMessage("各自为战");
                             }
 
+                            PassiveSkills.refreshEquipmentPacket(player);
+
 
                         }
                     }
@@ -1504,7 +1507,7 @@ public class MyListener implements Listener {
                 }
             }
             if (nullInvisibilityPlayers.contains(playerUUID)) {  //getScore(player, "class") == 5
-                null_passive_skill_disable(player);
+                null_passive_skill_disable(player, 3);
             }
             if (getScore(player, "class") == 15) {
                 elaina_passive_skill_2_disable(player);

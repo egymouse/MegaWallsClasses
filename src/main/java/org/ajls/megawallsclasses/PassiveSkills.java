@@ -12,6 +12,7 @@ import net.kyori.adventure.util.TriState;
 import org.ajls.lib.Lib;
 import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
+import org.ajls.megawallsclasses.customclasses.NullInvisibilityMode;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -78,6 +79,7 @@ public class PassiveSkills {
 
     //null
     public static HashMapInteger<UUID> null_invisibility_mode = new HashMapInteger<>(1);  //0 wait till invisible 1 invisible end timer  //0 default 1 wait till invisible 2 invisible end timer
+    public static NullInvisibilityMode nullInvisibilityMode = new NullInvisibilityMode();
     public static void null_passive_skill_1_increase(Player damager) {
         UUID damagerUUID = damager.getUniqueId();
         n5ll_invisibility.increment(damagerUUID, 3);
@@ -223,7 +225,30 @@ public class PassiveSkills {
         }
     }
 
-    public static void null_passive_skill_disable(Player player) {  //add disable notification where number turn gold when switch hotbar, turn dark red when got hit
+    public static void null_passive_skill_disable(Player player, int reason) {  //todo :add disable notification where number turn gold when switch hotbar, turn dark red when got hit
+        UUID uuid = player.getUniqueId();
+        int mode = nullInvisibilityMode.get(uuid);
+        if (mode != 0 && mode < reason) {
+            //原因更严重
+            nullInvisibilityMode.put(player.getUniqueId(), reason);
+        }
+        else if (reason == 0) {  //冷却结束了
+            nullInvisibilityMode.put(player.getUniqueId(), reason);
+        }
+//        if (reason == 2 || reason == 3) {
+//            nullInvisibilityMode.put(player.getUniqueId(), reason);
+//        }
+
+
+        if ( (reason == 0 || reason == 3) && (mode == 1 || mode == 2) ) {
+            refreshEquipmentPacket(player);
+        }
+//        else {
+//            refreshEquipmentPacket(player);
+//        }
+    }
+
+    public static void refreshEquipmentPacket(Player player) {
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online != player) {
                 ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
@@ -237,81 +262,6 @@ public class PassiveSkills {
                 list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, player.getInventory().getItemInMainHand()));
                 list.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, player.getInventory().getItemInOffHand()));
                 hide_armor_packet.getSlotStackPairLists().write(0, list);
-//                //copy start
-//                PacketContainer packet = hide_armor_packet;
-////                List<Pair<EnumWrappers.ItemSlot, ItemStack>> list = new ArrayList<>();
-////                list = packet.getSlotStackPairLists().read(0);
-//                ItemStack stackget = null;
-//                for (int i = 0; i < list.size(); i++) {
-//                    Pair pair = list.get(i);
-//                    stackget = (ItemStack) pair.getSecond();
-//                    if (stackget == null) continue;
-//                    if (stackget.equals(new ItemStack(Material.AIR))) continue;
-//                    if (stackget.getItemMeta() == null) continue;
-//                    ItemStack stack = stackget.clone();
-//                    boolean not_armor = false;
-//                    // Only modify leather armor
-//
-//                    if (stack != null && Objects.requireNonNull(stack.getItemMeta()).getEnchants().isEmpty()) { //&& stack.getType().name().contains("IRON")
-//                        // The problem turned out to be that certain Minecraft functions update
-//                        // every player with the same packet for an equipment, whereas other
-//                        // methods update the equipment with a different packet per player.
-//                        // To fix this, we'll simply clone the packet before we modify it
-////                                event.setPacket(packet = packet.deepClone());
-////                                stack = packet.getItemModifier().read(0);
-//                        switch (stack.getType().name()) {
-//                            case "IRON_HELMET":
-//                                stack.setType(Material.LEATHER_HELMET);
-//                                break;
-//                            case "IRON_CHESTPLATE":
-//                                stack.setType(Material.LEATHER_CHESTPLATE);
-//                                break;
-//                            case "IRON_LEGGINGS":
-//                                stack.setType(Material.LEATHER_LEGGINGS);
-//                                break;
-//                            case "IRON_BOOTS":
-//                                stack.setType(Material.LEATHER_BOOTS);
-//                                break;
-//                            default:
-//                                not_armor = true;
-//                                break;
-//
-//                        }
-//                        if (not_armor) {
-//                            break;
-//                        }
-//                        Player player1 = null;
-//                        int entityID = packet.getIntegers().read(0);
-//                        for (Player p : Bukkit.getOnlinePlayers()) {
-//                            if (p.getEntityId() == entityID) {
-//                                player1 = p;
-//                                break;
-//                            }
-//                        }
-////                                Player player = event.getPlayer();
-////                            Entity entity = world.getEnti
-//                        // Color that depends on the player's name
-////                                String recieverName = event.getPlayer().getName();
-////                            int color = recieverName.hashCode() & 0xFFFFFF;
-//
-//                        // Change the color
-//                        if (player != null) {
-//                            LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
-//                            meta.setColor(translateChatColorToColor(getPlayerTeamColor(player)));  //Color.fromBGR(color)
-//                            stack.setItemMeta(meta);
-//                            pair.setSecond(stack);
-//                            list.set(i, pair);
-//
-//                        }
-//                    }
-//                }
-//                packet.getSlotStackPairLists().write(0, list);
-//                nullPassiveSkillDisable.add(player.getUniqueId());
-////                BukkitScheduler scheduler = Bukkit.getScheduler();
-////                scheduler.scheduleSyncDelayedTask(plugin, () -> {
-////
-////                } )
-//                //copy end
                 protocolManager.sendServerPacket(online, hide_armor_packet);
 //                try {
 //                    protocolManager.sendServerPacket(online, hide_armor_packet);
