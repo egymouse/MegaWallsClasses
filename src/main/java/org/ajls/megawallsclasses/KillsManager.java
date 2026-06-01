@@ -60,7 +60,7 @@ public class KillsManager {
 //            player.sendMessage(damager.getName());
             BukkitScheduler bukkitScheduler = getScheduler();
 //            int finalNewAttackedTime = newAttackedTime;
-            bukkitScheduler.scheduleSyncDelayedTask(plugin, () -> {
+            bukkitScheduler.scheduleSyncDelayedTask(plugin, () -> {  //todo 改成时间戳 死亡时直接查看时间戳就行
 //                if (player_attackedTimes.get(playerUUID).equals(finalNewAttackedTime)) {
 //                player_damager.remove(playerUUID);
                 int newDeaths = 0;

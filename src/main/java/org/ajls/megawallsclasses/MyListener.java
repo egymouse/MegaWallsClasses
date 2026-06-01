@@ -2784,7 +2784,7 @@ public class MyListener implements Listener {
             if (ClassU.isTransformationMaster(player) && (EnergyAccumulate.getEnergy(player) == 0 || activeSuccess) ) { // snowman should use return boolean to judge
                 transformation_master_active_skill(player);
             }
-            addEnergy(player, 0);
+            addEnergy(player, 0);  //自动刷新能量状态 1 反正放大招都要扣能量 当然不排除有职业附近没有敌人释放失败 但是这样省心
         }
         else {
             player.sendMessage("死了还想通灵?");

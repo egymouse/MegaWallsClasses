@@ -225,7 +225,7 @@ public class PassiveSkills {
         }
     }
 
-    public static void null_passive_skill_disable(Player player, int reason) {  //todo :add disable notification where number turn gold when switch hotbar, turn dark red when got hit
+    public static void null_passive_skill_disable(Player player, int reason) {
         UUID uuid = player.getUniqueId();
         int mode = nullInvisibilityMode.get(uuid);
         if (mode != 0 && mode < reason) {

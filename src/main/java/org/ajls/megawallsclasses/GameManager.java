@@ -139,7 +139,7 @@ public class GameManager {
             for (int i = players.size()-1; i >= 0; i--) {
                 Player target = players.get(i);
                 if (target.getUniqueId() == playerUUID) {
-                    players.remove(i);  //TODO: remove for same team players
+                    players.remove(i);
                     Bukkit.broadcastMessage("Removed using uuid comparison");
                 }
             }

@@ -22,6 +22,7 @@ public class Rating {
     目前系统 按总伤害权扣除分数 后面会更改
     自然伤害（比如摔落）要考虑
      */
+    //todo 首先环境伤害以15s最近打的玩家算，否则单独按环境算，交药，回血，死亡环境都会分一杯羹，但是rating变化不会分，因为不能因为环境打了伤害而降低死亡惩罚  自己菜才是原罪，比如别人打你1hp你摔39hp不就是你菜狗的体现吗  还有回血的多少可以通过血量stamp来存储，用下一次打时的血量减去上一次打时的血量就是恢复的血量，然后按比例分配就行
     public static Loser_WinnerMap loser_winnerMap = new Loser_WinnerMap();
     public static boolean tryCreateRating(Player player) {
         Configuration configuration = MegaWallsClasses.getPlugin().getConfig();
@@ -96,7 +97,7 @@ public class Rating {
             double amount = probability * weight * 10; // * k which is 1, can be changed later  // now k = 0.1 or else grow too fast  //k其实应该调到5，或者按照没缩放的分就算0.05，也就是砍半，国际象棋缩放等级是400，然后K是40（新手）20（中手）10（老手），刚好对应我们缩放的0.05如果是中手（20/400 = 1/20 = 0.05）
             //FIDE其实还有规定，如果差值大于400（强10倍），那么也按400算  以后ai uhc出了也可以搞机器人然后评价elo
             //lichess默认1500，缩放等级是400，我们缩放是100，所以我们的分数*4+1500就是lichess等级
-
+            //todo 放缩倍数从100变400，k从0.1调到0.05，变化值调成20 （刚好放大4倍，k调小一倍，所以最后还是大一倍），势均力敌就是0.5*20=10的积分，然后获得的币子就是抢来的积分数 当然200分就是实力高出一档的体现了 (76胜率） 同时加上cap 400分的设计（1:100按1:10算)
             //by default is 10/2 =5, so if you score less than 5 pts you are better than the other 言外之意是如果打一局 赢了 变化少于5分表示你比对面强， 或者输了变化大于5分也同理
             totalAmount += amount;
             addRating(winnerName, amount);

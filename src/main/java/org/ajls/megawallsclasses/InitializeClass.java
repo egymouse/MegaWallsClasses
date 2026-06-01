@@ -159,6 +159,8 @@ public class InitializeClass {
         player.addPotionEffect(new PotionEffect(PotionEffectType.INSTANT_HEALTH, 20*5, 100, false, true));  //originally 3
         player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 20*5, 255, false, true));  //originally 3
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20*3, 255, false, true));  //originally 3
+
+        //todo 让runtasklater的算法和药水效果衰减一样，这样保持和药水同频
         for (Player otherPlayer: Bukkit.getOnlinePlayers()) {
             otherPlayer.hidePlayer(MegaWallsClasses.getPlugin(), player);
         }

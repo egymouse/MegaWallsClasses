@@ -125,7 +125,7 @@ public class CustomEventsOld {
                 player.setGameMode(GameMode.SURVIVAL);
                 if (player_nextClass.containsKey(player.getUniqueId())) {
                     ClassU.setClass(player, player_nextClass.remove(player.getUniqueId()));
-                    InitializeClass.refreshClassOnChangeClass(player);  //add tf compatibility
+                    InitializeClass.refreshClassOnChangeClass(player);  //todo add tf compatibility 以前的comment 现在都忘记了哪些method识别的了tf哪些识别不了了
                 }
                 else {
                     InitializeClass.resetPlayerCondition(player);

@@ -1,6 +1,7 @@
 package org.ajls.megawallsclasses;
 
 import org.ajls.lib.advanced.BukkitTaskMap;
+import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.megawallsclasses.advanced.SpiderEnergy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -9,6 +10,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.ajls.megawallsclasses.MyListener.*;
@@ -21,7 +24,7 @@ public class EnergyAccumulate {
     public static void addEnergy (Player player, int amount) {
         if (amount > 0) {
             MegaWallsClasses.addScore(player, "energy", amount);
-            testSkillReady(player);
+            testSkillReady(player);  //包含了levelEqualsEnergy了
         }
         else if (amount < 0){
             BukkitTaskUtils.cancelTask(player, player_activeSkillReady);
@@ -52,23 +55,26 @@ public class EnergyAccumulate {
         return getScore(player, "energy") >= 100;
     }
 
+
+    public static HashMap<Integer, Integer> class_attackEnergy = new HashMap<>(Map.of());
+
     //attack others
     public static void attackEnergyAccumulate(Player damager) {
         switch (ScoreboardsAndTeams.getScore(damager, "class")) {
             case 1:
-                MegaWallsClasses.addScore(damager, "energy", 12);
+                addEnergy(damager, 12);
                 break;
             case 2:
-                MegaWallsClasses.addScore(damager, "energy", 25);
+                addEnergy(damager, 25);
                 break;
             case 4:
-                MegaWallsClasses.addScore(damager, "energy", 20);
+                addEnergy(damager, 20);
                 break;
             case 5:
-                MegaWallsClasses.addScore(damager, "energy", 15);
+                addEnergy(damager, 15);
                 break;
             case 6:
-                MegaWallsClasses.addScore(damager, "energy", 17);
+                addEnergy(damager, 17);
                 break;
             case 7:
                 MegaWallsClasses.addScore(damager, "energy", 4);
@@ -121,7 +127,7 @@ public class EnergyAccumulate {
                 addEnergy(damager, 12);
                 break;
         }
-        testSkillReady(damager);
+        testSkillReady(damager); //todo 代码设计太屎山了 全部改成addEnergy什么的，最好直接interface 直接用最爽了，implement的override好还是直接对Enum使用hashmap好呢？
     }
 
     //attacked by others
