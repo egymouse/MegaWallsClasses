@@ -4,6 +4,7 @@ import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.customclasses.CustomClass;
 import org.ajls.megawallsclasses.customclasses.CustomClassI;
 import org.ajls.megawallsclasses.customclasses.DrownkingClass;
+import org.ajls.megawallsclasses.customclasses.DrownkingOldClass;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -23,7 +24,7 @@ public enum ClassEnum {
     ENTITY_303(7),
     CREEPER(8),
     UNDEAD_KNIGHT(9),
-    DROWNKING(10, new DrownkingClass()),
+    DROWNKING(10, new DrownkingClass()), //DrownkingOldClass()
     SPIDER(11),
     SHAMAN(12),
     SNOWMAN(13),
