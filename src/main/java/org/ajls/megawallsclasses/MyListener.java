@@ -8,6 +8,7 @@ import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.commands.Energetic;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
+import org.ajls.megawallsclasses.customclasses.CustomClassI;
 import org.ajls.megawallsclasses.customclasses.NullInvisibilityMode;
 import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
 import org.ajls.megawallsclasses.nmsmodify.TamedTeleport;
@@ -1339,23 +1340,7 @@ public class MyListener implements Listener {
                 if (projectileSource instanceof Player) {
                     Player damager = (Player) projectileSource;
                     UUID damagerUUID = damager.getUniqueId();
-                    registerPlayerHit(player, damager);
-                    boolean isActive = activeTridents.remove(tridentUUID);//drownking_activeSkillTimes.containsKey(damagerUUID);
-//                    boolean isFullEnergy = EnergyAccumulate.isFullEnergy(player);
-//                    if (isFullEnergy && !isActive) {
-//                        activeSkill(player);
-//                    }
-                    if (isActive) { // || isFullEnergy) {
-                        double playerHealth = player.getHealth();
-                        playerHealth = playerHealth - event.getFinalDamage();  // use EventU to get final health
-                        addHealth(player, (player.getMaxHealth() - playerHealth) * -0.38);
-                        World world = player.getWorld();
-                        world.strikeLightningEffect(player.getLocation());
-                        drownking_activeSkillTimes.remove(damagerUUID);
-                        addEnergy(damager, 30);  // a 30 energy bonus if hit a player and with the 20 by energy accumulate, the total is 50
-                    }
-                    shootEnergyAccumulate(damager);
-
+                    ClassEnum.getClassByPlayer(player).onEntityDamageByEntity(event);
                 }
 //                if (trident_drownking.containsKey(tridentUUID)) {
 ////                    UUID damagerUUID = trident_drownking.get(tridentUUID);
@@ -1666,50 +1651,12 @@ public class MyListener implements Listener {
             UUID tridentUUID = trident.getUniqueId();
             if (projectileSource instanceof Player) {
                 Player player = (Player) projectileSource;
-                UUID playerUUID = player.getUniqueId();
-                if (getScore(player, "class") == 10) {
-//                    trident_drownking.put(tridentUUID, player.getUniqueId());
-                    if (Cooldown.player_activeSkillCooldown.containsKey(playerUUID)) {
-                        Cooldown.player_activeSkillCooldown.remove(playerUUID);
-                        activeTridents.add(tridentUUID);  // add the trident to active tridents
-                    }
-                    else if (EnergyAccumulate.isFullEnergy(player)) {
-                        activeSkill(player);  // activate the skill if player has full energy
-                        Cooldown.player_activeSkillCooldown.remove(playerUUID);
-                        activeTridents.add(tridentUUID);  // add the trident to active tridents
-                    }
-                    //or use boolean to reduce repeat code, and remember only active skill when the player is not in activeSkillCooldown.
+//                if (!(projectile.getShooter() instanceof Player player)) return;
 
-                    ItemStack placeholderItem = new ItemStack(Material.COMMAND_BLOCK);;
-                    ItemStackU.setAttributePlayerBlockRange(placeholderItem, -114514);
-                    ItemStackU.setStringPersistentData(placeholderItem, NameSpacedKeys.ITEM_TYPE, "drownking_trident");
-
-
-
-                    if (player.getInventory().getItemInMainHand().getType() == Material.TRIDENT) {
-//                        drownking_tridentThrownSlot.put(player.getUniqueId(), player.getInventory().getHeldItemSlot());
-                        player.getEquipment().setItemInMainHand(placeholderItem);
-                    }
-                    else if (player.getInventory().getItemInOffHand().getType() == Material.TRIDENT) {
-//                        drownking_tridentThrownSlot.put(player.getUniqueId(), -1);
-                        player.getEquipment().setItemInOffHand(placeholderItem);
-                    }
-                }
-
-
-//                if (player_offHandRightClickItem.get(playerUUID) != null) {
-//                    if (player_offHandRightClickItem.get(playerUUID).getType() == Material.TRIDENT) {
-//                        drownking_tridentThrownSlot.put(player.getUniqueId(), -1);
-//                    }
-//                }
-//                if (player_mainHandRightClickItem.get(playerUUID) != null) {
-//                    if (player_mainHandRightClickItem.get(playerUUID).getType() == Material.TRIDENT) {
-//                        drownking_tridentThrownSlot.put(player.getUniqueId(), player.getInventory().getHeldItemSlot());
-//                    }
-//                }
-
-
-
+                // 1. 获取职业（你现成的方法）
+                CustomClassI customClassI = ClassEnum.getClassByPlayer(player);
+                // 2. 只执行溺尸王的逻辑，其他职业自动跳过
+                customClassI.onTridentLaunch(event, player);
             }
         }
 //        else if(projectile instanceof Snowball) {
@@ -1922,7 +1869,7 @@ public class MyListener implements Listener {
                                             found = true;
 //                                                        playerItem.setType(Material.SCULK_SENSOR);
 //                                                        playerItem.setAmount(MyListener.warden_sensorAmount.get(uuid));
-                                            ItemStack item = InventoryManager.drownking_trident();
+                                            ItemStack item = InventoryManager.drownking_trident();  //todo 要么这个drownking_trident method缓存到内存，别每次都新建，包括菜单物品栏也缓存到内存,reorder也酌情根据玩家职业选择缓存（改职业就改缓存），要么就直接trident.getItemStack()
                                             player.getInventory().setItem(i, item);
 //                                            break;
 
@@ -1942,26 +1889,18 @@ public class MyListener implements Listener {
 
                     }, 2L);  // try 0l  //try 10L as 后摇 backswing
 
-//                    if (trident_drownking.containsKey(tridentUUID)) {  //no that should be drownking_activeSkillTimes
-//                        scheduler = getServer().getScheduler();
-//                        scheduler.scheduleSyncDelayedTask(getPlugin(), () ->{
-//                            trident_drownking.remove(tridentUUID);
-//
-//
-//
-//
-//                        }, 2L);  // try 0l
-//                    }
-//                    else if (EnergyAccumulate.isFullEnergy(player)) {
-//                        scheduler = getServer().getScheduler();
-//                        scheduler.scheduleSyncDelayedTask(getPlugin(), () ->{
-//                            if (EnergyAccumulate.isFullEnergy(player)) {  // haven't hit anyone, or else he will have 50 energy
-////                                EnergyAccumulate.addEnergy(player, -100);  //there is a bug if full energy but not stab anyone that there won't be speed effects
-//                                activeSkill(player);
-//                                drownking_activeSkillTimes.remove(playerUUID);
-//                            }
-//                        }, 2L);  // try 0l
-//                    }
+                    if (activeTridents.contains(tridentUUID)) {  //no that should be drownking_activeSkillTimes ，后面备注，这句话意思是，扎到地板就要清理，对于老版本防止6s内一直刺，对于新版本，就是Cooldown.player_activeSkillCooldown.remove(damagerUUID);，实现扎到人时判定是不是在cd内同时移除cd防止一直叉，当然老版本清理那个三叉戟——射出者映射是正确的，版本更新时居然忘记要清理了，导致内存泄露
+                        //后面继续备注，其实还要补上探测能量是不是100，如果是100要直接激活主动技能，也就是半新版本的 射出不会自动激活主动，而是叉中激活主动（对应叉中结算），当然前面有个判断isEnergyFull来判断是否叉中（如果叉中自然会交给damage代码处理，移除Energy同时伤害），如果扔出去没叉到人掉地上一样能量会被清除，一样也是对应叉中结算。新版本只需要在Launch执行逻辑就行，这个叉中结算版本不仅需要在damage处理逻辑，还需要在hit但是没damage这里处理逻辑来防止没叉中人，但是还有cd或者还有能量
+                        //当然现在是修bug加上去的，之前更新了居然忘记了不移除会导致trident内存泄露，现在记得了
+                        scheduler = getServer().getScheduler();
+                        scheduler.scheduleSyncDelayedTask(getPlugin(), () ->{
+                            activeTridents.remove(tridentUUID);
+
+
+
+
+                        }, 2L);  // try 0l //后面备注：这个event和damage event到底谁先被执行呢？
+                    }
                 }
             }
 
@@ -2659,7 +2598,7 @@ public class MyListener implements Listener {
 //        }
     }
 
-    void activeSkill(Player player) {
+    public static void activeSkill(Player player) {
 //        int failed = 0;
         if (isPlayerPlayable(player)) {
             //        player.sendMessage("放放你的");

@@ -1,4 +1,4 @@
 package org.ajls.megawallsclasses.customclasses;
 
-public class CustomClass {
+public class CustomClass implements CustomClassI{
 }

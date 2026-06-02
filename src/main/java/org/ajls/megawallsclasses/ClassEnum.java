@@ -1,36 +1,29 @@
 package org.ajls.megawallsclasses;
 
+import org.ajls.lib.utils.ScoreboardU;
+import org.ajls.megawallsclasses.customclasses.CustomClass;
 import org.ajls.megawallsclasses.customclasses.CustomClassI;
+import org.ajls.megawallsclasses.customclasses.DrownkingClass;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public enum ClassEnum implements CustomClassI {
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public enum ClassEnum {
     ZOMBIE(1),
     HEROBRINE(2),
-    SKELETON(3){
-        @Override
-        public void sendSkillReadyMessage(Player player) {
-            // 职业3专属提示
-            player.sendMessage(ChatColor.GREEN + "终极技能" + ChatColor.YELLOW + " 准备就绪 " + ChatColor.AQUA + "射箭自动触发");
-        }
-    },
-    ENDERMAN(4) {
-        @Override
-        public void applySkillReadyEffect(Player player) {
-            // 职业4专属回血效果
-            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 1));
-            player.sendMessage("末影人灵魂爆发回血");
-        }
-        // 提示用通用的，不用重写！
-    },
+    SKELETON(3),
+    ENDERMAN(4),
     NULL(5),
     DREAD_LORD(6),
     ENTITY_303(7),
     CREEPER(8),
     UNDEAD_KNIGHT(9),
-    DROWNKING(10),
+    DROWNKING(10, new DrownkingClass()),
     SPIDER(11),
     SHAMAN(12),
     SNOWMAN(13),
@@ -45,9 +38,62 @@ public enum ClassEnum implements CustomClassI {
 //    NAC, //not a class
 
     public final int classId;
+    public final CustomClassI customClass;
+
+    ClassEnum(int classId, CustomClassI customClassI) {
+        this.classId = classId;
+        this.customClass = customClassI;
+    }
 
     ClassEnum(int classId) {
         this.classId = classId;
+        this.customClass = new CustomClass();
+    }
+
+
+
+
+    // ===================== 核心：根据ID查找 =====================
+    // 1. 静态Map缓存：类加载时就把ID和枚举绑定好，查找速度极快（O(1)）
+    private static final Map<Integer, ClassEnum> JOB_CACHE;
+    static {
+        JOB_CACHE = Arrays.stream(values())
+                .collect(Collectors.toMap(
+                        job -> job.classId,   // Key：职业ID
+                        job -> job          // Value：枚举对象
+                ));
+    }
+
+    /**
+     * 根据 jobId 获取职业枚举（推荐使用！）
+     * @param jobId 职业ID
+     * @return 对应的枚举，找不到返回null
+     */
+    public static ClassEnum getByJobId(int jobId) {
+        ClassEnum job = JOB_CACHE.get(jobId);
+        if (job == null) {
+            throw new IllegalArgumentException("无效的职业ID：" + jobId);
+        }
+        return job;
+    }
+
+    // 核心：通过积分榜分数获取职业（唯一判断逻辑）
+    public static CustomClassI getJob(int classScore) {
+//        for (ClassEnum factory : values()) {
+//            if (factory.classId == classScore) {
+//                return factory.customClass;
+//            }
+//        }
+//        return WARRIOR.job; // 默认职业
+//
+//
+        ClassEnum classEnum = getByJobId(classScore);
+        return classEnum.customClass;
+    }
+
+    public static CustomClassI getClassByPlayer(Player player) {
+        int classScore = ScoreboardU.getScore(player, "class");
+        return getJob(classScore);
     }
 }
 

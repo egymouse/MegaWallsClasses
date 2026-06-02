@@ -27,7 +27,7 @@ public class EnergyAccumulate {
             testSkillReady(player);  //包含了levelEqualsEnergy了
         }
         else if (amount < 0){
-            BukkitTaskUtils.cancelTask(player, player_activeSkillReady);
+            BukkitTaskUtils.cancelTask(player, player_activeSkillReady);  //todo 你就算cancel了，他那个2s delay后也会重置能量条的比例，这样你在2s空挡期同步的能量比例会被覆盖
             //if energy == 100 initialize auto energy accumulation
             MegaWallsClasses.addScore(player, "energy", amount);
 
