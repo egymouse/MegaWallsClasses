@@ -30,10 +30,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockReceiveGameEvent;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -136,6 +133,10 @@ public class MyListener implements Listener {
             BukkitScheduler bukkitScheduler = getScheduler();
             bukkitScheduler.runTaskLater(getPlugin(), ()-> {
                 player.sendMessage(ChatColor.RED +"右键钟打开菜单" + ChatColor.GREEN + "尽情和好友玩吧");
+                player.sendMessage("释放技能：经验（能量）达到100\n" +
+                        "手持下界之星，剑右键，弓箭左键\n" +
+                        "\n" +
+                        "指南针：左键最近敌人，右键切换队伍");  //todo 改成从resources文档中读取内容，要不然文本太多了
             }, 100L);
         }
         if (configuration.get("custom_inventory_order." + playerName) == null) {
@@ -723,24 +724,40 @@ public class MyListener implements Listener {
 //                    InventoryView inventoryView = player.getOpenInventory();
 //                    Inventory topInventory = inventoryView.getTopInventory();
 //                    inventoryView.getTitle()
-                    switch (event.getCurrentItem().getType()) {
-                        case GREEN_CONCRETE:
-                            saveInventoryOrder(player, topInventory);
-                            event.setCancelled(true);
-                            player.closeInventory();
-                            player.sendMessage(ChatColor.GREEN + "物品栏成功保存");
-                            break;
-                        case YELLOW_CONCRETE:
-                            saveInventoryOrder(player, createReorderInventory(player));
-                            event.setCancelled(true);
-                            player.closeInventory();
-                            player.sendMessage(ChatColor.YELLOW + "物品栏成功重置到默认");
-                            break;
+
+//                    boolean isLegal = true;
+//                    // 2. Shift+点击 快捷移动 -> 取消
+//                    if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+//                        event.setCancelled(true);
+//                        player.sendMessage("§c不能将物品移动到自己的物品栏！");
+//                        isLegal = false;
+//                    }
+//                    else if (inventory.equals(player.getInventory())) {
+//                        event.setCancelled(true);
+//                        player.sendMessage("是重新排列新物品栏内物品，而不是将物品放到自己物品栏");
+//                        isLegal = false;
+//                    }
+                    boolean isLegal = processReorderInventoryLegal(event);
+                    if (isLegal) {
+                        switch (event.getCurrentItem().getType()) {
+                            case GREEN_CONCRETE:
+                                saveInventoryOrder(player, topInventory);
+                                event.setCancelled(true);
+                                player.closeInventory();
+                                player.sendMessage(ChatColor.GREEN + "物品栏成功保存");
+                                break;
+                            case YELLOW_CONCRETE:
+                                saveInventoryOrder(player, createReorderInventory(player));
+                                event.setCancelled(true);
+                                player.closeInventory();
+                                player.sendMessage(ChatColor.YELLOW + "物品栏成功重置到默认");
+                                break;
+                        }
                     }
-                    if (inventory.equals(player.getInventory())) {
-                        event.setCancelled(true);
-                        player.sendMessage("是重新排列新物品栏内物品，而不是将物品放到自己物品栏");
-                    }
+//                    if (inventory.equals(player.getInventory())) {
+//                        event.setCancelled(true);
+//                        player.sendMessage("是重新排列新物品栏内物品，而不是将物品放到自己物品栏");
+//                    }
                 }
             }
         }
@@ -753,26 +770,29 @@ public class MyListener implements Listener {
 //                    int index = (int) player.getMetadata("WhichClassReorder").getFirst();
                     int index = player_whichClassReorder.get(player.getUniqueId());
                     Inventory inventory = event.getClickedInventory();
-
-                    switch (event.getCurrentItem().getType()) {
-                        case GREEN_CONCRETE:
-                            saveClassInventoryOrder(player, topInventory, index);
-                            event.setCancelled(true);
-                            player.openInventory(createWhichClassReorderInventory(player));
-                            player.sendMessage(ChatColor.GREEN + "职业物品栏成功保存");
-                            break;
-                        case YELLOW_CONCRETE:
+                    boolean isLegal = processReorderInventoryLegal(event);
+                    if (isLegal) {
+                        switch (event.getCurrentItem().getType()) {
+                            case GREEN_CONCRETE:
+                                saveClassInventoryOrder(player, topInventory, index);
+                                event.setCancelled(true);
+                                player.openInventory(createWhichClassReorderInventory(player));
+                                player.sendMessage(ChatColor.GREEN + "职业物品栏成功保存");
+                                break;
+                            case YELLOW_CONCRETE:
 //                            saveClassInventoryOrder(player, createClassReorderInventory(player, index), index);
-                            resetClassReorderInventory(player, index);
-                            event.setCancelled(true);
-                            player.openInventory(createWhichClassReorderInventory(player));
-                            player.sendMessage(ChatColor.YELLOW + "职业物品栏成功重置到默认");
-                            break;
+                                resetClassReorderInventory(player, index);
+                                event.setCancelled(true);
+                                player.openInventory(createWhichClassReorderInventory(player));
+                                player.sendMessage(ChatColor.YELLOW + "职业物品栏成功重置到默认");
+                                break;
+                        }
                     }
-                    if (inventory.equals(player.getInventory())) {
-                        event.setCancelled(true);
-                        player.sendMessage("是重新排列新物品栏内物品，而不是将物品放到自己物品栏");
-                    }
+
+//                    if (inventory.equals(player.getInventory())) {
+//                        event.setCancelled(true);
+//                        player.sendMessage("是重新排列新物品栏内物品，而不是将物品放到自己物品栏");
+//                    }
                 }
             }
         }
@@ -899,6 +919,25 @@ public class MyListener implements Listener {
             }
             event.setCancelled(true);
         }
+    }
+
+    public static boolean processReorderInventoryLegal(InventoryClickEvent event) {  //isReorderInventoryLegal
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getClickedInventory();
+        // 2. Shift+点击 快捷移动 -> 取消
+        if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+            event.setCancelled(true);
+//            player.sendMessage("§c不能将物品移动到自己的物品栏！");
+            player.sendMessage("是重新排列新物品栏内物品，而不是将物品放到自己物品栏");
+            return false;
+        }
+        else if (inventory.equals(player.getInventory())) {
+            event.setCancelled(true);
+            player.sendMessage("是重新排列新物品栏内物品，而不是将物品放到自己物品栏");
+            return false;
+        }
+
+        return true;
     }
 
     @EventHandler

@@ -15,6 +15,7 @@ import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
 import net.minecraft.world.level.block.state.BlockState;
+import org.ajls.cactusgenerator.cosmetics.Bloody;
 import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.commands.*;
 import org.ajls.megawallsclasses.custommusic.MidiMusicPlayer;
@@ -87,6 +88,7 @@ public final class MegaWallsClasses extends JavaPlugin {
 //        org.ajls.
         tracked_teams.add("red_team");
         setTracked_teams(tracked_teams);
+        Bloody.registerPlayerDeathItems(CustomEventsOld.getPlayer_deathItems());
         getServer().getPluginManager().registerEvents(new MyListener(), this);
         getCommand("class").setExecutor(new ChangeClass());
         getCommand("blue").setExecutor(new Blue());

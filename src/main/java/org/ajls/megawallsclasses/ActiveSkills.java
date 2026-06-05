@@ -1044,7 +1044,7 @@ public class ActiveSkills {
         }
 
         ClassEnum classEnum = ClassEnum.TRANSFIGURATION_MASTER;
-        while (classEnum == ClassEnum.TRANSFIGURATION_MASTER) {
+        while (classEnum == ClassEnum.TRANSFIGURATION_MASTER || classEnum == ClassEnum.NONE) {
             int randomResult = Utils.random(0, ClassEnum.values().length - 1);
             classEnum = ClassEnum.values()[randomResult];
         }

@@ -5,6 +5,7 @@ import org.ajls.megawallsclasses.customclasses.CustomClass;
 import org.ajls.megawallsclasses.customclasses.CustomClassI;
 import org.ajls.megawallsclasses.customclasses.DrownkingClass;
 import org.ajls.megawallsclasses.customclasses.DrownkingOldClass;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum ClassEnum {
+    NONE(0),  //无职转生
     ZOMBIE(1),
     HEROBRINE(2),
     SKELETON(3),
@@ -71,11 +73,14 @@ public enum ClassEnum {
      * @return 对应的枚举，找不到返回null
      */
     public static ClassEnum getByJobId(int jobId) {
-        ClassEnum job = JOB_CACHE.get(jobId);
-        if (job == null) {
-            throw new IllegalArgumentException("无效的职业ID：" + jobId);
+        ClassEnum classEnum = JOB_CACHE.get(jobId);
+        if (classEnum == null) {
+//            Bukkit.broadcastMessage("有人无职转生了bruh");
+            Bukkit.broadcastMessage("有人正在尝试新职业");
+//            throw new IllegalArgumentException("无效的职业ID：" + jobId);
+            return NONE;
         }
-        return job;
+        return classEnum;
     }
 
     // 核心：通过积分榜分数获取职业（唯一判断逻辑）
