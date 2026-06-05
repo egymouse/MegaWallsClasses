@@ -75,6 +75,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     //TODO white team can shoot himself to get energy, spider fall damage will kill himself, spider explosion will kill the other, 303 bow hit will kill the other, class description add missing, class name to normal
     //todo 服务器清爽化结构化 插件烦人的都重写，cacutils也写好来 比如scp330 railgun water attribute中depend的麻烦 还有Protocolib的区块数据
     //todo 配置文件先玩家再数据，这样一读就读玩家所有数据，直接加载到内存
+    //todo 加入dummy player防止玩家退出游戏像ec一样暴毙，就和afk的玩家一样
 
 
     @Override
@@ -131,7 +132,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         if (getScoreboard("energy") == null) {
             createScoreboard("energy");
         }
-        ScoreboardU.createScoreboard("tf"); //transformation master
+        ScoreboardU.createScoreboard("tf"); //transformation master  //todo 搞好tf自定义物品的替换，别吞其他物品，或者依靠物品metadata区分，导致物品无法合并 (直接别补发补给性物品，比如方块和食物和弓箭）
 //        PassiveSkills.elaina_icicleSpinTask();
 
 //        BukkitScheduler scheduler = plugin.getServer().getScheduler();

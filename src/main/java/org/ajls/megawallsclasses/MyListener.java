@@ -2132,6 +2132,7 @@ public class MyListener implements Listener {
             scheduler.scheduleSyncDelayedTask(getPlugin(), () -> player.getInventory().remove(Material.GLASS_BOTTLE), 1L);
             if (getLore(item) != null) {
                 if (containsLore(item, "heal_potion")) {  //MegaWallsClasses.getLore(item).equals(MegaWallsClasses.getLore(setLore(new ItemStack(Material.POTION), "heal_potion"))
+                    //todo heal_potion全部统一改成heatlh_potion
                     event.setCancelled(true);
                     addHealth(player, PotionU.getDuration(item, 0));
 //                    player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
@@ -2550,6 +2551,7 @@ public class MyListener implements Listener {
 //        }
         else {
             player.sendMessage(ChatColor.RED + "差 " + ChatColor.YELLOW + (100 - getScore(player, "energy")) + ChatColor.RED + " 能量");
+            //todo 查查ec会不会添加音效，要不然添加音效会不会很吵
         }
     }
 

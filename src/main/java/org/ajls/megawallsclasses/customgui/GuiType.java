@@ -82,4 +82,6 @@ public enum GuiType {
         return guiType.guiHandlerI;
 
     }
+
+    //todo gui架构写好，同时检测玩家把reorder物品放入自己背包，比如click，drag啊，或者直接关闭物品栏让物品掉出来
 }

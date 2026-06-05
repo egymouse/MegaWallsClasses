@@ -58,7 +58,7 @@ public class InitializeClass {
 
 //        ItemStackModify.setBasePotionTye(speed_potion, PotionType.SWIFTNESS);
         setDisplayName(health_potion, "heal_potion_" + index);
-        InventoryManager.setLoadDisplayName(health_potion, ChatColor.RED + "" + duration + " HP");
+        InventoryManager.setLoadDisplayName(health_potion, ChatColor.RED + "" + duration + " HP");  //todo 把 HP前面空格去掉
 //        setDisplayName(health_potion, duration + " HP");  //"15s II"
         setLore(health_potion, "heal_potion");
         ItemStackModify.setMaxStackSize(health_potion, amount);

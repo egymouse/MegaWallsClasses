@@ -143,6 +143,7 @@ public class CustomEventsOld {
 
 
                 HashSet<Item> deathItems = player_deathItems.getValues(playerUUID, true);
+                //todo 添加玩家显示盔甲，显示手持，最后显形，配上逐渐升高的音调
                 BukkitTask fleshRecreateTask = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
 //                    for (Item item : deathItems) {
 //                        if (item.isValid()) {
