@@ -90,13 +90,30 @@
         <!--          <version>1.21-R0.1-SNAPSHOT</version>-->
         <!--          <scope>provided</scope>-->
         <!--      </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>net.dmulloy2</groupId>-->
+<!--            <artifactId>ProtocolLib</artifactId>-->
+<!--            <version>5.4.0</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.comphenix.protocol</groupId>-->
+<!--            <artifactId>ProtocolLib</artifactId>-->
+<!--&lt;!&ndash;            <version>5.0.0</version>&ndash;&gt;-->
+<!--            <version>5.3.0</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-<!--            <version>5.0.0</version>-->
-            <version>5.3.0</version>
-            <scope>provided</scope>
+            <!--            <version>5.0.0</version>-->
+            <version>5.4.0</version>
+            <scope>system</scope>
+            <systemPath>D:\David\MC\server\itself\1.20.1minigame\mw_test\plugins\ProtocolLib.jar</systemPath>
         </dependency>
+
 <!--        <dependency>-->
 <!--            <groupId>io.papermc.paper</groupId>-->
 <!--            <artifactId>paper-api</artifactId>-->

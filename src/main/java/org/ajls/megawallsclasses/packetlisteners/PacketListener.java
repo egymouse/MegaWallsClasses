@@ -1,4 +1,4 @@
-package org.ajls.megawallsclasses;
+package org.ajls.megawallsclasses.packetlisteners;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -13,6 +13,10 @@ import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
 import net.minecraft.world.level.block.state.BlockState;
+import org.ajls.megawallsclasses.ClassEnum;
+import org.ajls.megawallsclasses.ClassU;
+import org.ajls.megawallsclasses.MegaWallsClasses;
+import org.ajls.megawallsclasses.PassiveSkills;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -21,7 +25,6 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -482,6 +485,17 @@ public class PacketListener {
                     }
                 }
         );
+//        protocolManager.addPacketListener(new PacketPlayServerEntityMetadataAdapter());
+//        protocolManager.addPacketListener(
+//                new PacketAdapter(MegaWallsClasses.getPlugin(), PacketType.Play.Server.ENTITY_METADATA) {
+//                    @Override
+//                    public void onPacketSending(PacketEvent event) {
+//                        PacketContainer packetContainer = event.getPacket();
+//                        Player player = event.getPlayer();
+//                        int entityID = packetContainer.getIntegers().read(0); // 获取实体ID
+//                    }
+//                }
+//        );
     }
 
     public static int getIndex(int x, int y, int z) {
