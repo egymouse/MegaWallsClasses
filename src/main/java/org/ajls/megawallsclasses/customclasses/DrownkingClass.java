@@ -25,6 +25,19 @@ import static org.ajls.megawallsclasses.MegaWallsClasses.getPlugin;
 import static org.bukkit.Bukkit.getServer;
 
 public class DrownkingClass implements CustomClassI{
+
+    @Override
+    public String getClassName() {
+        return "溺尸王";
+    }
+
+    @Override
+    public String getClassSimpleName() {
+        return "水鬼";
+    }
+
+
+
     @Override
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         Trident trident = (Trident) event.getEntity();
@@ -253,7 +266,8 @@ public class DrownkingClass implements CustomClassI{
     }
 
 
-//    @Override
+
+    //    @Override
 //    public void onTridentDamage(EntityDamageByEntityEvent event) {
 //
 //    }

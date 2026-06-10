@@ -23,6 +23,16 @@ import static org.bukkit.Bukkit.broadcastMessage;
 public class DrownkingOldClass implements CustomClassI {
 
     @Override
+    public String getClassName() {
+        return "溺尸王(旧)";
+    }
+
+    @Override
+    public String getClassSimpleName() {
+        return "水鬼(旧)";
+    }
+
+    @Override
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         Trident trident = (Trident) event.getEntity();
         UUID tridentUUID = trident.getUniqueId();

@@ -1,10 +1,7 @@
 package org.ajls.megawallsclasses;
 
 import org.ajls.lib.utils.ScoreboardU;
-import org.ajls.megawallsclasses.customclasses.CustomClass;
-import org.ajls.megawallsclasses.customclasses.CustomClassI;
-import org.ajls.megawallsclasses.customclasses.DrownkingClass;
-import org.ajls.megawallsclasses.customclasses.DrownkingOldClass;
+import org.ajls.megawallsclasses.customclasses.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,22 +14,24 @@ import java.util.stream.Collectors;
 
 public enum ClassEnum {
     NONE(0),  //无职转生
-    ZOMBIE(1),
-    HEROBRINE(2),
-    SKELETON(3),
-    ENDERMAN(4),
-    NULL(5),
-    DREAD_LORD(6),
-    ENTITY_303(7),
-    CREEPER(8),
-    UNDEAD_KNIGHT(9),
+    ZOMBIE(1, new ZombieClass()),
+    HEROBRINE(2, new HerobrineClass()),
+    SKELETON(3, new SkeletonClass()),
+    ENDERMAN(4, new EndermanClass()),
+    NULL(5, new NullClass()),
+    DREAD_LORD(6, new DreadlordClass()),
+    ENTITY_303(7, new Entity303Class()),
+    CREEPER(8, new CreeperClass()),
+    UNDEAD_KNIGHT(9, new UndeadKnightClass()),
     DROWNKING(10, new DrownkingClass()), //DrownkingOldClass()
-    SPIDER(11),
-    SHAMAN(12),
-    SNOWMAN(13),
-    MOLE(14),
-    ELAINA(15),
-    SQUID(18),
+    SPIDER(11, new SpiderClass()),
+    SHAMAN(12, new ShamanClass()),
+    SNOWMAN(13, new SnowmanClass()),
+    MOLE(14, new MoleClass()),
+    ELAINA(15, new ElainaClass()),
+    SQUID(18, new SquidClass()),
+
+
 //    COW,
 //    GOLEM,
     SKELETON_LORD(28),

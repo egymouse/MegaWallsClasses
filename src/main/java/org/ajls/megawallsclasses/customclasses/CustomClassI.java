@@ -9,6 +9,16 @@ import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public interface CustomClassI {
+
+    default String getClassName() {
+        return "没有职业";
+    }
+
+    default String getClassSimpleName() {
+        return "无职";
+    }
+
+
     default void test() {
 
     }
@@ -50,4 +60,6 @@ public interface CustomClassI {
     default void onPlayerPickupArrow(PlayerPickupArrowEvent event) {
 
     }
+
+
 }

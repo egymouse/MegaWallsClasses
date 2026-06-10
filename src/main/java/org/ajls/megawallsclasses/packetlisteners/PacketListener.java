@@ -496,6 +496,8 @@ public class PacketListener {
 //                    }
 //                }
 //        );
+//        protocolManager.addPacketListener(new PacketPlayServerPlayerInfoAdapter());
+//        protocolManager.addPacketListener(new PacketPlayerEntityMetadataAdapter());
     }
 
     public static int getIndex(int x, int y, int z) {

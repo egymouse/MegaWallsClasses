@@ -9,6 +9,7 @@ import org.ajls.megawallsclasses.commands.Energetic;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
 import org.ajls.megawallsclasses.customclasses.CustomClassI;
+import org.ajls.megawallsclasses.displayname.DisplayNameManager;
 import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
 import org.ajls.megawallsclasses.nmsmodify.TamedTeleport;
 import org.ajls.megawallsclasses.rating.Rating;
@@ -201,6 +202,9 @@ public class MyListener implements Listener {
                 throw new RuntimeException(e);
             }
         },0, playTimeInTicks + 20); //delay originally 0  //150*20
+
+
+        DisplayNameManager.refresh(player);
 
     }
 
