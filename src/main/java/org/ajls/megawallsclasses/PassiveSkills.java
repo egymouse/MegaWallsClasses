@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
+import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import it.unimi.dsi.fastutil.Hash;
 import net.kyori.adventure.util.TriState;
@@ -183,6 +184,26 @@ public class PassiveSkills {
 //
 //        }, 130L, 200);
 //        tasks.put(damager.getUniqueId(), task);
+    }
+
+    static void test(Player player) {
+        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+        PacketContainer hide_armor_packet = protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
+
+//        // Source - https://stackoverflow.com/a/78605794
+//// Posted by Elikill58
+//// Retrieved 2026-06-10, License - CC BY-SA 4.0
+//
+//// create a new player info data
+//        PlayerInfoData new_playerinfo = new PlayerInfoData(playerInfo.getProfileId(),
+//                playerInfo.getLatency(), playerInfo.isListed(), playerInfo.getGameMode(),
+//                playerInfo.getProfile(), new_tab_name, playerInfo.getProfileKeyData());
+//
+//// write it into packet
+//        hide_armor_packet.getPlayerInfoDataLists().write(1, Collections.singletonList(new_playerinfo));
+
+
+        //todo 解决玩家头顶自定义名称的问题
     }
 
     static void null_hide_armor(Player damager) {

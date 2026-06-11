@@ -89,12 +89,12 @@ public class Rating {
             double weight = winners_weight.get(uuid);
             String winnerName = Bukkit.getOfflinePlayer(uuid).getName();
             double winnerRating = getRating(winnerName);
-            double diff = (winnerRating - loserRating)/100; //add a hundred makes it look nicer  // winner: novice loser: master odds really small 1/10000 opposite 10000/1 prob=1/{1+1/opposite} = 1/{1+odd}
+            double diff = (winnerRating - loserRating)/400; //add a hundred makes it look nicer  // winner: novice loser: master odds really small 1/10000 opposite 10000/1 prob=1/{1+1/opposite} = 1/{1+odd}
             //可以直接通分啊，衡量的是落后的人赢的概率，这是预计，实际是0，所以给它实际减去预计的分，也就是扣输掉的人的分
             //赢的人的话预计是1-p，实际是1（因为赢了），差值也是p，但是是正的
             double expDiff = Math.pow(10, diff);
             double probability = 1 / (1+expDiff);
-            double amount = probability * weight * 10; // * k which is 1, can be changed later  // now k = 0.1 or else grow too fast  //k其实应该调到5，或者按照没缩放的分就算0.05，也就是砍半，国际象棋缩放等级是400，然后K是40（新手）20（中手）10（老手），刚好对应我们缩放的0.05如果是中手（20/400 = 1/20 = 0.05）
+            double amount = probability * weight * 20; // * k which is 1, can be changed later  // now k = 0.1 or else grow too fast  //k其实应该调到5，或者按照没缩放的分就算0.05，也就是砍半，国际象棋缩放等级是400，然后K是40（新手）20（中手）10（老手），刚好对应我们缩放的0.05如果是中手（20/400 = 1/20 = 0.05）
             //FIDE其实还有规定，如果差值大于400（强10倍），那么也按400算  以后ai uhc出了也可以搞机器人然后评价elo
             //lichess默认1500，缩放等级是400，我们缩放是100，所以我们的分数*4+1500就是lichess等级
             //todo 放缩倍数从100变400，k从0.1调到0.05，变化值调成20 （刚好放大4倍，k调小一倍，所以最后还是大一倍），势均力敌就是0.5*20=10的积分，然后获得的币子就是抢来的积分数 当然200分就是实力高出一档的体现了 (76胜率） 同时加上cap 400分的设计（1:100按1:10算)

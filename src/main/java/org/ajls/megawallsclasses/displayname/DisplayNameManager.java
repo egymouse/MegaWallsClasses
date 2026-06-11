@@ -3,10 +3,14 @@ package org.ajls.megawallsclasses.displayname;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerPlayerConnection;
 import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.ClassEnum;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -22,6 +26,14 @@ public class DisplayNameManager {
 
 //        player.displayName(component);
 //        player.bel
+
+//        CraftPlayer craftPlayer = (CraftPlayer) player;
+//
+//        ServerPlayer serverPlayer = craftPlayer.getHandle();
+//        for (Player online : Bukkit.getOnlinePlayers()) {
+//            ServerPlayerConnection serverPlayerConnection = serverPlayer.connection;
+//            serverPlayerConnection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME));
+//        }
     }
 
     public static Component getCustomName(UUID uuid) {
