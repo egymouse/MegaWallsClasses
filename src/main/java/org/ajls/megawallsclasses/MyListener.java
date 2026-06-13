@@ -182,26 +182,29 @@ public class MyListener implements Listener {
 
 
 
-        List<Player> players = new ArrayList<>();
-        players.add(player);
-        long playTimeInMilliSeconds = MegaWallsClasses.getMidiMusicPlayer().getTotalTimeInMilliseconds("Crucified");
-        long playTimeInTicks = playTimeInMilliSeconds / 50; //+ 60;
+        if (!isBedrockPlayer) {  //todo 搞基岩版提高音域的材质包ok?
+            List<Player> players = new ArrayList<>();
+            players.add(player);
+            long playTimeInMilliSeconds = MegaWallsClasses.getMidiMusicPlayer().getTotalTimeInMilliseconds("Crucified");
+            long playTimeInTicks = playTimeInMilliSeconds / 50; //+ 60;
 //        double playTimeInTicksDouble = (double) playTimeInTicks;
 //        playTimeInTicksDouble /= 1200;
 //        player.sendMessage((playTimeInTicksDouble) + "Min");
 //        player.sendMessage((playTimeInMilliSeconds) + "ms");
 //        player.sendMessage((playTimeInTicks) + "ticks");
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
-            //TODO: cancel this task when players quit, or even more, pause the task using a timer i-- and check if player is online
-            try {
-                MegaWallsClasses.getMidiMusicPlayer().playMidiToPlayers(new File(MegaWallsClasses.getPlugin().getDataFolder(), "midis/Crucified.mid"), players);  //"midis/sss.mid"
-            } catch (InvalidMidiDataException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        },0, playTimeInTicks + 20); //delay originally 0  //150*20
+            BukkitScheduler scheduler = Bukkit.getScheduler();
+            scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
+                //TODO: cancel this task when players quit, or even more, pause the task using a timer i-- and check if player is online
+                try {
+                    MegaWallsClasses.getMidiMusicPlayer().playMidiToPlayers(new File(MegaWallsClasses.getPlugin().getDataFolder(), "midis/Crucified.mid"), players);  //"midis/sss.mid"
+                } catch (InvalidMidiDataException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            },0, playTimeInTicks + 20); //delay originally 0  //150*20
+        }
+
 
 
         DisplayNameManager.refresh(player);
