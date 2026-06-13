@@ -282,7 +282,11 @@ public class Cooldown {
                 }
 
                 //todo 用list来存储这些吧，这样也好分辨什么时候需要空格，未设置的c就跳过，相邻两个自动加空格
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(finalA1c + a11 + finalP1c + p11 + finalP2c + p21));
+                String finalString = finalA1c + a11 + finalP1c + p11 + finalP2c + p21;
+                if (!finalString.equals("")) {
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(finalString));  //修复了基岩版玩家显示空actionbar的bug
+                }
+
             }
         },0 , 1);
         player_cooldownTask.put(uuid, task);
