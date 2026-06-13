@@ -6,43 +6,30 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
-import com.comphenix.protocol.wrappers.PlayerInfoData;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import it.unimi.dsi.fastutil.Hash;
 import net.kyori.adventure.util.TriState;
-import org.ajls.lib.Lib;
 import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
-import org.ajls.megawallsclasses.customclasses.NullInvisibilityMode;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import static org.ajls.megawallsclasses.BlocksModify.isInBounds;
-import static org.ajls.megawallsclasses.ColorAndChatColor.translateChatColorToColor;
 import static org.ajls.megawallsclasses.MegaWallsClasses.plugin;
 import static org.ajls.megawallsclasses.MyListener.*;
 import static org.ajls.megawallsclasses.ScoreboardsAndTeams.getPlayerTeam;
 import static org.ajls.megawallsclasses.ScoreboardsAndTeams.getPlayerTeamColor;
 import static org.ajls.megawallsclasses.Utils.random;
-import static org.bukkit.Bukkit.broadcastMessage;
-import static org.bukkit.Bukkit.getServer;
 
 public class PassiveSkills {
     static HashMap<UUID, BukkitTask> nullInvisibility_tasks = new HashMap<>();

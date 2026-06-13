@@ -3,7 +3,7 @@ package org.ajls.megawallsclasses;
 import org.ajls.cactusgenerator.cosmetics.Bloody;
 import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.commands.*;
-import org.ajls.megawallsclasses.customclasses.ClassNamesConfig;
+import org.ajls.megawallsclasses.classsystem.ClassNamesConfig;
 import org.ajls.megawallsclasses.custommusic.MidiMusicPlayer;
 import org.ajls.megawallsclasses.packetlisteners.PacketListener;
 import org.bukkit.*;
@@ -66,14 +66,15 @@ public final class MegaWallsClasses extends JavaPlugin {
         // Plugin startup logic
         plugin = this;
         midiMusicPlayer = new MidiMusicPlayer(MegaWallsClasses.getPlugin());
-        getConfig().options().copyDefaults(true);
-        saveDefaultConfig();
+        getConfig().options().copyDefaults(true);  //这行代码设置了一个“开关// ”（copyDefaults），告诉Bukkit的配置API：当从getConfig()读取一个不存在的配置项时，自动用插件JAR里config.yml的预设值去填充。
+        //todo 我不知道，反正新增职业名称这段代码时实测根本没有copyDefaults，这怎么办（）
+        saveDefaultConfig();  //保存到磁盘
         tracked_teams.add("blue_team");
 //        org.ajls.
         tracked_teams.add("red_team");
         setTracked_teams(tracked_teams);
         Bloody.registerPlayerDeathItems(CustomEventsOld.getPlayer_deathItems());
-        ClassNamesConfig.getInstance(this);
+        ClassNamesConfig.getInstance(this);  //其实也不用写，反正调用时会自动传入instance
         getServer().getPluginManager().registerEvents(new MyListener(), this);
         getCommand("class").setExecutor(new ChangeClass());
         getCommand("blue").setExecutor(new Blue());

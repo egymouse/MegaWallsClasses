@@ -3,17 +3,15 @@ package org.ajls.megawallsclasses;
 import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.customclasses.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum ClassEnum {
-    NONE(0),  //无职转生
+    //todo 还有我在像对于不同类型的职业（比如默认职业，搞笑职业，老版本职业）来分个类，但是classId就会出现断层，这怎么解决？ 可以增加Category字段，无论是int还是新的Enum都行 public Enum Category
+    NONE(0, new NoneClass()),  //无职转生
     ZOMBIE(1, new ZombieClass()),
     HEROBRINE(2, new HerobrineClass()),
     SKELETON(3, new SkeletonClass()),
@@ -40,16 +38,16 @@ public enum ClassEnum {
 //    NAC, //not a class
 
     public final int classId;
-    public final CustomClassI customClass;
+    public final AbstractCustomClass customClass;
 
-    ClassEnum(int classId, CustomClassI customClassI) {
+    ClassEnum(int classId, AbstractCustomClass abstractCustomClass) {
         this.classId = classId;
-        this.customClass = customClassI;
+        this.customClass = abstractCustomClass;
         this.customClass.setClassEnum(this);  // 同样为默认实现注入
     }
 
     ClassEnum(int classId) {
-        this(classId, new CustomClass());  //到时候可以给无职专门分配一个职业来玩玩
+        this(classId, new NoneClass());  //到时候可以给无职专门分配一个职业来玩玩
     }
 
 
@@ -83,7 +81,7 @@ public enum ClassEnum {
     }
 
     // 核心：通过积分榜分数获取职业（唯一判断逻辑）
-    public static CustomClassI getJob(int classScore) {
+    public static AbstractCustomClass getJob(int classScore) {
 //        for (ClassEnum factory : values()) {
 //            if (factory.classId == classScore) {
 //                return factory.customClass;
@@ -96,7 +94,7 @@ public enum ClassEnum {
         return classEnum.customClass;
     }
 
-    public static CustomClassI getClassByPlayer(Player player) {
+    public static AbstractCustomClass getClassByPlayer(Player player) {
         int classScore = ScoreboardU.getScore(player, "class");
         return getJob(classScore);
     }

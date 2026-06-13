@@ -15,22 +15,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 import static org.ajls.megawallsclasses.EnergyAccumulate.addEnergy;
-import static org.ajls.megawallsclasses.EnergyAccumulate.shootEnergyAccumulate;
-import static org.ajls.megawallsclasses.KillsManager.registerPlayerHit;
 import static org.ajls.megawallsclasses.ScoreboardsAndTeams.getScore;
 import static org.bukkit.Bukkit.broadcastMessage;
 
-public class DrownkingOldClass implements CustomClassI {
+public class DrownkingOldClass extends AbstractCustomClass {
 
-    @Override
-    public String getClassName() {
-        return "溺尸王(旧)";
-    }
-
-    @Override
-    public String getClassSimpleName() {
-        return "水鬼(旧)";
-    }
 
     @Override
     public void onProjectileLaunch(ProjectileLaunchEvent event) {

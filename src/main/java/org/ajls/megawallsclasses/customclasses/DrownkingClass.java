@@ -8,7 +8,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,22 +18,12 @@ import java.util.UUID;
 
 import static org.ajls.megawallsclasses.ActiveSkills.activeTridents;
 import static org.ajls.megawallsclasses.EnergyAccumulate.addEnergy;
-import static org.ajls.megawallsclasses.EnergyAccumulate.shootEnergyAccumulate;
-import static org.ajls.megawallsclasses.KillsManager.registerPlayerHit;
 import static org.ajls.megawallsclasses.MegaWallsClasses.getPlugin;
 import static org.bukkit.Bukkit.getServer;
 
-public class DrownkingClass implements CustomClassI{
+public class DrownkingClass extends AbstractCustomClass {
 
-    @Override
-    public String getClassName() {
-        return "溺尸王";
-    }
 
-    @Override
-    public String getClassSimpleName() {
-        return "水鬼";
-    }
 
 
 

@@ -1,4 +1,4 @@
-package org.ajls.megawallsclasses.customclasses;
+package org.ajls.megawallsclasses;
 
 import org.ajls.lib.advanced.HashMapInteger;
 import org.bukkit.ChatColor;

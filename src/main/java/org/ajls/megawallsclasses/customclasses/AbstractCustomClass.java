@@ -2,33 +2,33 @@ package org.ajls.megawallsclasses.customclasses;
 
 import org.ajls.megawallsclasses.ClassEnum;
 import org.ajls.megawallsclasses.MegaWallsClasses;
+import org.ajls.megawallsclasses.classsystem.ClassNamesConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 
-public interface CustomClassI {
-    ClassEnum classEnum = null;  // 存储注入的枚举
+public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象类implement之前那个接口的，但算了反正一样
+    private ClassEnum classEnum = null;  // 存储注入的枚举
 
-    default void setClassEnum(ClassEnum classEnum) {
+    public void setClassEnum(ClassEnum classEnum) {
         this.classEnum = classEnum;
     }
 
-    default ClassEnum getClassEnum() {
+    public ClassEnum getClassEnum() {
         return classEnum;
     }
 
     // 默认实现：通过枚举获取 classId，再到配置文件读取名称
-    default String getClassName() {
+    public String getClassName() {
         int classId = getClassEnum().classId;
         return ClassNamesConfig.getInstance(MegaWallsClasses.getPlugin())
                 .getClassName(classId);
     }
 
-    default String getClassSimpleName() {
+    public String getClassShortName() {
         int classId = getClassEnum().classId;
         return ClassNamesConfig.getInstance(MegaWallsClasses.getPlugin())
                 .getClassShortName(classId);
@@ -45,18 +45,18 @@ public interface CustomClassI {
 //    }
 
 
-    default void test() {
+    public void test() {
 
     }
 
     // ---------------- 抽离：职业专属提示（通用默认实现）----------------
-    default void sendSkillReadyMessage(Player player) {
+    public void sendSkillReadyMessage(Player player) {
         // 原代码：非3职业的通用提示
         player.sendMessage(ChatColor.GREEN + "终极技能 " + ChatColor.YELLOW + "准备就绪");
     }
 
     // ---------------- 抽离：职业专属效果（通用默认实现：无效果）----------------
-    default void applySkillReadyEffect(Player player) {
+    public void applySkillReadyEffect(Player player) {
         // 普通职业：没有额外效果
         //末影人
     }
@@ -68,22 +68,22 @@ public interface CustomClassI {
 
     // ===================== 新增：三叉戟发射事件方法 =====================
     // 默认空实现：其他职业完全不用管，只有溺尸王重写
-    default void onProjectileLaunch(ProjectileLaunchEvent event) {
+    public void onProjectileLaunch(ProjectileLaunchEvent event) {
         // 普通职业：无任何逻辑
     }
 
-    default void onProjectileHit(ProjectileHitEvent event, Player player) {}
+    public void onProjectileHit(ProjectileHitEvent event, Player player) {}
 
 //    default void onTridentDamage(EntityDamageByEntityEvent event) {
 //
 //    }
 
-    default void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 
     }
 
 
-    default void onPlayerPickupArrow(PlayerPickupArrowEvent event) {
+    public void onPlayerPickupArrow(PlayerPickupArrowEvent event) {
 
     }
 

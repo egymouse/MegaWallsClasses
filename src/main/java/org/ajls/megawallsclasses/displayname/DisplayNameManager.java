@@ -3,14 +3,10 @@ package org.ajls.megawallsclasses.displayname;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerPlayerConnection;
 import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.ClassEnum;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -36,6 +32,9 @@ public class DisplayNameManager {
 //            ServerPlayerConnection serverPlayerConnection = serverPlayer.connection;
 //            serverPlayerConnection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME));
 //        }
+
+        Component customName = getCustomName(player);
+        player.displayName(customName);
     }
 
     public static Component getCustomName(UUID uuid) {
@@ -43,7 +42,7 @@ public class DisplayNameManager {
         return getCustomName(player);  //todo add not null
     }
     public static Component getCustomName(Player player) {
-        String classSimpleName = ClassEnum.getClassByPlayer(player).getClassSimpleName();
+        String classSimpleName = ClassEnum.getClassByPlayer(player).getClassShortName();
         String playerName = player.getName();
         ChatColor teamChatColor = ScoreboardU.getPlayerTeamColor(player, true);
         TextColor teamTextColor = ScoreboardU.getPlayerTeamTextColor(player, true);

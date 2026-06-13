@@ -1,4 +1,4 @@
-package org.ajls.megawallsclasses.customclasses;
+package org.ajls.megawallsclasses.classsystem;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,6 +14,9 @@ public class ClassNamesConfig {
     private ClassNamesConfig(JavaPlugin plugin) {
         this.plugin = plugin;
         reload();
+//        if (instance == null) {
+//            instance = this;
+//        }
     }
 
     public static ClassNamesConfig getInstance(JavaPlugin plugin) {
@@ -45,7 +48,7 @@ public class ClassNamesConfig {
 
     public String getClassName(int classId) {
         ClassNameEntry entry = cache.get(classId);
-        return entry != null ? entry.name : "没有职业";  //未知职业
+        return entry != null ? entry.name : "无职业";  //未知职业
     }
 
     public String getClassShortName(int classId) {

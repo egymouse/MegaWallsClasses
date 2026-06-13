@@ -8,7 +8,7 @@ import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.commands.Energetic;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
-import org.ajls.megawallsclasses.customclasses.CustomClassI;
+import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.displayname.DisplayNameManager;
 import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
 import org.ajls.megawallsclasses.nmsmodify.TamedTeleport;
@@ -622,6 +622,11 @@ public class MyListener implements Listener {
                     InitializeClass.resetPlayerCondition(player);
                     ClassU.setClass(player, index);
 //                    setScore(player, "class", index);
+
+
+                    DisplayNameManager.refresh(player);//todo 添加幻变大师适配，以及加入所有职业的职业名称，最好做好category适配
+
+
                     elaina_disable(player);
 
                     player.sendMessage(Documentation.getClassDocumentation(index));
@@ -723,7 +728,7 @@ public class MyListener implements Listener {
 //            player.sendMessage("test");
             event.setCancelled(true);
         }
-        else if (title.equals("Reorder inventory")) {
+        else if (title.equals("Reorder inventory")) {  //todo 记得改成不能偷物品，甚至不能drag以及丢弃，甚至放在鼠标上然后关闭物品栏让物品自然掉出，可以用custom event（自己写一个event接入bukkit api)来实现多事件的整合
             if (event.getCurrentItem() != null) {
                 if (!event.getCurrentItem().getType().equals(Material.AIR)) {
                     Player player = (Player) event.getWhoClicked();
@@ -1389,8 +1394,8 @@ public class MyListener implements Listener {
                     UUID damagerUUID = damager.getUniqueId();
                     registerPlayerHit(player, damager);
 
-                    CustomClassI customClassI = ClassEnum.getClassByPlayer(damager);  //todo 别写Player了，写victim，要不然天天写bug
-                    customClassI.onEntityDamageByEntity(event);
+                    AbstractCustomClass abstractCustomClass = ClassEnum.getClassByPlayer(damager);  //todo 别写Player了，写victim，要不然天天写bug
+                    abstractCustomClass.onEntityDamageByEntity(event);
 
                     shootEnergyAccumulate(damager); //todo a 30 energy bonus if hit a player and with the 20 by energy accumulate, the total is 50，但是我没在event看到什么attackEnergyAccumulate的代码 ，好吧发现了就在这里这一行
                 }
@@ -1706,9 +1711,9 @@ public class MyListener implements Listener {
 //                if (!(projectile.getShooter() instanceof Player player)) return;
 
                 // 1. 获取职业（你现成的方法）
-                CustomClassI customClassI = ClassEnum.getClassByPlayer(player);
+                AbstractCustomClass abstractCustomClass = ClassEnum.getClassByPlayer(player);
                 // 2. 只执行溺尸王的逻辑，其他职业自动跳过
-                customClassI.onProjectileLaunch(event);
+                abstractCustomClass.onProjectileLaunch(event);
             }
         }
 //        else if(projectile instanceof Snowball) {
