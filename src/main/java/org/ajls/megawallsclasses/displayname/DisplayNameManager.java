@@ -19,6 +19,8 @@ public class DisplayNameManager {
 
     //todo 到时候搞一个custom class getClassName 返回 黑暗君主 和getClassNameShort 返回黑君
 
+    //todo 搞玩家皮肤对应职业
+
     public static void refresh(Player player) {
 //        player.displayName(Component.text("test"));
 

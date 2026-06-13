@@ -138,7 +138,7 @@ public class GameManager {
             Bukkit.broadcastMessage("Oh no the one that should be teleported can't be deselect");
             for (int i = players.size()-1; i >= 0; i--) {
                 Player target = players.get(i);
-                if (target.getUniqueId() == playerUUID) {
+                if (target.getUniqueId().equals(playerUUID)) {
                     players.remove(i);
                     Bukkit.broadcastMessage("Removed using uuid comparison");
                 }
@@ -150,16 +150,23 @@ public class GameManager {
 //                }
 //            }
         }
-        for (Player otherPlayer: players) {
-//            if (otherPlayer.getGameMode() == GameMode.SPECTATOR) {
+//        for (Player otherPlayer: players) {
+////            if (otherPlayer.getGameMode() == GameMode.SPECTATOR) {
+////                players.remove(otherPlayer);
+////            }
+////            else if (ScoreboardsAndTeams.isPlayerSameTeam(player,  otherPlayer)) {
+////                players.remove(otherPlayer);
+////            }
+////
+//            if (!GamemodeUtils.isPlayer2PlayableEnemy(player, otherPlayer)) {
 //                players.remove(otherPlayer);
 //            }
-//            else if (ScoreboardsAndTeams.isPlayerSameTeam(player,  otherPlayer)) {
-//                players.remove(otherPlayer);
-//            }
-//
+//        }
+        Iterator<Player> it = players.iterator();
+        while (it.hasNext()) {
+            Player otherPlayer = it.next();
             if (!GamemodeUtils.isPlayer2PlayableEnemy(player, otherPlayer)) {
-                players.remove(otherPlayer);
+                it.remove(); // 用迭代器自身删除
             }
         }
         if (players.size() > 0) {

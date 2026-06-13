@@ -9,4 +9,6 @@ public class UndeadKnightClass implements CustomClassI{
     public String getClassSimpleName() {
         return "死灵";
     }
+
+    //todo 带回来死灵一开始的骷髅马设计 老职业回忆大厅
 }
