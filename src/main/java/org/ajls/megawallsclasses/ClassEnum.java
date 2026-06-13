@@ -45,11 +45,11 @@ public enum ClassEnum {
     ClassEnum(int classId, CustomClassI customClassI) {
         this.classId = classId;
         this.customClass = customClassI;
+        this.customClass.setClassEnum(this);  // 同样为默认实现注入
     }
 
     ClassEnum(int classId) {
-        this.classId = classId;
-        this.customClass = new CustomClass();
+        this(classId, new CustomClass());  //到时候可以给无职专门分配一个职业来玩玩
     }
 
 

@@ -3,6 +3,7 @@ package org.ajls.megawallsclasses;
 import org.ajls.cactusgenerator.cosmetics.Bloody;
 import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.commands.*;
+import org.ajls.megawallsclasses.customclasses.ClassNamesConfig;
 import org.ajls.megawallsclasses.custommusic.MidiMusicPlayer;
 import org.ajls.megawallsclasses.packetlisteners.PacketListener;
 import org.bukkit.*;
@@ -72,6 +73,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         tracked_teams.add("red_team");
         setTracked_teams(tracked_teams);
         Bloody.registerPlayerDeathItems(CustomEventsOld.getPlayer_deathItems());
+        ClassNamesConfig.getInstance(this);
         getServer().getPluginManager().registerEvents(new MyListener(), this);
         getCommand("class").setExecutor(new ChangeClass());
         getCommand("blue").setExecutor(new Blue());

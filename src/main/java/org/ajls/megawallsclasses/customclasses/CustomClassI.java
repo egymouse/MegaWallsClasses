@@ -1,5 +1,7 @@
 package org.ajls.megawallsclasses.customclasses;
 
+import org.ajls.megawallsclasses.ClassEnum;
+import org.ajls.megawallsclasses.MegaWallsClasses;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -9,14 +11,38 @@ import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public interface CustomClassI {
+    ClassEnum classEnum = null;  // 存储注入的枚举
 
+    default void setClassEnum(ClassEnum classEnum) {
+        this.classEnum = classEnum;
+    }
+
+    default ClassEnum getClassEnum() {
+        return classEnum;
+    }
+
+    // 默认实现：通过枚举获取 classId，再到配置文件读取名称
     default String getClassName() {
-        return "没有职业";
+        int classId = getClassEnum().classId;
+        return ClassNamesConfig.getInstance(MegaWallsClasses.getPlugin())
+                .getClassName(classId);
     }
 
     default String getClassSimpleName() {
-        return "无职";
+        int classId = getClassEnum().classId;
+        return ClassNamesConfig.getInstance(MegaWallsClasses.getPlugin())
+                .getClassShortName(classId);
     }
+
+
+
+//    default String getClassName() {
+//        return "没有职业";
+//    }
+//
+//    default String getClassSimpleName() {
+//        return "无职";
+//    }
 
 
     default void test() {
