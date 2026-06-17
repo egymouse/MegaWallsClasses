@@ -201,7 +201,7 @@ public class DrownkingClass extends AbstractCustomClass {
             }
             if (!found) {
                 ItemStack item = InventoryManager.drownking_trident();
-                player.getInventory().addItem(item);
+                player.getInventory().addItem(item); //todo 如果玩家物品栏满了会不会被吞，注意看return值
             }
 
         }, 2L);  // try 0l  //try 10L as 后摇 backswing

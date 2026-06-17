@@ -1,6 +1,8 @@
 package org.ajls.megawallsclasses;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.ajls.lib.advanced.HaxhMap;
+import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
 import org.ajls.megawallsclasses.rating.Rating;
 import org.ajls.megawallsclasses.utils.VelocityU;
 import org.bukkit.*;
@@ -119,12 +121,12 @@ public class CustomEventsOld {
         else {
             BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
             player.sendMessage("respawn in 5s");
-            scheduler.scheduleSyncDelayedTask(plugin, () -> {
+            scheduler.runTaskLater(plugin, () -> {  //ScheduledTask task = (ScheduledTask)  但是报错
 //                teamTeleportSpawn(player);
                 Location teleportLocation = teleportNearPlayers(player);
                 player.setGameMode(GameMode.SURVIVAL);
                 if (player_nextClass.containsKey(player.getUniqueId())) {
-                    ClassU.setClass(player, player_nextClass.remove(player.getUniqueId()));
+                    ClassU.setClass(player, player_nextClass.remove(player.getUniqueId()));  //todo 这些代码是为了死亡后才能变成之前选的职业来设计的 省的抽象人战中切职业 吗、可能还需要添加resetPlayerCondition
                     InitializeClass.refreshClassOnChangeClass(player);  //todo add tf compatibility 以前的comment 现在都忘记了哪些method识别的了tf哪些识别不了了
                 }
                 else {
@@ -209,7 +211,8 @@ public class CustomEventsOld {
                     }
                     world.spawnParticle(Particle.CLOUD, player.getLocation(), 10);  //0.5, 0.5, 0.5, 0.1
                     world.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
-                }, 60L);
+                }, 60L);  //todo 加一个从脚到头到手持物品到解除隐身 隔0.5s的渐变 加上逐渐升高的音调
+//                PlayerDataManager.getPlayerData(player).activeSpawnProtection();
 
 
 //                initializeClass(player);

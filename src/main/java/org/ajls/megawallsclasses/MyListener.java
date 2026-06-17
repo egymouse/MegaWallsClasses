@@ -12,6 +12,7 @@ import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.displayname.DisplayNameManager;
 import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
 import org.ajls.megawallsclasses.nmsmodify.TamedTeleport;
+import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
 import org.ajls.megawallsclasses.rating.Rating;
 import org.ajls.megawallsclasses.utils.EventU;
 import org.ajls.megawallsclasses.utils.InventoryIterator;
@@ -101,7 +102,7 @@ public class MyListener implements Listener {
     HashMap<UUID, Location> player_deathLocation = new HashMap<>();
     static HashMap<UUID, BukkitTask> player_activeSkillReady = new HashMap<>();
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) throws InvalidMidiDataException, IOException {
+    public void onPlayerJoin(PlayerJoinEvent event) throws InvalidMidiDataException, IOException {  //todo 溺尸王扣血 有鱿鱼药怎么算
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         FloodgateApi api = FloodgateApi.getInstance();
@@ -208,6 +209,7 @@ public class MyListener implements Listener {
 
 
         DisplayNameManager.refresh(player);
+        PlayerDataManager.register(player);
 
     }
 
@@ -985,7 +987,7 @@ public class MyListener implements Listener {
         if (event.getDamage() <= 0.1) return; //damage that causes kb effect
         double finalDamage = org.ajls.lib.utils.EventU.getFinalDamage(event);// event.getFinalDamage();
 //        Bukkit.broadcastMessage("damage delt: " + finalDamage);
-        Entity entity = event.getEntity();
+        Entity victimEntity = event.getEntity();
         Entity damagerEntity = event.getDamager();
         if (damagerEntity instanceof Player) {
             Player damager = (Player) damagerEntity;
@@ -995,8 +997,8 @@ public class MyListener implements Listener {
             if (material == Material.BOW) {
                 event.setCancelled(true);
                 if (getScore(damager, "class") == 28 && getScore(damager, "energy") < 100) {
-                    if (entity instanceof Player) {
-                        Player player = (Player) entity;
+                    if (victimEntity instanceof Player) {
+                        Player player = (Player) victimEntity;
                         if (isPlayerPlayableEnemy(damager, player)) {
                             skeleton_lord_player.put(damager.getUniqueId(), player.getUniqueId());
                             damager.sendMessage("你标记了" + player.getName());
@@ -1008,8 +1010,8 @@ public class MyListener implements Listener {
             }
         }
         if (event.getEntity() instanceof Player && !event.isCancelled()) {
-            Player player = (Player) entity;
-            UUID playerUUID = player.getUniqueId();
+            Player victim = (Player) victimEntity;
+            UUID playerUUID = victim.getUniqueId();
             if (event.getDamager() instanceof Player) {
                 Player damager = (Player) event.getDamager();
                 UUID damagerUUID = damager.getUniqueId();
@@ -1022,19 +1024,19 @@ public class MyListener implements Listener {
 //                    finalDamage = org.ajls.lib.utils.EventU.getFinalDamage(event);
 //                }
 
-//                Player player = (Player) event.getEntity();
-                if (PlayerU.isPlayerPlayableEnemy(player, damager)) {
-                    registerPlayerHit(player, damager);
-                    Rating.loser_winnerMap.addWeight(player, damager, finalDamage);
-                    if (!attacked.contains(player.getUniqueId())) {
-                        attacked.add(player.getUniqueId());
+//                Player victim = (Player) event.getEntity();
+                if (PlayerU.isPlayerPlayableEnemy(victim, damager)) {
+                    registerPlayerHit(victim, damager);
+                    Rating.loser_winnerMap.addWeight(victim, damager, finalDamage);
+                    if (!attacked.contains(victim.getUniqueId())) {
+                        attacked.add(victim.getUniqueId());
                         BukkitScheduler scheduler = getServer().getScheduler();
                         scheduler.scheduleSyncDelayedTask(getPlugin(), () -> {
-                            attacked.remove(player.getUniqueId());
+                            attacked.remove(victim.getUniqueId());
                             // Do something
                         }, 10L);
                         attackEnergyAccumulate(damager);
-                        attackedEnergyAccumulate(player);
+                        attackedEnergyAccumulate(victim);
                         if (getScore(damager, "class") == 15) {
                             if (elaina_mode.containsKey(damagerUUID)) {
                                 if (elaina_mode.get(damagerUUID) == 0) {
@@ -1042,7 +1044,7 @@ public class MyListener implements Listener {
                                 }
                             }
                         }
-                        if (getScore(player, "class") == 15) {
+                        if (getScore(victim, "class") == 15) {
                             if (elaina_mode.containsKey(playerUUID)) {
                                 if (elaina_mode.get(playerUUID) == 2) {
                                     elaina_enemy.put(playerUUID, damagerUUID);
@@ -1063,13 +1065,13 @@ public class MyListener implements Listener {
                                 }
                                 break;
                             case 12:
-                                shaman_passive_skill_1_increase(damager, player);
-//                            PassiveSkills.shaman_passive_skill_2_increase(damager, player);
+                                shaman_passive_skill_1_increase(damager, victim);
+//                            PassiveSkills.shaman_passive_skill_2_increase(damager, victim);
                                 break;
                             case 15:
                                 break;
                             case 28:
-                                skeleton_lord_passive_skill_2(damager, player);
+                                skeleton_lord_passive_skill_2(damager, victim);
                                 break;
                             case 30:
                                 HashSet<WardenDarknessTargetTimestamp> targetTimestamps = warden_darknessTargetTimestamp.getValues(damagerUUID, true);
@@ -1082,7 +1084,7 @@ public class MyListener implements Listener {
                                 }
                                 break;
                         }
-                        switch (getScore(player, "class")) {
+                        switch (getScore(victim, "class")) {
 //                        case 2:
 //                            herobrine_passive_skill_1(damager);
 //                            break;
@@ -1090,32 +1092,32 @@ public class MyListener implements Listener {
 //                            null_passive_skill_1(damager);
 //                            break;
                             case 12:
-//                            PassiveSkills.shaman_passive_skill_1_increase(damager, player);
-                                shaman_passive_skill_2_increase(damager, player);
+//                            PassiveSkills.shaman_passive_skill_1_increase(damager, victim);
+                                shaman_passive_skill_2_increase(damager, victim);
                                 break;
 //                        case 15:
 //                            break;
 //                        case 28:
-//                            skeleton_lord_passive_skill_2(damager, player);
+//                            skeleton_lord_passive_skill_2(damager, victim);
 //                            break;
                         }
 
-//                    switch (MegaWallsClasses.getScore(player, "class")) {
+//                    switch (MegaWallsClasses.getScore(victim, "class")) {
 //                        case 1:
-//                            MegaWallsClasses.addScore(player, "energy", 1);
+//                            MegaWallsClasses.addScore(victim, "energy", 1);
 //                            break;
 //                        case 5:
 //                            for (Player online : Bukkit.getOnlinePlayers()) {
-////                                online.showPlayer(player);
+////                                online.showPlayer(victim);
 //                            ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 //                            PacketContainer hide_armor_packet = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
-//                            hide_armor_packet.getIntegers().write(0, player.getEntityId());
+//                            hide_armor_packet.getIntegers().write(0, victim.getEntityId());
 //                            List<Pair<EnumWrappers.ItemSlot, ItemStack>> list = new ArrayList<>();
-//                                list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, player.getInventory().getHelmet()));
-//                                list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, player.getInventory().getChestplate()));
-//                                list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, player.getInventory().getLeggings()));
-//                                list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, player.getInventory().getBoots()));
-//                                list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, player.getInventory().getItemInMainHand()));
+//                                list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, victim.getInventory().getHelmet()));
+//                                list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, victim.getInventory().getChestplate()));
+//                                list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, victim.getInventory().getLeggings()));
+//                                list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, victim.getInventory().getBoots()));
+//                                list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, victim.getInventory().getItemInMainHand()));
 //                                hide_armor_packet.getSlotStackPairLists().write(0, list);
 //                                try {
 //                                    protocolManager.sendServerPacket(online, hide_armor_packet);
@@ -1131,27 +1133,27 @@ public class MyListener implements Listener {
             }
             else if (event.getDamager() instanceof Arrow) {
                 if (event.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
-//                    Player player = (Player) entity;
+//                    Player victim = (Player) victimEntity;
                     Arrow arrow = (Arrow) event.getDamager();
                     ProjectileSource projectileSource =arrow.getShooter();
                     BukkitScheduler scheduler = getServer().getScheduler();
                     scheduler.scheduleSyncDelayedTask(plugin, () -> {
-                        player.setArrowsInBody(0);
+                        victim.setArrowsInBody(0);
                     }, 0L);
                     if (projectileSource instanceof Player) {
                         Player damager = (Player) projectileSource;
                         UUID damagerUUID = damager.getUniqueId();
-//                        Player player = (Player) event.getEntity();
-                        registerPlayerHit(player, damager);
-                        if (!attacked.contains(player.getUniqueId())) {
-                            attacked.add(player.getUniqueId());
+//                        Player victim = (Player) event.getEntity();
+                        registerPlayerHit(victim, damager);
+                        if (!attacked.contains(victim.getUniqueId())) {
+                            attacked.add(victim.getUniqueId());
 //                            BukkitScheduler scheduler = getServer().getScheduler();
                             scheduler.scheduleSyncDelayedTask(getPlugin(), () -> {
-                                attacked.remove(player.getUniqueId());
+                                attacked.remove(victim.getUniqueId());
                                 // Do something
                             }, 10L);
                             shootEnergyAccumulate(damager);
-                            attackedEnergyAccumulate(player);
+                            attackedEnergyAccumulate(victim);
                             if (getScore(damager, "class") == 15) {
                                 if (elaina_mode.containsKey(damagerUUID)) {
                                     if (elaina_mode.get(damagerUUID) == 0) {
@@ -1159,7 +1161,7 @@ public class MyListener implements Listener {
                                     }
                                 }
                             }
-                            if (getScore(player, "class") == 15) {
+                            if (getScore(victim, "class") == 15) {
                                 if (elaina_mode.containsKey(playerUUID)) {
                                     if (elaina_mode.get(playerUUID) == 2) {
                                         elaina_enemy.put(playerUUID, damagerUUID);
@@ -1185,16 +1187,16 @@ public class MyListener implements Listener {
                                     null_passive_skill_1_increase(damager);
                                     break;
                                 case 12:
-                                    shaman_passive_skill_1_increase(damager, player);
-//                                    PassiveSkills.shaman_passive_skill_2_increase(damager, player);
+                                    shaman_passive_skill_1_increase(damager, victim);
+//                                    PassiveSkills.shaman_passive_skill_2_increase(damager, victim);
                                     break;
                                 case 15:
                                     break;
                                 case 28:
-                                    skeleton_lord_passive_skill_2(damager, player);
+                                    skeleton_lord_passive_skill_2(damager, victim);
                                     break;
                             }
-                            switch (getScore(player, "class")) {
+                            switch (getScore(victim, "class")) {
 //                        case 2:
 //                            herobrine_passive_skill_1(damager);
 //                            break;
@@ -1202,34 +1204,34 @@ public class MyListener implements Listener {
 //                            null_passive_skill_1(damager);
 //                            break;
                                 case 1:
-                                    zombie_passive_skill_2(player);
+                                    zombie_passive_skill_2(victim);
                                     break;
                                 case 12:
-//                            PassiveSkills.shaman_passive_skill_1_increase(damager, player);
-                                    shaman_passive_skill_2_increase(damager, player);
+//                            PassiveSkills.shaman_passive_skill_1_increase(damager, victim);
+                                    shaman_passive_skill_2_increase(damager, victim);
                                     break;
 //                        case 15:
 //                            break;
 //                        case 28:
-//                            skeleton_lord_passive_skill_2(damager, player);
+//                            skeleton_lord_passive_skill_2(damager, victim);
 //                            break;
                             }
-//                            switch (MegaWallsClasses.getScore(player, "class")) {
+//                            switch (MegaWallsClasses.getScore(victim, "class")) {
 //                                case 1:
-//                                    MegaWallsClasses.addScore(player, "energy", 1);
+//                                    MegaWallsClasses.addScore(victim, "energy", 1);
 //                                    break;
 //                                case 5:
 //                                    for (Player online : Bukkit.getOnlinePlayers()) {
-////                                online.showPlayer(player);
+////                                online.showPlayer(victim);
 //                                        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 //                                        PacketContainer hide_armor_packet = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
-//                                        hide_armor_packet.getIntegers().write(0, player.getEntityId());
+//                                        hide_armor_packet.getIntegers().write(0, victim.getEntityId());
 //                                        List<Pair<EnumWrappers.ItemSlot, ItemStack>> list = new ArrayList<>();
-//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, player.getInventory().getHelmet()));
-//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, player.getInventory().getChestplate()));
-//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, player.getInventory().getLeggings()));
-//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, player.getInventory().getBoots()));
-//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, player.getInventory().getItemInMainHand()));
+//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, victim.getInventory().getHelmet()));
+//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, victim.getInventory().getChestplate()));
+//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, victim.getInventory().getLeggings()));
+//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, victim.getInventory().getBoots()));
+//                                        list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, victim.getInventory().getItemInMainHand()));
 //                                        hide_armor_packet.getSlotStackPairLists().write(0, list);
 //                                        try {
 //                                            protocolManager.sendServerPacket(online, hide_armor_packet);
@@ -1241,13 +1243,13 @@ public class MyListener implements Listener {
 //
 //                            }
 
-//                            testSkillReady(player);
+//                            testSkillReady(victim);
                         }
                         if (getScore(damager, "class") == 9) {
                             if (!Cooldown.player_passiveSkill1Cooldown.containsKey(damager.getUniqueId())) {
-                                player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 100, 2, true, true));
-                                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100 , 0, true, true));
-//                            player.setMetadata("PassiveSkill1", new FixedMetadataValue(plugin, MegaWallsClasses.time));
+                                victim.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 100, 2, true, true));
+                                victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100 , 0, true, true));
+//                            victim.setMetadata("PassiveSkill1", new FixedMetadataValue(plugin, MegaWallsClasses.time));
                                 Cooldown.player_passiveSkill1Cooldown.put(damager.getUniqueId(), 170);
                             }
                             else {
@@ -1256,7 +1258,7 @@ public class MyListener implements Listener {
                         }
                         else if (getClassEnum(damager) == ClassEnum.ENTITY_303) {  // not sure counts if someone hit the enemy first
                             if (random(1, 100) <= 35) {
-                                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 30, 2, true, true));
+                                victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 30, 2, true, true));
                                 damager.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 50, 2, true, true));
                             }
                         }
@@ -1265,8 +1267,8 @@ public class MyListener implements Listener {
                 else if (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
                     Arrow arrow = (Arrow) event.getDamager();
                     Player damager = (Player) arrow.getShooter();
-                    registerPlayerHit(player, damager);
-//                    Player player = (Player) event.getEntity();
+                    registerPlayerHit(victim, damager);
+//                    Player victim = (Player) event.getEntity();
 //                    String teamName = getPlayerTeam(damager).getName();
 //                    DamageSource damageSource = new DamageSource() {
 //                        @Override
@@ -1310,28 +1312,28 @@ public class MyListener implements Listener {
 //                        }
 //                    };
                     event.setDamage(0.0000000000000000000000000000000000000000000007006492321625); //0.0000000000000000000000000000000000000000000007006492321625
-//                    if (!getPlayerTeam(player).getName().equals(teamName)) {
-//                        player.damage(111, );
-                    addHealth(player, -6);
-                    attackedEnergyAccumulate(player);
-                    player.sendMessage(ChatColor.RED + "!爆炸箭! " + ChatColor.RED + "HP " + ChatColor.YELLOW + "-6");
+//                    if (!getPlayerTeam(victim).getName().equals(teamName)) {
+//                        victim.damage(111, );
+                    addHealth(victim, -6);
+                    attackedEnergyAccumulate(victim);
+                    victim.sendMessage(ChatColor.RED + "!爆炸箭! " + ChatColor.RED + "HP " + ChatColor.YELLOW + "-6");
 
-//                        switch (MegaWallsClasses.getScore(player, "class")) {
+//                        switch (MegaWallsClasses.getScore(victim, "class")) {
 //                            case 1:
-//                                MegaWallsClasses.addScore(player, "energy", 1);
+//                                MegaWallsClasses.addScore(victim, "energy", 1);
 //                                break;
 //                            case 5:
 //                                for (Player online : Bukkit.getOnlinePlayers()) {
-////                                online.showPlayer(player);
+////                                online.showPlayer(victim);
 //                                    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 //                                    PacketContainer hide_armor_packet = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
-//                                    hide_armor_packet.getIntegers().write(0, player.getEntityId());
+//                                    hide_armor_packet.getIntegers().write(0, victim.getEntityId());
 //                                    List<Pair<EnumWrappers.ItemSlot, ItemStack>> list = new ArrayList<>();
-//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, player.getInventory().getHelmet()));
-//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, player.getInventory().getChestplate()));
-//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, player.getInventory().getLeggings()));
-//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, player.getInventory().getBoots()));
-//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, player.getInventory().getItemInMainHand()));
+//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, victim.getInventory().getHelmet()));
+//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, victim.getInventory().getChestplate()));
+//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, victim.getInventory().getLeggings()));
+//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, victim.getInventory().getBoots()));
+//                                    list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, victim.getInventory().getItemInMainHand()));
 //                                    hide_armor_packet.getSlotStackPairLists().write(0, list);
 //                                    try {
 //                                        protocolManager.sendServerPacket(online, hide_armor_packet);
@@ -1342,7 +1344,7 @@ public class MyListener implements Listener {
 //                                break;
 
 //                        }
-//                        testSkillReady(player);
+//                        testSkillReady(victim);
 //                    }
                 }
             }
@@ -1351,7 +1353,7 @@ public class MyListener implements Listener {
                     Skeleton skeleton = (Skeleton) event.getDamager();
                     if (skeleton_skeleton_lord.containsKey(skeleton.getUniqueId())) {
                         Player skeleton_lord = getPlayer(skeleton_skeleton_lord.get(skeleton.getUniqueId()));
-                        registerPlayerHit(player, skeleton_lord);
+                        registerPlayerHit(victim, skeleton_lord);
                         if (random(1,100) <= 8) {
                             addHealth(skeleton_lord, 3);
                             skeleton_lord.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5 * 20, 1, false, false));  // original 5
@@ -1365,22 +1367,22 @@ public class MyListener implements Listener {
                 UUID tntPrimedUUID = tntPrimed.getUniqueId();
                 if (tnt_creeper.containsKey(tntPrimedUUID)) {
                     event.setDamage(0.00001);
-//                    if (!isPlayerPlayableEnemy(player, getPlayer(tnt_creeper.get(tntPrimedUUID)))) {
+//                    if (!isPlayerPlayableEnemy(victim, getPlayer(tnt_creeper.get(tntPrimedUUID)))) {
 ////                        event.setDamage(0.00001);
 //                    }
                     Player damager = getPlayer(tnt_creeper.get(tntPrimedUUID));
-                    if (isPlayerPlayableEnemy(player, damager)) {
-                        registerPlayerHit(player, damager);
+                    if (isPlayerPlayableEnemy(victim, damager)) {
+                        registerPlayerHit(victim, damager);
                         if (tntPrimed.hasMetadata("onPeople")) {
-                            addHealth(player, -4);
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 100, 0, false, false));
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 80, 1, false, false));
+                            addHealth(victim, -4);
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 100, 0, false, false));
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 80, 1, false, false));
                         }
                         else {
 //                            event.setDamage(2);
-                            addHealth(player, -2);
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 50, 0, false, false));
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 40, 1, false, false));
+                            addHealth(victim, -2);
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 50, 0, false, false));
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 40, 1, false, false));
                         }
                     }
                 }
@@ -1392,12 +1394,12 @@ public class MyListener implements Listener {
                 if (projectileSource instanceof Player) {
                     Player damager = (Player) projectileSource;
                     UUID damagerUUID = damager.getUniqueId();
-                    registerPlayerHit(player, damager);
+                    registerPlayerHit(victim, damager);
 
                     AbstractCustomClass abstractCustomClass = ClassEnum.getClassByPlayer(damager);  //todo 别写Player了，写victim，要不然天天写bug
                     abstractCustomClass.onEntityDamageByEntity(event);
 
-                    shootEnergyAccumulate(damager); //todo a 30 energy bonus if hit a player and with the 20 by energy accumulate, the total is 50，但是我没在event看到什么attackEnergyAccumulate的代码 ，好吧发现了就在这里这一行
+                    shootEnergyAccumulate(damager); //todo a 30 energy bonus if hit a victim and with the 20 by energy accumulate, the total is 50，但是我没在event看到什么attackEnergyAccumulate的代码 ，好吧发现了就在这里这一行
                 }
 //                if (trident_drownking.containsKey(tridentUUID)) {
 ////                    UUID damagerUUID = trident_drownking.get(tridentUUID);
@@ -1407,9 +1409,19 @@ public class MyListener implements Listener {
 //                }
 
             }
+
+            if (nullInvisibilityPlayers.contains(playerUUID)) {  //getScore(player, "class") == 5
+                null_passive_skill_disable(victim, 3);
+            }
+            if (getScore(victim, "class") == 15) {
+                elaina_passive_skill_2_disable(victim);
+            }
+            else if (getClassEnum(victim) == ClassEnum.ZOMBIE) {
+                zombie_passive_skill_1(victim);
+            }
         }
-        else if (entity instanceof Wither) {
-            Wither wither = (Wither) entity;
+        else if (victimEntity instanceof Wither) {
+            Wither wither = (Wither) victimEntity;
 //            Entity damagerEntity = event.getDamager();
             if (damagerEntity instanceof Player) {
                 Player damager = (Player) damagerEntity;
@@ -1419,8 +1431,8 @@ public class MyListener implements Listener {
                 }
             }
         }
-        else if (entity instanceof Skeleton) {
-            Skeleton skeleton = (Skeleton) entity;
+        else if (victimEntity instanceof Skeleton) {
+            Skeleton skeleton = (Skeleton) victimEntity;
             UUID skeletonUUID = skeleton.getUniqueId();
             if (damagerEntity instanceof Player) {
                 Player damager = (Player) damagerEntity;
@@ -1443,6 +1455,7 @@ public class MyListener implements Listener {
     dread lord wither skull
     disable entity_303 only break block explosion from damaging entities
      */
+    //todo 为什么不检查cancelled和0.1的kb伤害?迟早把这个移到上面的那里，最好是听ai的建议预处理然后交给职业自己操作
     public void onEntityDamagedByEntity(EntityDamageByEntityEvent event) {
 //        Bukkit.broadcastMessage("damage");
         Entity entity = event.getEntity();
@@ -1548,15 +1561,15 @@ public class MyListener implements Listener {
                     }
                 }
             }
-            if (nullInvisibilityPlayers.contains(playerUUID)) {  //getScore(player, "class") == 5
-                null_passive_skill_disable(player, 3);
-            }
-            if (getScore(player, "class") == 15) {
-                elaina_passive_skill_2_disable(player);
-            }
-            else if (getClassEnum(player) == ClassEnum.ZOMBIE) {
-                zombie_passive_skill_1(player);
-            }
+//            if (nullInvisibilityPlayers.contains(playerUUID)) {  //getScore(player, "class") == 5
+//                null_passive_skill_disable(player, 3);
+//            }
+//            if (getScore(player, "class") == 15) {
+//                elaina_passive_skill_2_disable(player);
+//            }
+//            else if (getClassEnum(player) == ClassEnum.ZOMBIE) {
+//                zombie_passive_skill_1(player);
+//            }
         }
 //        if (entity instanceof WitherSkull) {
 //            WitherSkull witherSkull = (WitherSkull) event.getEntity();

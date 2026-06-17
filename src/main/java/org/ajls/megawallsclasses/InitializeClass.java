@@ -4,6 +4,7 @@ import org.ajls.lib.advanced.HaxhMap;
 import org.ajls.lib.references.Time;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
+import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
 import org.bukkit.*;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.enchantments.Enchantment;
@@ -169,6 +170,8 @@ public class InitializeClass {
                 otherPlayer.showPlayer(MegaWallsClasses.getPlugin(), player);
             }
         }, 20*3);
+
+        PlayerDataManager.getPlayerData(player).activeSpawnProtection();
 
 //        PassiveSkills.null_hide_armor(player);
     }
