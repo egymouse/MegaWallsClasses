@@ -62,8 +62,8 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 服务器清爽化结构化 插件烦人的都重写，cacutils也写好来 比如scp330 railgun water attribute中depend的麻烦 还有Protocolib的区块数据
     //todo 配置文件先玩家再数据，这样一读就读玩家所有数据，直接加载到内存
     //todo 加入dummy player防止玩家退出游戏像ec一样暴毙，就和afk的玩家一样
-    //todo 加入格挡
-    //todo 玩家只有未在无敌帧时被打加能量
+    //todo 加入格挡，副手变成盾
+    //todo 玩家只有未在无敌帧时被打加能量（比如僵尸被打加能量只能加一次，其他职业打别人只有第一个打的才能加）
 
 
     @Override

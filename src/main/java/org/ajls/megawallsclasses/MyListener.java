@@ -14,6 +14,7 @@ import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
 import org.ajls.megawallsclasses.nmsmodify.TamedTeleport;
 import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
 import org.ajls.megawallsclasses.rating.Rating;
+import org.ajls.megawallsclasses.types.DamageType;
 import org.ajls.megawallsclasses.utils.EventU;
 import org.ajls.megawallsclasses.utils.InventoryIterator;
 import org.ajls.megawallsclasses.utils.PotionU;
@@ -24,6 +25,7 @@ import org.bukkit.block.SculkSensor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -967,7 +969,7 @@ public class MyListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onStrengthTest(EntityDamageByEntityEvent event) {
+    public void onStrengthTest(EntityDamageByEntityEvent event) {  //todo 改成hb 95%的增伤
         Entity entity = event.getEntity();
         Entity damagerEntity = event.getDamager();
         if (damagerEntity instanceof LivingEntity) {
@@ -2766,11 +2768,31 @@ public class MyListener implements Listener {
         blast_arrows.remove(arrow);
     }
 
+    public static HashMap<EntityDamageEvent, DamageType> damage_context = new HashMap<>();  //如果EntityDamageEvent.DamageCause.CUSTOM，直接来这里查找真正的伤害原因
+
     public static void addHealth(LivingEntity entity, double health) {
-        double absorptionPlayer = entity.getAbsorptionAmount();
-        double healthPlayer = entity.getHealth();
+        addHealth(entity,null,  health);
+    }
+
+    public static void addHealth(LivingEntity victim, LivingEntity damager, double health) {  //造成真伤的意思 //因为是真伤/回血所以不受神秘代码的阻拦，也就是不处理事件是否取消/伤害修改，只做通知好让职业加能量
+        //todo hb力量单独处理
+        double absorptionPlayer = victim.getAbsorptionAmount();
+        double healthPlayer = victim.getHealth();
         if (health < 0 ) {  //damage
-            getServer().getPluginManager().callEvent(new EntityDamageEvent(entity, EntityDamageEvent.DamageCause.CUSTOM, -health));
+
+            EntityDamageEvent event;
+            if (damager == null) {
+                event = new EntityDamageEvent(victim, EntityDamageEvent.DamageCause.CUSTOM, -health);
+            }
+            else {
+                event = new EntityDamageByEntityEvent(victim, damager, EntityDamageEvent.DamageCause.CUSTOM, -health);
+            }
+            damage_context.put(event, DamageType.TRUE);
+
+            getServer().getPluginManager().callEvent(event); //这个只给cacgen来提示流血多少以及lib来处理造成的最高伤害，真正是否是真伤的handle要自己来处理
+
+            damage_context.remove(event);
+
             if (absorptionPlayer >= -health) { // absorption able to absorb damage
                 absorptionPlayer += health;
                 health = 0;
@@ -2778,31 +2800,27 @@ public class MyListener implements Listener {
             else {  // absorption not able to absorb damage
                 health += absorptionPlayer; // damage remove absorption amount
                 absorptionPlayer = 0;
-//                healthPlayer += health; // damage to player's health
             }
+            victim.setAbsorptionAmount(absorptionPlayer);
         }
-        entity.setAbsorptionAmount(absorptionPlayer);
+        else { //healing
+            getServer().getPluginManager().callEvent(new EntityRegainHealthEvent(victim, health, EntityRegainHealthEvent.RegainReason.CUSTOM));
+        }
         healthPlayer += health;  // damage to player's health
-//        else { // healing
-//            healthPlayer += health;
-//        }
-//        healthPlayer = healthPlayer + health;
-        if (0 < healthPlayer && healthPlayer < entity.getMaxHealth()) {
-            entity.setHealth(healthPlayer);
-//            EntityRegainHealthEvent entityRegainHealthEvent = new EntityRegainHealthEvent(entity, health, EntityRegainHealthEvent.RegainReason.CUSTOM);
-//            Bukkit.getServer().getPluginManager().callEvent(entityRegainHealthEvent);
+        if (0 < healthPlayer && healthPlayer < victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+            victim.setHealth(healthPlayer);
         }
         else if (healthPlayer <= 0) {
-            if (entity instanceof Player) {
-                Player player = (Player) entity;
+            if (victim instanceof Player) {
+                Player player = (Player) victim;
 //                playerDeathEvent(player);  //disabled because call event will handle death
             }
             else {
-                entity.setHealth(0);
+                victim.setHealth(0);
             }
         }
         else {
-            entity.setHealth(entity.getMaxHealth());
+            victim.setHealth(victim.getMaxHealth());
         }
     }
 
