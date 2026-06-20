@@ -1,6 +1,7 @@
 package org.ajls.megawallsclasses;
 
 import org.ajls.cactusgenerator.cosmetics.Bloody;
+import org.ajls.lib.api.LIbAPI;
 import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.commands.*;
 import org.ajls.megawallsclasses.classsystem.ClassNamesConfig;
@@ -81,6 +82,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         Bloody.registerPlayerDeathItems(CustomEventsOld.getPlayer_deathItems());
         ClassNamesConfig.getInstance(this);  //其实也不用写，反正调用时会自动传入instance
         getServer().getPluginManager().registerEvents(new MyListener(), this);
+        LIbAPI.registerListener(new MyListener());
         new SpawnProtectionListener();
         getCommand("class").setExecutor(new ChangeClass());
         getCommand("blue").setExecutor(new Blue());

@@ -1,7 +1,9 @@
 package org.ajls.megawallsclasses;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+import net.kyori.adventure.text.Component;
 import org.ajls.lib.advanced.HashMapInteger;
+import org.ajls.lib.api.PriorityEventHandler;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.lib.utils.PlayerU;
 import org.ajls.lib.utils.ScoreboardU;
@@ -23,6 +25,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.SculkSensor;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.damage.DamageSource;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
@@ -214,6 +217,15 @@ public class MyListener implements Listener {
         PlayerDataManager.register(player);
 
     }
+
+//    @PriorityEventHandler(bukkitPriority = EventPriority.NORMAL)
+//    public void test(PlayerJoinEvent event) {
+//        Bukkit.broadcast(Component.text("NORMAL"));
+//    }
+//    @PriorityEventHandler(bukkitPriority = EventPriority.MONITOR)
+//    public void test3(PlayerJoinEvent event) {
+//        Bukkit.broadcast(Component.text("MONITOR"));
+//    }
 
 
     @EventHandler
@@ -2782,10 +2794,16 @@ public class MyListener implements Listener {
 
             EntityDamageEvent event;
             if (damager == null) {
-                event = new EntityDamageEvent(victim, EntityDamageEvent.DamageCause.CUSTOM, -health);
+                DamageSource source = DamageSource.builder(org.bukkit.damage.DamageType.GENERIC).build();
+                event = new EntityDamageEvent(victim, EntityDamageEvent.DamageCause.CUSTOM, source, -health);
+//                event = new EntityDamageEvent(victim, source, -health);
             }
             else {
-                event = new EntityDamageByEntityEvent(victim, damager, EntityDamageEvent.DamageCause.CUSTOM, -health);
+                DamageSource source = DamageSource.builder(org.bukkit.damage.DamageType.GENERIC)
+                        .withCausingEntity(damager)
+                        .withDirectEntity(damager)
+                        .build();
+                event = new EntityDamageByEntityEvent(victim, damager, EntityDamageEvent.DamageCause.CUSTOM, source, -health);
             }
             damage_context.put(event, DamageType.TRUE);
 

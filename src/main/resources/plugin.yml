@@ -44,4 +44,4 @@ permissions:
   energetic:
     description: Allows energetic command
     default: op
-depend: [ProtocolLib, TractorCompass]
+depend: [ProtocolLib, TractorCompass, Lib]

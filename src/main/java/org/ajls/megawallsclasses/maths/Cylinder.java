@@ -21,7 +21,7 @@ public class Cylinder {
                 Vector otherPlayerPos = otherPlayer.getLocation().toVector();
                 Vector relativePos = otherPlayerPos.subtract(playerPos);
                 double relativeDistance = relativePos.dot(playerDirection);
-                if (relativeDistance < distance) {
+                if (relativeDistance < distance && relativeDistance >= 0) {
                     double euclideanDistanceSquared = relativePos.lengthSquared(); //otherPlayerPos.distanceSquared(playerPos);
                     double radiusSquared = euclideanDistanceSquared - relativeDistance * relativeDistance;
                     if (radiusSquared < radius * radius) { 

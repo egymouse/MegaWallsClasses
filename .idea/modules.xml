@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MegaWallsClasses.iml" filepath="$PROJECT_DIR$/MegaWallsClasses.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mega-walls-classes.iml" filepath="$PROJECT_DIR$/mega-walls-classes.iml" />
     </modules>
   </component>
 </project>

@@ -23,4 +23,6 @@ public class SnowGolemShoot {
         shooter.level().addFreshEntity(entitysnowball);
     }
 
+    //todo 试试用插件来实现
+
 }
