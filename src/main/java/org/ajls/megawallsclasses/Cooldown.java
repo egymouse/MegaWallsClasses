@@ -232,7 +232,7 @@ public class Cooldown {
         }.runTaskTimer(MegaWallsClasses.plugin, 0, 1);
          */
         BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.plugin, () -> {
-            HashSet<UUID> isHoldingTrackerCompass = org.ajls.tractorcompass.MyListener.getIsHoldingTrackerCompass();
+            HashSet<UUID> isHoldingTrackerCompass = org.ajls.trackercompass.MyListener.getIsHoldingTrackerCompass();
             if (!isHoldingTrackerCompass.contains(player.getUniqueId())) {
 //                        String p1n = (number1 > 0) ? "positive" : (number1 < 0) ? "negative" : "zero";
                 String p11 = "";

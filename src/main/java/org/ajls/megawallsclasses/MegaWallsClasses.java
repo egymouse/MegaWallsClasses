@@ -34,7 +34,7 @@ import static org.ajls.megawallsclasses.ActiveSkills.block_moleBlockState;
 //import static org.ajls.megawallsclasses.PassiveSkills.nullPassiveSkillDisable;
 import static org.ajls.megawallsclasses.GameManager.wither_team;
 import static org.ajls.megawallsclasses.ScoreboardsAndTeams.*;
-import static org.ajls.tractorcompass.MyListener.setTracked_teams;
+import static org.ajls.trackercompass.MyListener.setTracked_teams;
 
 public final class MegaWallsClasses extends JavaPlugin {
     public static MegaWallsClasses plugin;
@@ -65,6 +65,11 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 加入dummy player防止玩家退出游戏像ec一样暴毙，就和afk的玩家一样
     //todo 加入格挡，副手变成盾
     //todo 玩家只有未在无敌帧时被打加能量（比如僵尸被打加能量只能加一次，其他职业打别人只有第一个打的才能加）
+    //todo 箭矢打到队友可以穿过去
+    //todo purpur搞一个尝试attack的事件，这样可以监听尝试攻击来修改伤害，而不用被原版的this.isInvulnerableTo(damagesource)什么的束缚
+    //todo 同一队伍强dis friendly  fire
+    //todo tf修复 d服没有盔甲韧性  职业重写数值 复活到树上 骷髅白队射箭打自己 骷髅爆炸箭打别人給生命回复 复活到树叶里面
+    //todo 取消掉前冲攻击的音效
 
 
     @Override
@@ -82,7 +87,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         Bloody.registerPlayerDeathItems(CustomEventsOld.getPlayer_deathItems());
         ClassNamesConfig.getInstance(this);  //其实也不用写，反正调用时会自动传入instance
         getServer().getPluginManager().registerEvents(new MyListener(), this);
-        LIbAPI.registerListener(new MyListener());
+//        LIbAPI.registerListener(new MyListener());
         new SpawnProtectionListener();
         getCommand("class").setExecutor(new ChangeClass());
         getCommand("blue").setExecutor(new Blue());
@@ -107,6 +112,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+        world.setGameRule(GameRule.NATURAL_REGENERATION, true);
 
         //newgamerule below
 //        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);

@@ -5,7 +5,7 @@ import org.ajls.megawallsclasses.ArrayListUtils;
 import org.ajls.megawallsclasses.InventoryManager;
 import org.ajls.megawallsclasses.NameSpacedKeys;
 import org.ajls.megawallsclasses.ScoreboardsAndTeams;
-import org.ajls.tractorcompass.CompassItemStack;
+import org.ajls.trackercompass.CompassItemStack;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -80,7 +80,7 @@ public class Order implements CommandExecutor {
         setClassItem(clock);
 //        ItemStack compass = new ItemStack(Material.COMPASS);
 //        setDisplayName(compass, "compass");
-        ItemStack compass = CompassItemStack.tractorCompass.clone();
+        ItemStack compass = CompassItemStack.trackerCompass.clone();
         setDisplayName(compass, "compass");
         ItemStack diamond_pickaxe = new ItemStack(Material.DIAMOND_PICKAXE);
         setDisplayName(diamond_pickaxe, "diamond_pickaxe");

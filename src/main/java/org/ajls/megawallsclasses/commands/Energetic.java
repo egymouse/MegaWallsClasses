@@ -15,7 +15,7 @@ public class Energetic implements CommandExecutor {
     public static HashSet<UUID> energeticPlayers = new HashSet<>();
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (commandSender instanceof Player) {
+        if (commandSender instanceof Player) {  //todo 独立出一个辅助插件 比如说治疗/heal回满血这些
             Player player = (Player) commandSender;
             if (!energeticPlayers.contains(player.getUniqueId())) {
                 energeticPlayers.add(player.getUniqueId());

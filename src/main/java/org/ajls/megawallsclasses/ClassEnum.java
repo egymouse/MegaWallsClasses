@@ -98,5 +98,20 @@ public enum ClassEnum {
         int classScore = ScoreboardU.getScore(player, "class");
         return getJob(classScore);
     }
+
+
+
+    public enum ClassMinecraftVersionEnum {  //职业要指定版本来正常伤害结算
+        JAVA_OLD,
+        JAVA_NEW,
+        BEDROCK
+    }
+
+    public enum ClassCategoryEnum {
+        EASE_CATION,
+        DO_MC_ER,
+        SELFMADE,
+        FANMADE
+    }
 }
 

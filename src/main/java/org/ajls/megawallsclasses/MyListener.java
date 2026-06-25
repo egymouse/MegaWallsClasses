@@ -79,7 +79,7 @@ import static org.ajls.megawallsclasses.KillsManager.*;
 import static org.ajls.megawallsclasses.PassiveSkills.*;
 import static org.ajls.megawallsclasses.ScoreboardsAndTeams.*;
 import static org.ajls.megawallsclasses.Utils.random;
-import static org.ajls.tractorcompass.MyListener.*;
+import static org.ajls.trackercompass.MyListener.*;
 import static org.bukkit.Bukkit.*;
 
 public class MyListener implements Listener {
@@ -222,10 +222,17 @@ public class MyListener implements Listener {
 //    public void test(PlayerJoinEvent event) {
 //        Bukkit.broadcast(Component.text("NORMAL"));
 //    }
-//    @PriorityEventHandler(bukkitPriority = EventPriority.MONITOR)
-//    public void test3(PlayerJoinEvent event) {
-//        Bukkit.broadcast(Component.text("MONITOR"));
-//    }
+
+    @EventHandler(order = 1)
+    public void test3(EntityDamageEvent event) {
+         Bukkit.broadcast(Component.text("0"));
+    }
+
+    @EventHandler(order = 0)
+    public void test4(EntityDamageEvent event) {
+        Bukkit.broadcast(Component.text("1"));
+    }
+
 
 
     @EventHandler
@@ -634,7 +641,7 @@ public class MyListener implements Listener {
                 Player player = (Player) event.getWhoClicked();
                 UUID playerUUID = player.getUniqueId();
                 int index = event.getSlot() + 1;
-                if (player_damagers.get(playerUUID) == null || player_damagers.get(playerUUID).isEmpty()) {
+                if (player_damagers.get(playerUUID) == null || player_damagers.get(playerUUID).isEmpty() || true) {
                     InitializeClass.resetPlayerCondition(player);
                     ClassU.setClass(player, index);
 //                    setScore(player, "class", index);

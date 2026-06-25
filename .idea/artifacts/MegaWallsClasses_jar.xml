@@ -2,7 +2,7 @@
   <artifact type="jar" build-on-make="true" name="MegaWallsClasses:jar">
     <output-path>$PROJECT_DIR$/../../../MC/server/itself/1.20.1minigame/mw_test/plugins</output-path>
     <root id="archive" name="MegaWallsClasses.jar">
-      <element id="module-output" name="MegaWallsClasses" />
+      <element id="module-output" name="mega-walls-classes" />
     </root>
   </artifact>
 </component>
