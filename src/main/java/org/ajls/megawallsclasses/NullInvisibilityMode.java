@@ -1,12 +1,13 @@
 package org.ajls.megawallsclasses;
 
 import org.ajls.lib.advanced.HashMapInteger;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.UUID;
 
 public class NullInvisibilityMode {
-    public HashMapInteger<UUID> null_invisibility_mode = new HashMapInteger<>(3);
+    public HashMapInteger<UUID> null_invisibility_mode = new HashMapInteger<>(3);  //0 wait till invisible 1 invisible end timer  //0 default 1 wait till invisible 2 invisible end timer
     public NullInvisibilityMode() {}
     public int get(UUID uuid) {
         return null_invisibility_mode.get(uuid);

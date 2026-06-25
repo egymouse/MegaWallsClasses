@@ -66,8 +66,7 @@ public class PassiveSkills {
     }
 
     //null
-    public static HashMapInteger<UUID> null_invisibility_mode = new HashMapInteger<>(1);  //0 wait till invisible 1 invisible end timer  //0 default 1 wait till invisible 2 invisible end timer
-    public static NullInvisibilityMode nullInvisibilityMode = new NullInvisibilityMode();
+    public static NullInvisibilityMode nullInvisibilityMode = new NullInvisibilityMode(); //0 wait till invisible 1 invisible end timer  //0 default 1 wait till invisible 2 invisible end timer
     public static void null_passive_skill_1_increase(Player damager) {
         UUID damagerUUID = damager.getUniqueId();
         n5ll_invisibility.increment(damagerUUID, 3);

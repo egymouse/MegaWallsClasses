@@ -72,21 +72,19 @@ public class Cooldown {
                                 int null_mode = PassiveSkills.nullInvisibilityMode.get(uuid);
 //                                PassiveSkills.null_invisibility_mode.pageUp(uuid); //switch mode
 
-                                if (null_mode == 0) {
+                                 if (null_mode == 0) {
                                     PassiveSkills.null_passive_skill_1(player);
-                                    n5ll_invisibility.decrement(uuid);
+                                    n5ll_invisibility.decrement(uuid);  //剩余次数，不用检查是否为0，因为下面代码如果是0的话就不会激活130的冷却
                                     hashMap.put(uuid, 70);
+                                     PassiveSkills.nullInvisibilityMode.switchMode(uuid); //下面再switchMode就bug了，所以放到这个分支这里
                                 }
                                 else {
-                                    PassiveSkills.null_passive_skill_disable(player, 0);
-                                    if (MyListener.n5ll_invisibility.get(uuid) == 0) {
-//                                        hashMap.remove(uuid); //dont need because default is remove
-                                    }
-                                    else {
+                                    PassiveSkills.null_passive_skill_disable(player, 0);  //这里已经把null的mode改成0了，下面再switchMode就改回1 就bug了
+                                    if (MyListener.n5ll_invisibility.get(uuid) > 0) {
                                         hashMap.put(uuid, 130);
                                     }
                                 }
-                                PassiveSkills.nullInvisibilityMode.switchMode(uuid);  //放最后，这样给disable 时可以判断是否需要disable，比如1，2就需要，3就不需要，如果改了再disable就丢信息了，而且disable也没handle正常情况下取消的逻辑，本质上就是世界本应该同时变化的但是因为代码必然有先后所以导致的问题
+
 //                                if (player.getHealth() < 16) {
 //                                    PassiveSkills.null_passive_skill_1(player);
 //                                }
@@ -306,6 +304,7 @@ public class Cooldown {
 
 
     //todo 改更customize一点，比如传入default color 和lowtimcolor，如果都传一样的就是Forced
+    //forced就是是否要覆盖和lowtimcolor的黄色
     public static String getCooldownTime(Player player, HashMap<UUID, Integer> player_cooldown, boolean tick_or_cross, ChatColor defaultColor, boolean isActive, boolean isDefaultColorForced) {
         UUID uuid = player.getUniqueId();
         String p1n;

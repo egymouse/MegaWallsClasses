@@ -222,16 +222,16 @@ public class MyListener implements Listener {
 //    public void test(PlayerJoinEvent event) {
 //        Bukkit.broadcast(Component.text("NORMAL"));
 //    }
-
-    @EventHandler(order = 1)
-    public void test3(EntityDamageEvent event) {
-         Bukkit.broadcast(Component.text("0"));
-    }
-
-    @EventHandler(order = 0)
-    public void test4(EntityDamageEvent event) {
-        Bukkit.broadcast(Component.text("1"));
-    }
+//
+//    @EventHandler(order = 1)
+//    public void test3(EntityDamageEvent event) {
+//         Bukkit.broadcast(Component.text("0"));
+//    }
+//
+//    @EventHandler(order = 0)
+//    public void test4(EntityDamageEvent event) {
+//        Bukkit.broadcast(Component.text("1"));
+//    }
 
 
 
