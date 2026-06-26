@@ -12,6 +12,7 @@ import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.displayname.DisplayNameManager;
+import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
 import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
 import org.ajls.megawallsclasses.nmsmodify.TamedTeleport;
 import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
@@ -106,6 +107,8 @@ public class MyListener implements Listener {
     ArrayList<UUID> attacked = new ArrayList<>(); // player attacked by others and invincible
     HashMap<UUID, Location> player_deathLocation = new HashMap<>();
     static HashMap<UUID, BukkitTask> player_activeSkillReady = new HashMap<>();
+
+    public static final double KNOCKBACK_DAMAGE = 0;
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) throws InvalidMidiDataException, IOException {  //todo 溺尸王扣血 有鱿鱼药怎么算
         Player player = event.getPlayer();
@@ -1031,7 +1034,10 @@ public class MyListener implements Listener {
             }
         }
         if (event.getEntity() instanceof Player && !event.isCancelled()) {
+            Player owner = SpawnProtectionListener.getOwner(event.getDamager());
+
             Player victim = (Player) victimEntity;
+            if (PlayerU.isPlayerSameTeam(owner, victim)) {event.setDamage(KNOCKBACK_DAMAGE);}
             UUID playerUUID = victim.getUniqueId();
             if (event.getDamager() instanceof Player) {
                 Player damager = (Player) event.getDamager();
@@ -2576,7 +2582,7 @@ public class MyListener implements Listener {
             if (getScore(player, "class") != 3) {
                 activeSkill(player);
             }
-            else if (getScore(player, "class") == 3) {
+            else if (getScore(player, "class") == 3) {  //todo 搞一个d服版本骷髅
                 player.sendMessage( ChatColor.AQUA + "射箭自动触发");
             }
         }

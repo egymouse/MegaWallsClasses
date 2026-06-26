@@ -116,7 +116,7 @@ public class ScoreboardsAndTeams {
         return getPlayerTeamColor(player, true);
     }
 
-    public static boolean isPlayerSameTeam(Player player1, Player player2) {
+    public static boolean isPlayerSameTeam(Player player1, Player player2) {  //todo 整合到PlayerU
         if (player1 == null || player2 == null) return false;
         String teamName1 = ScoreboardU.getPlayerTeamName(player1, false);
         String teamName2 = ScoreboardU.getPlayerTeamName(player2, false);

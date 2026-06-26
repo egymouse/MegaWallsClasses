@@ -70,6 +70,9 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 同一队伍强dis friendly  fire
     //todo tf修复 d服没有盔甲韧性  职业重写数值 复活到树上 骷髅白队射箭打自己 骷髅爆炸箭打别人給生命回复 复活到树叶里面
     //todo 取消掉前冲攻击的音效
+    //todo playerdata npr解决
+    //todo d服龙
+    //todo 更改头顶显示名称 ClientboundPlayerInfoUpdatePacket ClientboundSetPlayerTeamPacket
 
 
     @Override

@@ -15,11 +15,11 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 
 public class SpawnProtectionListener extends BaseListener {
 
-    @EventHandler(priority = EventPriority.LOWEST)  // 这个low其实会和Lib combatO冲突，导致玩家可能伤害并未超出无敌帧攻击。。。不对，反正没检查cancelled，都会触发，无论先后，只要你有战斗意愿就触发，
+    @EventHandler(priority = EventPriority.LOWEST, order = 1)  // 这个low其实会和Lib combatO冲突，导致玩家可能伤害并未超出无敌帧攻击。。。不对，反正没检查cancelled，都会触发，无论先后，只要你有战斗意愿就触发，
 
 
 //    @PriorityEventHandler(bukkitPriority = EventPriority.LOW)
-    //todo 不对，万一lib CombatO先触发，以为被打了好疼，结果是要被取消的 那不就爆炸了，又不能改normal，要不然僵尸受伤害就解决不了了。无法解决，只能通过自己造一个凌驾于插件优先级之上的数字优先级来解决 目前只能通过改成LOWEST来和取消横扫来随机抢占了 但是我目的是希望先横扫裁决再无敌裁决  当然之后才是cps裁决 然后正常攻击
+    //done 不对，万一lib CombatO先触发，以为被打了好疼，结果是要被取消的 那不就爆炸了，又不能改normal，要不然僵尸受伤害就解决不了了。无法解决，只能通过自己造一个凌驾于插件优先级之上的数字优先级来解决 目前只能通过改成LOWEST来和取消横扫来随机抢占了 但是我目的是希望先横扫裁决再无敌裁决  当然之后才是cps裁决 然后正常攻击 done通过改index实现了
     public void onPlayerDamage(EntityDamageByEntityEvent event) {  //解决剧毒药水还是有用
         // 获取造成伤害的根源实体（攻击者）
         Entity damagerEntity = event.getDamager();
@@ -74,7 +74,7 @@ public class SpawnProtectionListener extends BaseListener {
     }
 
 
-    private Player getOwner(Entity entity) {
+    public static Player getOwner(Entity entity) {  //todo 增加骷髅王的骷髅 或者萨满的狼这种owner 或者直接用teamPlugin把实体加同一个team解决
         // 1. 情况一：直接物理攻击（拳头、剑等）
         if (entity instanceof Player) {
             return (Player) entity;
