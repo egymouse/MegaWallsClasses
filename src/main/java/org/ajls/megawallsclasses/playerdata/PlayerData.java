@@ -3,6 +3,7 @@ package org.ajls.megawallsclasses.playerdata;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.ajls.lib.Lib;
 import org.ajls.megawallsclasses.MegaWallsClasses;
+import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -11,6 +12,8 @@ import java.util.UUID;
 public class PlayerData {
     private Player player;
     private UUID uuid;
+    private AbstractCustomClass customClass;
+
 
     public void setPlayer(Player player) {
         this.player = player;

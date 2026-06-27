@@ -42,7 +42,7 @@ public class DisplayNameManager {
         return getCustomName(player);  //todo add not null
     }
     public static Component getCustomName(Player player) {
-        String classSimpleName = ClassEnum.getClassByPlayer(player).getClassShortName();
+        String classSimpleName = ClassEnum.getCustomClassByPlayer(player).getClassShortName();
         String playerName = player.getName();
         ChatColor teamChatColor = ScoreboardU.getPlayerTeamColor(player, true);
         TextColor teamTextColor = ScoreboardU.getPlayerTeamTextColor(player, true);

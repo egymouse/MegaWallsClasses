@@ -38,7 +38,7 @@ public enum ClassEnum {
 //    NAC, //not a class
 
 
-    DRAGON(311);  //todo 改成每个玩家一个职业instance 存储在Playerdata里面
+    DRAGON(311, new DragonClass());  //todo 改成每个玩家一个职业instance 存储在Playerdata里面
 
     public final int classId;
     public final AbstractCustomClass customClass;
@@ -72,7 +72,7 @@ public enum ClassEnum {
      * @param jobId 职业ID
      * @return 对应的枚举，找不到返回null
      */
-    public static ClassEnum getByJobId(int jobId) {
+    public static ClassEnum getClassEnumByClassID(int jobId) {
         ClassEnum classEnum = JOB_CACHE.get(jobId);
         if (classEnum == null) {
 //            Bukkit.broadcastMessage("有人无职转生了bruh");
@@ -84,7 +84,7 @@ public enum ClassEnum {
     }
 
     // 核心：通过积分榜分数获取职业（唯一判断逻辑）
-    public static AbstractCustomClass getJob(int classScore) {
+    public static AbstractCustomClass getCustomClassByClassID(int classScore) {
 //        for (ClassEnum factory : values()) {
 //            if (factory.classId == classScore) {
 //                return factory.customClass;
@@ -93,13 +93,18 @@ public enum ClassEnum {
 //        return WARRIOR.job; // 默认职业
 //
 //
-        ClassEnum classEnum = getByJobId(classScore);
+        ClassEnum classEnum = getClassEnumByClassID(classScore);
         return classEnum.customClass;
     }
 
-    public static AbstractCustomClass getClassByPlayer(Player player) {
+    public static AbstractCustomClass getCustomClassByPlayer(Player player) {
         int classScore = ScoreboardU.getScore(player, "class");
-        return getJob(classScore);
+        return getCustomClassByClassID(classScore);
+    }
+
+    public static ClassEnum getClassEnumByPlayer(Player player) {
+        int classScore = ScoreboardU.getScore(player, "class");
+        return getClassEnumByClassID(classScore);
     }
 
 

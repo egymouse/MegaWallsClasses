@@ -20,9 +20,12 @@ import org.ajls.megawallsclasses.types.DamageType;
 import org.ajls.megawallsclasses.utils.EventU;
 import org.ajls.megawallsclasses.utils.InventoryIterator;
 import org.ajls.megawallsclasses.utils.PotionU;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.SculkSensor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.damage.DamageSource;
@@ -368,7 +371,7 @@ public class MyListener implements Listener {
         Material material = itemStack.getType();
         UUID playerUUID = player.getUniqueId();
         if (material == Material.TRIDENT) {
-            ClassEnum.getClassByPlayer(player).onPlayerPickupArrow(event);
+            ClassEnum.getCustomClassByPlayer(player).onPlayerPickupArrow(event);
 //            if (ClassU.getClass(player) == 10) {
 //                event.setCancelled(true);
 //////                item.remove();
@@ -585,34 +588,36 @@ public class MyListener implements Listener {
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
+            ClassEnum.getCustomClassByPlayer(player).onEntityShootBow(event);
             if (getScore(player, "class") == 3 && getScore(player, "energy") >= 100) {
 //                addHealth(player, 7);
-                Arrow arrow = (Arrow) event.getProjectile();
+                if (event.getProjectile() instanceof Arrow arrow) {
 //                UUID uuid = arrow.getUniqueId();
-                blast_arrows.put(arrow, player);
-                BukkitScheduler scheduler = getServer().getScheduler();
-                BukkitTask task = scheduler.runTaskTimer(getPlugin(), () -> {
+                    blast_arrows.put(arrow, player);
+                    BukkitScheduler scheduler = getServer().getScheduler();
+                    BukkitTask task = scheduler.runTaskTimer(getPlugin(), () -> {
 
-                    Particle.DustOptions dustOptions = new Particle.DustOptions(Color.RED, 1.0F);
-                    getWorld("world").spawnParticle(Particle.DUST, arrow.getLocation(), 1, dustOptions);
+                        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.RED, 1.0F);
+                        getWorld("world").spawnParticle(Particle.DUST, arrow.getLocation(), 1, dustOptions);
 
-                    // Do something
+                        // Do something
 //                    if (arrow.isOnGround() || arrow.isDead() || arrow.isInBlock()) {;
 //                        scheduler.cancelTask(t);
 //                    }
 
-                }, 0L, 1L);
-                tasks.put(arrow.getUniqueId(), task);
+                    }, 0L, 1L);
+                    tasks.put(arrow.getUniqueId(), task);
 //                autoEnergyAccumulation(player, 1, 20);
-                player.playSound(player, Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
+                    player.playSound(player, Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
 
-                player.sendMessage(ChatColor.RED + "爆炸箭");
-                setScore(player, "energy", 0);
-                player.setLevel(0);
-                if (ClassU.isTransformationMaster(player)) {
-                    transformation_master_active_skill(player);
+                    player.sendMessage(ChatColor.RED + "爆炸箭");
+                    setScore(player, "energy", 0);
+                    player.setLevel(0);
+                    if (ClassU.isTransformationMaster(player)) {
+                        transformation_master_active_skill(player);
+                    }
+                    addEnergy(player, 0);
                 }
-                addEnergy(player, 0);
             }
         }
     }
@@ -1063,7 +1068,7 @@ public class MyListener implements Listener {
                                 break;
                             case 311:
                                 if (event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
-                                    DragonClass dragonClass = (DragonClass) ClassEnum.getClassByPlayer(damager);
+                                    DragonClass dragonClass = (DragonClass) ClassEnum.getCustomClassByPlayer(damager);
                                     if (dragonClass.combustPlayers_dragons.contains(damagerUUID, victim.getUniqueId())) {
                                         addHealth(damager, org.ajls.lib.utils.EventU.getFinalDamage(event) * 1.5);
                                     }
@@ -1180,6 +1185,14 @@ public class MyListener implements Listener {
                                     break;
                                 case 28:
                                     skeleton_lord_passive_skill_2(damager, victim);
+                                    break;
+                                case 311:
+                                    if (DragonClass.arrowNetherFire.contains(arrow.getUniqueId())) {
+                                        if (victim.getFireTicks() < 100) {
+                                            victim.setFireTicks(100);
+                                        }
+                                        DragonClass.registerCombust(damager, victim);
+                                    }
                                     break;
                             }
                             switch (getScore(victim, "class")) {
@@ -1382,7 +1395,7 @@ public class MyListener implements Listener {
                     UUID damagerUUID = damager.getUniqueId();
                     registerPlayerHit(victim, damager);
 
-                    AbstractCustomClass abstractCustomClass = ClassEnum.getClassByPlayer(damager);  //todo 别写Player了，写victim，要不然天天写bug
+                    AbstractCustomClass abstractCustomClass = ClassEnum.getCustomClassByPlayer(damager);  //todo 别写Player了，写victim，要不然天天写bug
                     abstractCustomClass.onEntityDamageByEntity(event);
 
                     shootEnergyAccumulate(damager); //todo a 30 energy bonus if hit a victim and with the 20 by energy accumulate, the total is 50，但是我没在event看到什么attackEnergyAccumulate的代码 ，好吧发现了就在这里这一行
@@ -1685,6 +1698,46 @@ public class MyListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onEntityCombustByEntity(EntityCombustByEntityEvent event) {
+        Entity combusterEntity = event.getCombuster();
+        if (combusterEntity instanceof Player combusterPlayer) {
+            ClassEnum.getCustomClassByPlayer(combusterPlayer).onEntityCombustByEntity(event);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        // 【性能优化】如果坐标没有跨方块，直接跳过，防止刷屏  //不行，万一这个方块刚刚被替换/变回去呢
+//        if (event.getFrom().getBlockX() == event.getTo().getBlockX() &&
+//                event.getFrom().getBlockY() == event.getTo().getBlockY() &&
+//                event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
+//            return;
+//        }
+
+        Location locationTo = event.getTo();
+
+        Player player = event.getPlayer();
+        // 获取玩家脚下的方块（注意：Y坐标减1）
+        Block floorBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        Location floorLoc = floorBlock.getLocation();
+
+        // 检查这个位置是否在被替换的集合中
+        if (DragonClass.netherrack_dragon.containsKey(floorLoc)) {
+            // 触发踩踏逻辑！
+            // 这里可以根据你的需求选择方案 A 或 B（见下文）
+            Pair<BlockState, UUID> blockState_UUID = DragonClass.netherrack_dragon.get(floorLoc);
+            if (player.getFireTicks() < 100) {
+                player.setFireTicks(100);
+            }
+            UUID uuid = blockState_UUID.getRight();
+            Player dragon = Bukkit.getPlayer(uuid);
+            if (dragon != null) {
+                DragonClass.registerCombust(player, dragon);
+            }
+        }
+    }
+
 //    @Deprecated
 //    HashMap<UUID, Integer> drownking_tridentThrownSlot = new HashMap<>();
     @EventHandler
@@ -1710,7 +1763,7 @@ public class MyListener implements Listener {
 //                if (!(projectile.getShooter() instanceof Player player)) return;
 
                 // 1. 获取职业（你现成的方法）
-                AbstractCustomClass abstractCustomClass = ClassEnum.getClassByPlayer(player);
+                AbstractCustomClass abstractCustomClass = ClassEnum.getCustomClassByPlayer(player);
                 // 2. 只执行溺尸王的逻辑，其他职业自动跳过
                 abstractCustomClass.onProjectileLaunch(event);
             }
@@ -1864,6 +1917,9 @@ public class MyListener implements Listener {
                 blast_arrow(arrow);
 //                blast_arrows.remove(arrow);
             }
+            else if (DragonClass.arrowNetherFire.contains(arrow.getUniqueId())) {
+                DragonClass.arrowFireTask.remove(arrow.getUniqueId());
+            }
         }
         else if(event.getEntity() instanceof WitherSkull) {
             WitherSkull witherSkull = (WitherSkull) event.getEntity();
@@ -1899,7 +1955,7 @@ public class MyListener implements Listener {
 //                    }
 //                }
 
-                ClassEnum.getClassByPlayer(player).onProjectileHit(event, player);
+                ClassEnum.getCustomClassByPlayer(player).onProjectileHit(event, player);
 //                if (ClassU.getClassEnum(player) == ClassEnum.DROWNKING) {
 //
 //                }
@@ -2544,12 +2600,21 @@ public class MyListener implements Listener {
 //                    task1.cancel();
 //                }
 //            }
-            if (getScore(player, "class") != 3) {
-                activeSkill(player);
-            }
-            else if (getScore(player, "class") == 3) {  //todo 搞一个d服版本骷髅
+            if (getScore(player, "class") == 3) {  //todo 搞一个d服版本骷髅
                 player.sendMessage( ChatColor.AQUA + "射箭自动触发");
             }
+            else if (ClassEnum.getClassEnumByPlayer(player) == ClassEnum.DRAGON) {
+                if (activeSkillTypeEnum == ActiveSkillTypeEnum.BOW) {
+                    DragonClass.switchMode(player);
+                }
+                else {
+                    activeSkill(player);
+                }
+            }
+            else if (getScore(player, "class") != 3) {
+                activeSkill(player);
+            }
+
         }
 //        else if ((MegaWallsClasses.getScore(player, "energy") < 100 && MegaWallsClasses.getScore(player, "class") == 28)){
 //            player.sendMessage("我知道你是特殊职业可以标记玩家但我不会写代码");

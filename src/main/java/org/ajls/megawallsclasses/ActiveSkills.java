@@ -773,7 +773,7 @@ public class ActiveSkills {
                                 block_blizzardTimes.remove(block);
                                 BlockState blockState = block_blizzardBlockState.remove(block);
                                 if (blockState != null) {
-                                    blockState.update(true);
+                                    blockState.update(true);  //这里apply因为这个是长期的state
                                 }
                             }
 //                            if ( block_blizzardTimes.get(block) == blizzardTimes) {   //block.getType().equals(Material.SNOW_BLOCK) &&
