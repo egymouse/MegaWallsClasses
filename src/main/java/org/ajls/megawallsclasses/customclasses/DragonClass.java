@@ -131,9 +131,7 @@ public class DragonClass extends AbstractCustomClass {
 // 之后判断
                         BlockState newState = oldState.getBlock().getState();
 
-                        boolean changed =
-                                oldState.getType() != newState.getType()
-                                        || !oldState.getBlockData().equals(newState.getBlockData());
+                        boolean changed = hasBlockStateChanged(oldState, newState);
 
                         if (changed) {
 //                            System.out.println("BlockState 改变了");
@@ -161,6 +159,11 @@ public class DragonClass extends AbstractCustomClass {
 
     }
 
+    public static boolean hasBlockStateChanged(BlockState oldState, BlockState newState) {
+        return oldState.getType() != newState.getType()
+                || !oldState.getBlockData().equals(newState.getBlockData());
+    }
+
     public static void tryNetherrackCombust(Player player) {
         Block floorBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
         Location floorLoc = floorBlock.getLocation();
@@ -170,6 +173,16 @@ public class DragonClass extends AbstractCustomClass {
             // 触发踩踏逻辑！
             // 这里可以根据你的需求选择方案 A 或 B（见下文）
             Pair<BlockState, UUID> blockState_UUID = DragonClass.netherrack_dragon.get(floorLoc);
+//            BlockState oldBlockState = blockState_UUID.getLeft();
+//            BlockState newBlockState = oldBlockState.getBlock().getState();
+//            if (hasBlockStateChanged(oldBlockState, newBlockState)) {
+//                DragonClass.netherrack_dragon.remove(floorLoc);
+//                return;
+//            }
+             if (floorBlock.getType() != Material.NETHERRACK) {
+                 DragonClass.netherrack_dragon.remove(floorLoc);
+                return;
+             }
 
             UUID uuid = blockState_UUID.getRight();
             Player dragon = Bukkit.getPlayer(uuid);
@@ -251,4 +264,10 @@ public class DragonClass extends AbstractCustomClass {
 //    所以我懒得写
 //            我只是在2s后探测地狱岩数据有没有变
 //    如果没变就变回原来方块
+
+    //todo 不对 还是有问题
+    //那如果有人挖了地狱岩然后又补上了地狱岩呢
+    //😃😂
+    //烦死了不修了
+    //反正你们到时候被大招打了跑就行了 别想着挖地狱岩
 }
