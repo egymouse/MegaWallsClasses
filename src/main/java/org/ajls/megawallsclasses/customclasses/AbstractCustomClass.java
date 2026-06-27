@@ -70,7 +70,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 
     }
 
-    public void activeSkill(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {
+    public void activeSkill(Player player) {
 
     }
 

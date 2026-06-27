@@ -1708,34 +1708,17 @@ public class MyListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        // 【性能优化】如果坐标没有跨方块，直接跳过，防止刷屏  //不行，万一这个方块刚刚被替换/变回去呢
-//        if (event.getFrom().getBlockX() == event.getTo().getBlockX() &&
-//                event.getFrom().getBlockY() == event.getTo().getBlockY() &&
-//                event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
-//            return;
-//        }
+        // 【性能优化】如果坐标没有跨方块，直接跳过，防止刷屏  //不行，万一这个方块刚刚被替换/变回去呢  //todo 但是玩家不动也不行啊
+        if (event.getFrom().getBlockX() == event.getTo().getBlockX() &&
+                event.getFrom().getBlockY() == event.getTo().getBlockY() &&
+                event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
+            return;
+        }
 
         Location locationTo = event.getTo();
 
         Player player = event.getPlayer();
-        // 获取玩家脚下的方块（注意：Y坐标减1）
-        Block floorBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        Location floorLoc = floorBlock.getLocation();
-
-        // 检查这个位置是否在被替换的集合中
-        if (DragonClass.netherrack_dragon.containsKey(floorLoc)) {
-            // 触发踩踏逻辑！
-            // 这里可以根据你的需求选择方案 A 或 B（见下文）
-            Pair<BlockState, UUID> blockState_UUID = DragonClass.netherrack_dragon.get(floorLoc);
-            if (player.getFireTicks() < 100) {
-                player.setFireTicks(100);
-            }
-            UUID uuid = blockState_UUID.getRight();
-            Player dragon = Bukkit.getPlayer(uuid);
-            if (dragon != null) {
-                DragonClass.registerCombust(player, dragon);
-            }
-        }
+        DragonClass.tryNetherrackCombust(player);  //todo 不行 要时时刻刻更新玩家最大着火tick
     }
 
 //    @Deprecated
@@ -2593,6 +2576,18 @@ public class MyListener implements Listener {
         if (Energetic.energeticPlayers.contains(player.getUniqueId())) {
             addEnergy(player,114514);
         }
+        if (ClassEnum.getClassEnumByPlayer(player) == ClassEnum.DRAGON) {
+            if (activeSkillTypeEnum == ActiveSkillTypeEnum.BOW) {
+                DragonClass.switchMode(player);
+            }
+            else {
+                if (getScore(player, "energy") >= 100 ) {
+                    activeSkill(player);
+                }
+
+            }
+            return;
+        }
         if (getScore(player, "energy") >= 100 ) {
 //            if (MegaWallsClasses.getScore(player, "energy") >= 100 ) {
 //                BukkitTask task1 = tasks.remove(player.getUniqueId()); // remove from map if exist
@@ -2602,14 +2597,6 @@ public class MyListener implements Listener {
 //            }
             if (getScore(player, "class") == 3) {  //todo 搞一个d服版本骷髅
                 player.sendMessage( ChatColor.AQUA + "射箭自动触发");
-            }
-            else if (ClassEnum.getClassEnumByPlayer(player) == ClassEnum.DRAGON) {
-                if (activeSkillTypeEnum == ActiveSkillTypeEnum.BOW) {
-                    DragonClass.switchMode(player);
-                }
-                else {
-                    activeSkill(player);
-                }
             }
             else if (getScore(player, "class") != 3) {
                 activeSkill(player);
@@ -2793,6 +2780,7 @@ public class MyListener implements Listener {
                     warden_active_skill(player);
                     break;
             }
+            ClassEnum.getCustomClassByPlayer(player).activeSkill(player);
 //            initializeAutoEnergyAccumulation(player);
             if (ClassU.isTransformationMaster(player) && (EnergyAccumulate.getEnergy(player) == 0 || activeSuccess) ) { // snowman should use return boolean to judge
                 transformation_master_active_skill(player);

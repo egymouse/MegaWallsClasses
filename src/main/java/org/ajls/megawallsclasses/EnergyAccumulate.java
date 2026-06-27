@@ -206,6 +206,9 @@ public class EnergyAccumulate {
             case 30:
                 addEnergy(damager, 12);
                 break;
+            case 311:
+                addEnergy(damager, 20);
+                break;
         }
         testSkillReady(damager);
     }

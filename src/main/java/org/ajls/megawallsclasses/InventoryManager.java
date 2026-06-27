@@ -363,7 +363,6 @@ public class InventoryManager {
                 classBow.addEnchantment(Enchantment.POWER, 1);
                 break;
             case 311:
-                classSword = getClassSword(Material.DIAMOND_SWORD);
                 classSword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1);
                 classBow = getClassBow();
                 classBow.addEnchantment(Enchantment.POWER, 2);

@@ -77,7 +77,7 @@ public class PassiveSkills {
 //
 //        }
     }
-    public static void null_passive_Nskill_1(Player damager) {  //改进 任务开始等6.5s给3.5s隐身并且减少计数 然后任务循环10s，延迟0s，循环结束判断是否还有计数，如果为0那么任务取消
+    public static void null_passive_skill_1(Player damager) {  //改进 任务开始等6.5s给3.5s隐身并且减少计数 然后任务循环10s，延迟0s，循环结束判断是否还有计数，如果为0那么任务取消
         damager.addPotionEffect((new PotionEffect(PotionEffectType.INVISIBILITY, 70, 0, true, true)));
         damager.addPotionEffect((new PotionEffect(PotionEffectType.SPEED, 70, 1, true, true)));
         damager.sendMessage(ChatColor.GRAY + "间隐 " + ChatColor.GRAY + "隐身 " + ChatColor.YELLOW + "I " + ChatColor.AQUA + "3.5s");
