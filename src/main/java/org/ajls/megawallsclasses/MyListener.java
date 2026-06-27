@@ -1,9 +1,7 @@
 package org.ajls.megawallsclasses;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
-import net.kyori.adventure.text.Component;
 import org.ajls.lib.advanced.HashMapInteger;
-import org.ajls.lib.api.PriorityEventHandler;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.lib.utils.PlayerU;
 import org.ajls.lib.utils.ScoreboardU;
@@ -11,6 +9,7 @@ import org.ajls.megawallsclasses.commands.Energetic;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
+import org.ajls.megawallsclasses.customclasses.DragonClass;
 import org.ajls.megawallsclasses.displayname.DisplayNameManager;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
 import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
@@ -29,7 +28,6 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -268,7 +266,7 @@ public class MyListener implements Listener {
 //                Player player = event.getPlayer();
                 event.setCancelled(true);
 //                Bukkit.broadcastMessage("skill activated by netherstar");
-                tryActiveSkill(player);
+                tryActiveSkill(player, ActiveSkillTypeEnum.NETHER_STAR);
             }
             if (getScore(player, "class") == 15) {
                 int times = HashMapUtils.hashMapIncrease(playerUUID, elaina_switchHotbarTimes);
@@ -460,7 +458,7 @@ public class MyListener implements Listener {
                             }
                             else {
 //                            Bukkit.broadcastMessage("skill active by rightclick");
-                                tryActiveSkill(player);
+                                tryActiveSkill(player, ActiveSkillTypeEnum.SWORD);
                             }
                             //|| action == Action.RIGHT_CLICK_BLOCK) {
                         }
@@ -501,7 +499,7 @@ public class MyListener implements Listener {
                         if (itemInHand == Material.BOW){  //todo 修复手持弓在背包内扔东西会触发的bug
 //                        Bukkit.broadcastMessage("left click");
                             event.setCancelled(true);
-                            tryActiveSkill(player);
+                            tryActiveSkill(player, ActiveSkillTypeEnum.BOW);
                             //|| action == Action.RIGHT_CLICK_BLOCK) {
                         }
                     }
@@ -637,13 +635,22 @@ public class MyListener implements Listener {
         Inventory topInventory = inventoryView.getTopInventory();
         Inventory bottomInventory = inventoryView.getBottomInventory();
         String title = event.getView().getTitle();
+        boolean isClassSelection = false;
+        int classOffset = 0;
         if (title.equals("Select Class")) {
+            isClassSelection = true;
+        }
+        else if (title.equals("Domcer Legendary Class Selection")) {
+            isClassSelection= true;
+            classOffset = 300;
+        }
+        if (isClassSelection) {
             if (event.getClickedInventory() == null) return;
             if (event.getClickedInventory().getType() != InventoryType.CHEST) return;  // and cancel event
             if (event.getCurrentItem() != null) {
                 Player player = (Player) event.getWhoClicked();
                 UUID playerUUID = player.getUniqueId();
-                int index = event.getSlot() + 1;
+                int index = event.getSlot() + 1 + classOffset;
                 if (player_damagers.get(playerUUID) == null || player_damagers.get(playerUUID).isEmpty() || true) {
                     InitializeClass.resetPlayerCondition(player);
                     ClassU.setClass(player, index);
@@ -686,72 +693,10 @@ public class MyListener implements Listener {
                     player.sendMessage(ChatColor.YELLOW + "脱战15秒后才能重选职业");
                 }
 
-//                player_nextClass.put(player.getUniqueId(), index);
+//                player_nextClass.put(player.getUniqueId(), index); //todo 改成死亡后才能切换职业
 //                player.sendMessage(ChatColor.YELLOW + "死亡就能刷新了");
-
-//                switch (event.getCurrentItem().getType()) {
-//                    case ROTTEN_FLESH:
-//                        MegaWallsClasses.setScore(player, "class", 1);
-////                        initializeClass(player);
-//                        break;
-//                    case DIAMOND_SWORD:
-//                        MegaWallsClasses.setScore(player, "class", 2);
-////                        initializeClass(player);
-//                        break;
-//                    case BONE:
-//                        MegaWallsClasses.setScore(player, "class", 3);
-////                        initializeClass(player);
-//                        break;
-//                    case ENDER_PEARL:
-//                        MegaWallsClasses.setScore(player, "class", 4);
-////                        initializeClass(player);
-//                        break;
-//                    case LIGHT_GRAY_STAINED_GLASS_PANE:
-//                        MegaWallsClasses.setScore(player, "class", 5);
-////                        initializeClass(player);
-//                        break;
-//                    case WITHER_SKELETON_SKULL:
-//                        MegaWallsClasses.setScore(player, "class", 6);
-////                        initializeClass(player);
-//                        break;
-//                    case TOTEM_OF_UNDYING:
-//                        MegaWallsClasses.setScore(player, "class", 7);
-////                        initializeClass(player);
-//                        break;
-//                    case GUNPOWDER:
-//                        MegaWallsClasses.setScore(player, "class", 8);
-//                        break;
-//                    case STONE_SWORD:
-//                        MegaWallsClasses.setScore(player, "class", 9);
-//                        break;
-//                    case TRIDENT:
-//                        MegaWallsClasses.setScore(player, "class", 10);
-//                        break;
-//                    case STRING:
-//                        MegaWallsClasses.setScore(player, "class", 11);
-//                        break;
-//                    case WIND_CHARGE:
-//                        ScoreboardsAndTeams.setScore(player, "class", 12);
-//                        break;
-//                    case SNOW_BLOCK:
-//                        ScoreboardsAndTeams.setScore(player, "class", 13);
-//                        break;
-//                    case DEBUG_STICK:
-//                        ScoreboardsAndTeams.setScore(player, "class", 15);
-//                        break;
-//                    case SKELETON_SKULL:
-//                        MegaWallsClasses.setScore(player, "class", 28);
-////                        initializeClass(player);
-//                        break;
-//                    //default: player.sendMessage(ChatColor.RED + "NOT ENOUGH ITEMS");
-//                }
-
-
-
-
 //                refreshClass(player);
             }
-//            player.sendMessage("test");
             event.setCancelled(true);
         }
         else if (title.equals("Reorder inventory")) {  //todo 记得改成不能偷物品，甚至不能drag以及丢弃，甚至放在鼠标上然后关闭物品栏让物品自然掉出，可以用custom event（自己写一个event接入bukkit api)来实现多事件的整合
@@ -925,6 +870,9 @@ public class MyListener implements Listener {
                             case 4:
                                 player.openInventory(createDocumentsInventory(player));
                                 break;
+                            case 6:
+                                player.openInventory(createDomcerLegendaryClassSelectionInventory(player));
+                                break;
                         }
                         switch (event.getCurrentItem().getType()) {
                             case IRON_SWORD:
@@ -1030,14 +978,17 @@ public class MyListener implements Listener {
                         }
                     }
                 }
-                tryActiveSkill(damager);
+                tryActiveSkill(damager, ActiveSkillTypeEnum.BOW);
             }
         }
         if (event.getEntity() instanceof Player && !event.isCancelled()) {
             Player owner = SpawnProtectionListener.getOwner(event.getDamager());
 
             Player victim = (Player) victimEntity;
-            if (PlayerU.isPlayerSameTeam(owner, victim)) {event.setDamage(KNOCKBACK_DAMAGE);}
+            if (PlayerU.isPlayerSameTeam(owner, victim)) {
+                event.setDamage(KNOCKBACK_DAMAGE);  //todo 如果是爆炸箭只给击退，但是还有其他情况（比如自己射自己）就直接取消攻击 最好加上箭可以穿过友军 要学习我的世界原版同一个队伍的行为(比如投掷物穿过什么的或者射出的箭爆炸只给击退（这个原版代码会写吗，毕竟不存在爆炸箭这种，但是貌似逻辑确实是这样的）
+                return;
+            }
             UUID playerUUID = victim.getUniqueId();
             if (event.getDamager() instanceof Player) {
                 Player damager = (Player) event.getDamager();
@@ -1107,6 +1058,14 @@ public class MyListener implements Listener {
 //                                    targetTimestamp.setTargetUUID(playerUUID);
                                         targetTimestamp.setTimestamp(targetTimestamp.getTimestamp() - 20);
                                         break;
+                                    }
+                                }
+                                break;
+                            case 311:
+                                if (event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+                                    DragonClass dragonClass = (DragonClass) ClassEnum.getClassByPlayer(damager);
+                                    if (dragonClass.combustPlayers_dragons.contains(damagerUUID, victim.getUniqueId())) {
+                                        addHealth(damager, org.ajls.lib.utils.EventU.getFinalDamage(event) * 1.5);
                                     }
                                 }
                                 break;
@@ -2566,9 +2525,15 @@ public class MyListener implements Listener {
         player.setExp((float) getScore(player, "energy") /100);
     }
 
+    public enum ActiveSkillTypeEnum {
+        SWORD,
+        BOW,
+        NETHER_STAR
+    }
 
 
-    void tryActiveSkill(Player player) {
+
+    void tryActiveSkill(Player player, ActiveSkillTypeEnum activeSkillTypeEnum) {
         if (Energetic.energeticPlayers.contains(player.getUniqueId())) {
             addEnergy(player,114514);
         }
@@ -2784,7 +2749,7 @@ public class MyListener implements Listener {
 //        Bukkit.broadcastMessage("爆炸弓箭");
 //        player.sendMessage("你的箭爆炸了");
         World world = arrow.getWorld();
-        world.createExplosion(arrow.getLocation(), 3, false, true, arrow);
+        world.createExplosion(arrow.getLocation(), 3, false, true, arrow);  //todo 研究一下原版逻辑为什么同一个队伍爆炸箭的爆炸不会造成伤害 看我的世界源代码
         BukkitTask task = tasks.remove(arrow.getUniqueId()); // remove from map if exist
         if(task != null) { // task found
             task.cancel();
@@ -3138,6 +3103,14 @@ public class MyListener implements Listener {
                 chestplate.addEnchantment(Enchantment.PROTECTION, 1);
                 InitializeClass.warden_initialize_class(player);
                 break;
+            case 311:
+                helmet = getClassItem(Material.DIAMOND_HELMET);
+                helmet.addEnchantment(Enchantment.PROTECTION, 1);
+                helmet.addEnchantment(Enchantment.FIRE_PROTECTION, 2);
+                boots = getClassItem(Material.GOLDEN_BOOTS);
+                boots.addEnchantment(Enchantment.PROTECTION, 3);
+                boots.addEnchantment(Enchantment.FIRE_PROTECTION, 2);
+                boots.addEnchantment(Enchantment.FEATHER_FALLING, 2);
 
         }
         if (!containsLore(helmet, "dont_load")) {

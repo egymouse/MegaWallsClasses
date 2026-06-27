@@ -221,7 +221,8 @@ public class Order implements CommandExecutor {
         String playerName = player.getName();
         Configuration configuration = plugin.getConfig();
 //        ConfigurationSection inventorySection = plugin.getConfig().getConfigurationSection("custom_inventory_order");
-        configuration.set("class_inventory_order." + playerName + "." + index, null);
+        configuration.set("class" +
+                "_inventory_order." + playerName + "." + index, null);
 //        inventorySection.createSection(playerName);
         configuration.createSection("class_inventory_order." + playerName + "." + index);
 //        ConfigurationSection playerSection = inventorySection.getConfigurationSection(playerName);

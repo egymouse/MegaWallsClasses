@@ -2,12 +2,11 @@ package org.ajls.megawallsclasses.customclasses;
 
 import org.ajls.megawallsclasses.ClassEnum;
 import org.ajls.megawallsclasses.MegaWallsClasses;
+import org.ajls.megawallsclasses.MyListener;
 import org.ajls.megawallsclasses.classsystem.ClassNamesConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 
 public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象类implement之前那个接口的，但算了反正一样
@@ -66,6 +65,10 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 //        //todo 写好老版本溺尸王 三叉戟靠忠诚，但是保留命令方块设计（或者加一个不能放置的屏障） 如果背包满也会自动进入屏障 然后触发主动6秒内打中人才行（非扔出），或者不触发满能量打中人也行
 //    }
 
+    public void activeSkill(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {
+
+    }
+
     // ===================== 新增：三叉戟发射事件方法 =====================
     // 默认空实现：其他职业完全不用管，只有溺尸王重写
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
@@ -84,6 +87,10 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 
 
     public void onPlayerPickupArrow(PlayerPickupArrowEvent event) {
+
+    }
+
+    public void onEntityCombustByEntity(EntityCombustByEntityEvent event) {
 
     }
 

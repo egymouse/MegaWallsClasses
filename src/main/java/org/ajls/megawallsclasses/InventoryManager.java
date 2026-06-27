@@ -46,11 +46,26 @@ public class InventoryManager {
         setDisplayName(team_selection,"选择你的队伍");
         ItemStack documents = new ItemStack(Material.WRITABLE_BOOK, 1);
         setDisplayName(documents, "文档介绍");
+        ItemStack domcerClassNormal = new ItemStack(Material.DIAMOND_SWORD);
+        setDisplayName(domcerClassNormal, "d服职业");
+        ItemStack domcerClassLegendary = new ItemStack(Material.NETHERITE_SWORD);
+        setDisplayName(domcerClassLegendary, "d服传奇职业");
+
         inventory.setItem(0,class_selection);
         inventory.setItem(1,reorder_inventory);
         inventory.setItem(2,class_reorder_inventory);
         inventory.setItem(3,team_selection);
         inventory.setItem(4,documents);
+        inventory.setItem(5,domcerClassNormal);
+        inventory.setItem(6,domcerClassLegendary);
+        return inventory;
+    }
+
+    public static Inventory createDomcerLegendaryClassSelectionInventory(Player player) {
+        Inventory inventory = Bukkit.createInventory(player, 36, "Domcer Legendary Class Selection");
+        ItemStack dragon = new ItemStack(Material.DRAGON_EGG, 1);
+        setDisplayName(dragon, "龙");
+        inventory.setItem(10, dragon);
         return inventory;
     }
 
@@ -346,6 +361,12 @@ public class InventoryManager {
                 classReorderInventory.addItem(warden_initial_sensor());
                 classBow = getClassBow();
                 classBow.addEnchantment(Enchantment.POWER, 1);
+                break;
+            case 311:
+                classSword = getClassSword(Material.DIAMOND_SWORD);
+                classSword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1);
+                classBow = getClassBow();
+                classBow.addEnchantment(Enchantment.POWER, 2);
                 break;
         }
         if (!containsLore(classSword, "dont_load")) {

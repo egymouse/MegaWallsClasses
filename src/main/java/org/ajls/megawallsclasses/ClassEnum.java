@@ -34,8 +34,11 @@ public enum ClassEnum {
 //    GOLEM,
     SKELETON_LORD(28),
     TRANSFIGURATION_MASTER(29),
-    WARDEN(30);
+    WARDEN(30),
 //    NAC, //not a class
+
+
+    DRAGON(311);  //todo 改成每个玩家一个职业instance 存储在Playerdata里面
 
     public final int classId;
     public final AbstractCustomClass customClass;
@@ -108,10 +111,16 @@ public enum ClassEnum {
     }
 
     public enum ClassCategoryEnum {
-        EASE_CATION,
-        DO_MC_ER,
-        SELFMADE,
-        FANMADE
+        EASE_CATION(114514),
+        DO_MC_ER_NORMAL(200),
+        DO_MC_ER_LEGENDARY(300),
+        SELFMADE(0),
+        FANMADE(100);
+
+        ClassCategoryEnum(int offset) {
+        }
+
     }
+
 }
 

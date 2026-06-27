@@ -73,6 +73,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo playerdata npr解决
     //todo d服龙
     //todo 更改头顶显示名称 ClientboundPlayerInfoUpdatePacket ClientboundSetPlayerTeamPacket
+    //todo 修复幻变大师切换职业物品 背包不够的bug
 
 
     @Override
