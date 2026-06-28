@@ -4,6 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ItemKind {
+        /*todo 血药，速度药改成一个就行，最好备战未来适配多个重复物品（比如说两组血药）
+    fromid改成hashmap存储
+    default layouts的layout如何复制？最好用static，在加载时执行一次就好。
+    职业的default layouts可以通过寻找可用最小索引添加
+    classKit的话 目前我是有自己的职业管理系统 看能不能集成 包括registry
+    职业剑，弓，速度药，血药需要默认值 比如大部分职业血药都是两瓶16hp
+    config有必要改成markdirty然后只在服务器启动/停止或者每隔几分钟保存config吗
+    Cannot resolve method 'or' in 'OptionalInt' 在laayout resolver的resolve
+    InventoryOrderEditor那块没怎么听懂，附上MyListener原本的实现，同时给出自己玩家打开物品栏用state machine管理的构想，就不用title来管理了
+
+
+
+    最后包结构我也不会，看看文件放在哪个包下好
+     */
+
+    /*
+    LayoutKey并没copy，会不会有什么问题
+    这default layout的common 只有ClassDefaultLayoutResolver getDefaultLayout才修改，其他都是只读，copy会不会浪费性能
+    如果class想要自定义职业默认layout特殊物品的位置呢？ 估计不会
+    getDefaultLayoutKeys能不能在override执行增量操作 可以call super就行
+     */
     TOOLKIT("toolkit"),
     COMPASS("compass"),
     PICKAXE("pickaxe"),

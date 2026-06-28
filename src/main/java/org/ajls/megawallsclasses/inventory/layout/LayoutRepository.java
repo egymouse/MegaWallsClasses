@@ -1,7 +1,7 @@
 package org.ajls.megawallsclasses.inventory.layout;
 
 import org.ajls.megawallsclasses.MegaWallsClasses;
-import org.ajls.megawallsclasses.inventory.ItemKey;
+import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class LayoutRepository {
+    //用来对配置读取/写入的
 
     private final Configuration config;
 
@@ -46,7 +47,7 @@ public class LayoutRepository {
         InventoryLayout layout = new InventoryLayout();
 
         for (String keyId : section.getKeys(false)) {
-            ItemKey key = ItemKey.fromId(keyId);
+            LayoutKey key = LayoutKey.fromId(keyId);
             int slot = section.getInt(keyId);
             layout.setSlot(key, slot);
         }
@@ -57,7 +58,7 @@ public class LayoutRepository {
     private void saveLayout(String path, InventoryLayout layout) {
         config.set(path, null);
 
-        for (Map.Entry<ItemKey, Integer> entry : layout.asMap().entrySet()) {
+        for (Map.Entry<LayoutKey, Integer> entry : layout.asMap().entrySet()) {
             config.set(path + "." + entry.getKey().id(), entry.getValue());
         }
 

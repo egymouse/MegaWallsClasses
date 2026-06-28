@@ -1,9 +1,11 @@
-package org.ajls.megawallsclasses.inventory;
+package org.ajls.megawallsclasses.inventory.layout;
 
+import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 
 public final class ClassDefaultLayoutResolver {
 
+    //用来给直接创建默认顺序的
     public static InventoryLayout getDefaultLayout(AbstractCustomClass customClass) {
         InventoryLayout layout = DefaultLayouts.common();
 

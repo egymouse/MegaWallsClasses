@@ -1,8 +1,8 @@
 package org.ajls.megawallsclasses.inventory.apply;
 
-import org.ajls.megawallsclasses.inventory.ClassKit;
-import org.ajls.megawallsclasses.inventory.ClassRegistry;
-import org.ajls.megawallsclasses.inventory.ItemKey;
+import org.ajls.megawallsclasses.ClassEnum;
+import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
+import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.ajls.megawallsclasses.inventory.layout.LayoutResolver;
 import org.bukkit.Material;
@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.OptionalInt;
 
 public class InventoryApplier {
+    //用来将实际将物品放入顺序的
 
     private final LayoutResolver layoutResolver;
     private final ClassRegistry classRegistry;
@@ -21,17 +22,18 @@ public class InventoryApplier {
         this.classRegistry = classRegistry;
     }
 
-    public void apply(Player player, int classId) {
+    public void apply(Player player) {
         player.getInventory().clear();
 
-        ClassKit kit = classRegistry.get(classId);
-        InventoryLayout layout = layoutResolver.resolve(player, kit);
+        AbstractCustomClass customClass = ClassEnum.getCustomClassByPlayer(player);
 
-        for (ItemKey key : kit.itemKeys()) {
+        InventoryLayout layout = layoutResolver.resolve(player, customClass);
+
+        for (LayoutKey key : customClass.getDefaultLayoutKeys()) {
             OptionalInt slotOpt = layout.getSlot(key);
             if (slotOpt.isEmpty()) continue;
 
-            ItemStack item = kit.createItem(key, player);
+            ItemStack item = customClass.createInventoryItem(player, key);
             if (item == null || item.getType() == Material.AIR) continue;
 
             player.getInventory().setItem(slotOpt.getAsInt(), item);

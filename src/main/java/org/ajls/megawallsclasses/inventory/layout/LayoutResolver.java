@@ -1,7 +1,6 @@
 package org.ajls.megawallsclasses.inventory.layout;
 
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
-import org.ajls.megawallsclasses.inventory.ClassDefaultLayoutResolver;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.bukkit.entity.Player;
 
@@ -11,6 +10,7 @@ import java.util.OptionalInt;
 import java.util.Set;
 
 public class LayoutResolver {
+    //用来根据玩家职业加载顺序的
 
     private final LayoutRepository repository;
 

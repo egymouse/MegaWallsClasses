@@ -45,11 +45,11 @@ public final class LayoutKey {
         if (index == 1) {
             return kind.id();
         }
-        return kind.id() + ":" + index;
+        return kind.id() + "_" + index;
     }
 
     public static LayoutKey fromId(String id) {
-        String[] parts = id.split(":");
+        String[] parts = id.split("_");
         ItemKind kind = ItemKind.fromId(parts[0]);
         int index = parts.length >= 2 ? Integer.parseInt(parts[1]) : 1;
         return LayoutKey.of(kind, index);
