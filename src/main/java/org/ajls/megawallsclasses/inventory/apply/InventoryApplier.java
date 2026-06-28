@@ -1,5 +1,10 @@
-package org.ajls.megawallsclasses.inventory;
+package org.ajls.megawallsclasses.inventory.apply;
 
+import org.ajls.megawallsclasses.inventory.ClassKit;
+import org.ajls.megawallsclasses.inventory.ClassRegistry;
+import org.ajls.megawallsclasses.inventory.ItemKey;
+import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
+import org.ajls.megawallsclasses.inventory.layout.LayoutResolver;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

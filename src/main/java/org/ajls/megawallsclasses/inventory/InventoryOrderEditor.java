@@ -2,6 +2,8 @@ package org.ajls.megawallsclasses.inventory;
 
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.NameSpacedKeys;
+import org.ajls.megawallsclasses.inventory.layout.LayoutRepository;
+import org.ajls.megawallsclasses.inventory.layout.LayoutResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -1,5 +1,7 @@
 package org.ajls.megawallsclasses.inventory;
 
+import org.ajls.megawallsclasses.inventory.key.LayoutKey;
+
 public final class ClassDefaultLayoutResolver {
 
     public static InventoryLayout getDefaultLayout(AbstractCustomClass customClass) {

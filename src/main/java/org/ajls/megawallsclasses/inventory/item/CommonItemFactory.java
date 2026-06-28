@@ -1,7 +1,8 @@
-package org.ajls.megawallsclasses.inventory;
+package org.ajls.megawallsclasses.inventory.item;
 
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.NameSpacedKeys;
+import org.ajls.megawallsclasses.inventory.ItemKey;
 import org.ajls.trackercompass.CompassItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

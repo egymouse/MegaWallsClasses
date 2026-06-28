@@ -1,6 +1,7 @@
-package org.ajls.megawallsclasses.inventory;
+package org.ajls.megawallsclasses.inventory.layout;
 
 import org.ajls.megawallsclasses.MegaWallsClasses;
+import org.ajls.megawallsclasses.inventory.ItemKey;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package org.ajls.megawallsclasses.inventory;
+package org.ajls.megawallsclasses.inventory.key;
 
 import java.util.HashMap;
 import java.util.Map;

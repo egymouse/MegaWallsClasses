@@ -1,5 +1,6 @@
 package org.ajls.megawallsclasses.inventory;
 
+import org.ajls.megawallsclasses.inventory.item.CommonItemFactory;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
