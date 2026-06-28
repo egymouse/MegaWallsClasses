@@ -81,9 +81,11 @@ public final class MegaWallsClasses extends JavaPlugin {
         // Plugin startup logic
         plugin = this;
         midiMusicPlayer = new MidiMusicPlayer(MegaWallsClasses.getPlugin());
-        getConfig().options().copyDefaults(true);  //这行代码设置了一个“开关// ”（copyDefaults），告诉Bukkit的配置API：当从getConfig()读取一个不存在的配置项时，自动用插件JAR里config.yml的预设值去填充。
+        saveDefaultConfig();  //如果没有config.yml，把默认的拉过来
+        getConfig().options().copyDefaults(true);
+        //这行代码设置了一个“开关// ”（copyDefaults），告诉Bukkit的配置API：当从getConfig()读取一个不存在的配置项时，自动用插件JAR里config.yml的预设值去填充。
         //todo 我不知道，反正新增职业名称这段代码时实测根本没有copyDefaults，这怎么办（）
-        saveDefaultConfig();  //保存到磁盘
+        saveConfig(); //保存到磁盘
         tracked_teams.add("blue_team");
 //        org.ajls.
         tracked_teams.add("red_team");

@@ -172,10 +172,13 @@ public class InventoryManager {
         return inventory;
     }
 
+
+    //todo 添加d服职业
     public static Inventory createWhichClassReorderInventory(Player player) {
         return InventoryU.setInventoryTitle(createClassSelectionInventory(player), "WhichClassReorder");
     }
 
+    //创建职业选择物品栏并遍历同步顺序 only原本是只同步职业物品，但是想到职业保存也要保存默认物品所以废弃了
     public static Inventory loadClassReorderInventory(Player player, int classIndex, boolean only) {
         Configuration configuration = plugin.getConfig();
         String playerName = player.getName();
@@ -224,6 +227,8 @@ public class InventoryManager {
 
 
     //heart of class reorder inventory
+    //先根据配置文件创建一个排好序的默认物品栏，然后速度药和血药因为有职业特点所以要删掉，后面会根据配置文件单独添加速度药和血药，下面的class sword和class bow名字都是符合保存顺序的，而非真实名字
+    //同样的为了适配幻变都会注入物品类型
     public static Inventory createClassReorderInventory(Player player, int classIndex, boolean only) {
         String playerName = player.getName();
         Configuration configuration = getPlugin().getConfig();

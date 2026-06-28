@@ -378,6 +378,7 @@ public class InitializeClass {
         }
     }
 
+    //重点在于获取装备
     static ItemStack getClassItem(Material material) {
         ItemStack classItem = new ItemStack(material);
 //        setDisplayName(classHelmet, "iron_sword");

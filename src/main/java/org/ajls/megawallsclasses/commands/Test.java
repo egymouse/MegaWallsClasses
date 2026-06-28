@@ -39,8 +39,7 @@ public class Test implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            player.damage(20, player);
-            player.damage(1, player);
+            player.getWorld().createExplosion(player.getLocation(), 3f, false, true, player);
         }
 
         return true;

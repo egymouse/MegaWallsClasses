@@ -68,6 +68,7 @@ public class Order implements CommandExecutor {
 
 
     //The heart of class inventory
+    //创建基本重构物品栏，同时将物品显示名注入itemmeta
     public static Inventory createReorderInventory(Player player) {
         World world = Bukkit.getWorld("world");
         Location loc = new Location(world, 0, 114514, 0);
@@ -165,11 +166,12 @@ public class Order implements CommandExecutor {
         inventory.setItem(40, green_concrete);
         inventory.setItem(36, reset);
 
-        inventory = injectItemType(inventory);
+        inventory = injectItemType(inventory);  //显示名称注入进itemmeta
 
         return inventory;
     }
 
+    //把物品显示名注入itemMeta
     public static Inventory injectItemType(Inventory inventory) {
         //inject item type
         for (int i = 0 ; i < inventory.getSize(); i++) {
@@ -190,7 +192,7 @@ public class Order implements CommandExecutor {
     }
 
 
-
+    //遍历保存默认物品栏顺序到配置文件
     public static void saveInventoryOrder(Player player, Inventory inventory) {
         String playerName = player.getName();
         Configuration configuration = plugin.getConfig();
@@ -217,6 +219,7 @@ public class Order implements CommandExecutor {
         plugin.saveConfig();
     }
 
+    //遍历保存职业物品栏顺序到配置文件
     public static void saveClassInventoryOrder(Player player, Inventory inventory, int index) {
         String playerName = player.getName();
         Configuration configuration = plugin.getConfig();
@@ -249,6 +252,7 @@ public class Order implements CommandExecutor {
 
 
     //creates a new inventory and compare names and copy to an empty inventory
+    //创建一个新的默认物品栏并遍历同步顺序
     public static Inventory loadReorderInventoryFromConfig(Player player, String title) {  //getItemFromName
         String playerName = player.getName();
         Inventory reorderInventory = createReorderInventory(player);
@@ -289,7 +293,7 @@ public class Order implements CommandExecutor {
     }
 
 
-    //rubbish code start
+    /*rubbish code start
 
 
     public static void setPlayerItem(Player player, String lastPath, ItemStack itemStack) {
@@ -375,6 +379,7 @@ public class Order implements CommandExecutor {
         return ArrayListUtils.removeArrayListIndexesClone(unoccupied_slots, occupied_slots);
     }
     //rubbish code enc
+     */
 
 //    static {
 //        itemName_itemStack.put()
