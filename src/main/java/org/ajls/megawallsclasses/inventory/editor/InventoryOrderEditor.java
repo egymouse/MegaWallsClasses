@@ -3,6 +3,7 @@ package org.ajls.megawallsclasses.inventory.editor;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.NameSpacedKeys;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
+import org.ajls.megawallsclasses.inventory.item.EditorPreviewItemFactory;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.bukkit.Bukkit;
@@ -84,13 +85,14 @@ public class InventoryOrderEditor {
 
     private ItemStack createConfirmButton() {
         ItemStack item = new ItemStack(Material.GREEN_CONCRETE);
-        // setDisplayName(item, "confirm");
+        ItemStackU.setDisplayName(item, "confirm");
         return item;
     }
 
     private ItemStack createResetButton() {
         ItemStack item = new ItemStack(Material.YELLOW_CONCRETE);
-        // setDisplayName(item, "reset");
+        ItemStackU.setDisplayName(item, "reset_to_default");
         return item;
     }
+
 }

@@ -1,0 +1,143 @@
+package org.ajls.megawallsclasses.inventory.item;
+
+import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.NameSpacedKeys;
+import org.ajls.megawallsclasses.inventory.key.ItemKind;
+import org.ajls.megawallsclasses.inventory.key.LayoutKey;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
+
+import static org.ajls.megawallsclasses.ItemStackModify.*;
+import static org.ajls.megawallsclasses.MegaWallsClasses.setEffect;
+
+public final class ClassItemFactory {
+
+    private ClassItemFactory() {
+    }
+
+    public static ItemStack classSword(Material material) {
+        return classSword(material, true);
+    }
+
+    public static ItemStack classSword(Material material, boolean unbreaking) {
+        ItemStack item = new ItemStack(material);
+        setDisplayName(item, "iron_sword");
+        setUnbreakable(item);
+        setClassItem(item);
+        addLore(item, "classSword");
+
+        if (unbreaking) {
+            item.addEnchantment(Enchantment.UNBREAKING, 3);
+        }
+
+        return mark(LayoutKey.of(ItemKind.SWORD), item);
+    }
+
+    public static ItemStack classBow() {
+        ItemStack item = new ItemStack(Material.BOW);
+        setDisplayName(item, "bow");
+        setUnbreakable(item);
+        setClassItem(item);
+        addLore(item, "classBow");
+        item.addEnchantment(Enchantment.UNBREAKING, 3);
+
+        return mark(LayoutKey.of(ItemKind.BOW), item);
+    }
+
+    public static ItemStack healPotion(int hp, int amount, int index) {
+        ItemStack item = new ItemStack(Material.POTION, amount);
+
+        setBasePotionTye(item, PotionType.HEALING);
+        setEffect(item, PotionEffectType.INSTANT_HEALTH, hp, 0);
+
+        setDisplayName(item, "heal_potion_" + index);
+        org.ajls.megawallsclasses.InventoryManager.setLoadDisplayName(
+                item,
+                ChatColor.RED + "" + hp + "HP"
+        );
+
+        setLore(item, "heal_potion");
+        setMaxStackSize(item, amount);
+        setClassItem(item);
+
+        return mark(LayoutKey.of(ItemKind.HEAL_POTION, index), item);
+    }
+
+    public static ItemStack speedPotion(int durationTicks, int amplifier, int amount, int index) {
+        ItemStack item = new ItemStack(Material.POTION, amount);
+
+        setBasePotionTye(item, PotionType.SWIFTNESS);
+        setEffect(item, PotionEffectType.SPEED, durationTicks, amplifier, false, true);
+
+        setDisplayName(item, "speed_potion_" + index);
+        org.ajls.megawallsclasses.InventoryManager.setLoadDisplayName(
+                item,
+                ChatColor.AQUA + "" + durationTicks / 20 + "s " + toRomanPotionLevel(amplifier)
+        );
+
+        setLore(item, "speed_potion");
+        addLore(item, "custom_potion");
+        setMaxStackSize(item, amount);
+        setClassItem(item);
+
+        return mark(LayoutKey.of(ItemKind.SPEED_POTION, index), item);
+    }
+
+    public static ItemStack snowmanBloodBlock() {
+        ItemStack item = new ItemStack(Material.REDSTONE_BLOCK);
+        setDisplayName(item, "snowman_blood_block");
+        setClassItem(item);
+        return mark(LayoutKey.of(ItemKind.SNOWMAN_BLOOD_BLOCK), item);
+    }
+
+    public static ItemStack molePie() {
+        ItemStack item = new ItemStack(Material.PUMPKIN_PIE, 64);
+        setDisplayName(item, "mole_pie");
+        addLore(item, "junk_food");
+        setClassItem(item);
+        return mark(LayoutKey.of(ItemKind.MOLE_PIE), item);
+    }
+
+    public static ItemStack moleBeef() {
+        ItemStack item = new ItemStack(Material.BEEF, 8);
+        setDisplayName(item, "mole_beef");
+        addLore(item, "junk_food");
+        setClassItem(item);
+        return mark(LayoutKey.of(ItemKind.MOLE_BEEF), item);
+    }
+
+    public static ItemStack wardenSensor() {
+        ItemStack item = new ItemStack(Material.SCULK_SENSOR);
+        setDisplayName(item, "warden_sensor");
+        setClassItem(item);
+        return mark(LayoutKey.of(ItemKind.WARDEN_SENSOR), item);
+    }
+
+    public static ItemStack mark(LayoutKey key, ItemStack item) {
+        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_TYPE, key.id());
+        return item;
+    }
+
+    private static String toRomanPotionLevel(int amplifier) {
+        int level = amplifier + 1;
+
+        switch (level) {
+            case 1:
+                return "I";
+            case 2:
+                return "II";
+            case 3:
+                return "III";
+            case 4:
+                return "IV";
+            case 5:
+                return "V";
+            default:
+                return String.valueOf(level);
+        }
+    }
+}

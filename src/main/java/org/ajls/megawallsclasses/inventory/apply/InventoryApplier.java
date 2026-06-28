@@ -12,31 +12,35 @@ import org.bukkit.inventory.ItemStack;
 import java.util.OptionalInt;
 
 public class InventoryApplier {
-    //用来将实际将物品放入顺序的
 
     private final LayoutResolver layoutResolver;
-    private final ClassRegistry classRegistry;
 
-    public InventoryApplier(LayoutResolver layoutResolver, ClassRegistry classRegistry) {
+    public InventoryApplier(LayoutResolver layoutResolver) {
         this.layoutResolver = layoutResolver;
-        this.classRegistry = classRegistry;
     }
 
     public void apply(Player player) {
-        player.getInventory().clear();
-
         AbstractCustomClass customClass = ClassEnum.getCustomClassByPlayer(player);
+        apply(player, customClass);
+    }
+
+    public void apply(Player player, AbstractCustomClass customClass) {
+        player.getInventory().clear();
 
         InventoryLayout layout = layoutResolver.resolve(player, customClass);
 
         for (LayoutKey key : customClass.getDefaultLayoutKeys()) {
             OptionalInt slotOpt = layout.getSlot(key);
-            if (slotOpt.isEmpty()) continue;
+            if (!slotOpt.isPresent()) continue;
 
             ItemStack item = customClass.createInventoryItem(player, key);
             if (item == null || item.getType() == Material.AIR) continue;
 
             player.getInventory().setItem(slotOpt.getAsInt(), item);
         }
+    }
+
+    public void apply(Player player, ClassEnum classEnum) {
+        apply(player, classEnum.customClass);
     }
 }

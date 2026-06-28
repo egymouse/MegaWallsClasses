@@ -4,6 +4,7 @@ import org.ajls.megawallsclasses.ClassEnum;
 import org.ajls.megawallsclasses.MegaWallsClasses;
 import org.ajls.megawallsclasses.MyListener;
 import org.ajls.megawallsclasses.classsystem.ClassNamesConfig;
+import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.inventory.item.CommonItemFactory;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
@@ -131,6 +132,18 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     public int getSpeedPotionAmount(int index) {
         return 1;
     }
+
+    public boolean hasInventoryItem(LayoutKey key) {
+        return getDefaultLayoutKeys().contains(key);
+    }
+
+    public int getPotionCount(ItemKind kind) {
+        if (kind == ItemKind.HEAL_POTION) return 2;
+        if (kind == ItemKind.SPEED_POTION) return 2;
+        return 1;
+    }
+
+
 
 
 
