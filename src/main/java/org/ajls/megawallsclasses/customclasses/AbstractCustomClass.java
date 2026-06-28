@@ -4,11 +4,19 @@ import org.ajls.megawallsclasses.ClassEnum;
 import org.ajls.megawallsclasses.MegaWallsClasses;
 import org.ajls.megawallsclasses.MyListener;
 import org.ajls.megawallsclasses.classsystem.ClassNamesConfig;
+import org.ajls.megawallsclasses.inventory.CommonItemFactory;
+import org.ajls.megawallsclasses.inventory.ItemKind;
+import org.ajls.megawallsclasses.inventory.LayoutKey;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象类implement之前那个接口的，但算了反正一样
     private ClassEnum classEnum = null;  // 存储注入的枚举
@@ -32,6 +40,96 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         int classId = getClassEnum().classId;
         return ClassNamesConfig.getInstance(MegaWallsClasses.getPlugin())
                 .getClassShortName(classId);
+    }
+
+
+    public List<LayoutKey> getDefaultLayoutKeys() {
+        List<LayoutKey> keys = new ArrayList<>();
+
+        keys.add(LayoutKey.of(ItemKind.TOOLKIT));
+        keys.add(LayoutKey.of(ItemKind.COMPASS));
+        keys.add(LayoutKey.of(ItemKind.PICKAXE));
+        keys.add(LayoutKey.of(ItemKind.ENDER_CHEST));
+        keys.add(LayoutKey.of(ItemKind.NETHER_STAR));
+
+        keys.add(LayoutKey.of(ItemKind.SWORD));
+        keys.add(LayoutKey.of(ItemKind.BOW));
+        keys.add(LayoutKey.of(ItemKind.ARROW));
+        keys.add(LayoutKey.of(ItemKind.FOOD));
+
+        keys.add(LayoutKey.of(ItemKind.BLOCK, 1));
+        keys.add(LayoutKey.of(ItemKind.BLOCK, 2));
+        keys.add(LayoutKey.of(ItemKind.AXE));
+        keys.add(LayoutKey.of(ItemKind.HAY_BLOCK));
+
+        keys.add(LayoutKey.of(ItemKind.HEAL_POTION, 1));
+        keys.add(LayoutKey.of(ItemKind.HEAL_POTION, 2));
+        keys.add(LayoutKey.of(ItemKind.SPEED_POTION, 1));
+        keys.add(LayoutKey.of(ItemKind.SPEED_POTION, 2));
+
+        return keys;
+    }
+
+    /**
+     * 根据 key 生成真实物品。
+     * 大部分职业不需要重写全部，只重写 getSwordMaterial / getBow / getPotionProfile 即可。
+     */
+    public ItemStack createInventoryItem(Player player, LayoutKey key) {
+        ItemKind kind = key.kind();
+
+        switch (kind) {
+            case SWORD:
+                return ClassItemFactory.classSword(getSwordMaterial());
+
+            case BOW:
+                return createClassBow();
+
+            case HEAL_POTION:
+                return ClassItemFactory.healPotion(
+                        getHealPotionHp(key.index()),
+                        getHealPotionAmount(key.index()),
+                        key.index()
+                );
+
+            case SPEED_POTION:
+                return ClassItemFactory.speedPotion(
+                        getSpeedPotionDurationTicks(key.index()),
+                        getSpeedPotionAmplifier(key.index()),
+                        getSpeedPotionAmount(key.index()),
+                        key.index()
+                );
+
+            default:
+                return CommonItemFactory.create(player, key);
+        }
+    }
+
+    public Material getSwordMaterial() {
+        return Material.IRON_SWORD;
+    }
+
+    public ItemStack createClassBow() {
+        return ClassItemFactory.classBow();
+    }
+
+    public int getHealPotionHp(int index) {
+        return 16;
+    }
+
+    public int getHealPotionAmount(int index) {
+        return 1;
+    }
+
+    public int getSpeedPotionDurationTicks(int index) {
+        return 300;
+    }
+
+    public int getSpeedPotionAmplifier(int index) {
+        return 1;
+    }
+
+    public int getSpeedPotionAmount(int index) {
+        return 1;
     }
 
 

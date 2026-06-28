@@ -1,9 +1,16 @@
 package org.ajls.megawallsclasses.inventory;
 
+import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.NameSpacedKeys;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.function.Function;
 
 public class InventoryOrderEditor {
 

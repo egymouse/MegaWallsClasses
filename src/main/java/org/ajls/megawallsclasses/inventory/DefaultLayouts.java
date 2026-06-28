@@ -1,37 +1,46 @@
-package org.ajls.megawallsclasses.inventory;
+package org.ajls.megawallsclasses.inventory.layout;
+
+import org.ajls.megawallsclasses.inventory.key.ItemKind;
+import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 
 public final class DefaultLayouts {
 
-    public static InventoryLayout common() {
-        InventoryLayout layout = new InventoryLayout();  //todo 不过上面 layout = common() 要注意复制，实际可以写 common().copy()。
+    private static final InventoryLayout COMMON = createCommon();
 
-        layout.setSlot(ItemKey.TOOLKIT, 0);
-        layout.setSlot(ItemKey.COMPASS, 1);
-        layout.setSlot(ItemKey.PICKAXE, 2);
-        layout.setSlot(ItemKey.BLOCK_1, 3);
-        layout.setSlot(ItemKey.SQUID_POTION, 4);
+    private DefaultLayouts() {
+    }
 
-        layout.setSlot(ItemKey.SWORD, 5);
-        layout.setSlot(ItemKey.FOOD, 6);
-        layout.setSlot(ItemKey.BOW, 7);
-        layout.setSlot(ItemKey.HEAL_POTION_1, 8);
-        layout.setSlot(ItemKey.HEAL_POTION_2, 9);
+    private static InventoryLayout createCommon() {
+        InventoryLayout layout = new InventoryLayout();
 
-        layout.setSlot(ItemKey.SPEED_POTION_1, 10);
-        layout.setSlot(ItemKey.SPEED_POTION_2, 11);
-        layout.setSlot(ItemKey.ARROW, 12);
-        layout.setSlot(ItemKey.ENDER_CHEST, 13);
-        layout.setSlot(ItemKey.BLOCK_2, 14);
-        layout.setSlot(ItemKey.AXE, 15);
-        layout.setSlot(ItemKey.HAY_BLOCK, 16);
-        layout.setSlot(ItemKey.NETHER_STAR, 17);
+        layout.setSlot(LayoutKey.of(ItemKind.TOOLKIT), 0);
+        layout.setSlot(LayoutKey.of(ItemKind.COMPASS), 1);
+        layout.setSlot(LayoutKey.of(ItemKind.PICKAXE), 2);
+
+        layout.setSlot(LayoutKey.of(ItemKind.BLOCK, 1), 3);
+        layout.setSlot(LayoutKey.of(ItemKind.SQUID_POTION), 4);
+
+        layout.setSlot(LayoutKey.of(ItemKind.SWORD), 5);
+        layout.setSlot(LayoutKey.of(ItemKind.FOOD), 6);
+        layout.setSlot(LayoutKey.of(ItemKind.BOW), 7);
+
+        layout.setSlot(LayoutKey.of(ItemKind.HEAL_POTION, 1), 8);
+        layout.setSlot(LayoutKey.of(ItemKind.HEAL_POTION, 2), 9);
+
+        layout.setSlot(LayoutKey.of(ItemKind.SPEED_POTION, 1), 10);
+        layout.setSlot(LayoutKey.of(ItemKind.SPEED_POTION, 2), 11);
+
+        layout.setSlot(LayoutKey.of(ItemKind.ARROW), 12);
+        layout.setSlot(LayoutKey.of(ItemKind.ENDER_CHEST), 13);
+        layout.setSlot(LayoutKey.of(ItemKind.BLOCK, 2), 14);
+        layout.setSlot(LayoutKey.of(ItemKind.AXE), 15);
+        layout.setSlot(LayoutKey.of(ItemKind.HAY_BLOCK), 16);
+        layout.setSlot(LayoutKey.of(ItemKind.NETHER_STAR), 17);
 
         return layout;
     }
 
-    public static InventoryLayout snowman() {
-        InventoryLayout layout = common();
-        layout.setSlot(ItemKey.SNOWMAN_BLOOD_BLOCK, 18);
-        return layout;
+    public static InventoryLayout common() {
+        return COMMON.copy();
     }
 }
