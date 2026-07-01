@@ -9,6 +9,8 @@ public final class ClassDefaultLayoutResolver {
     public static InventoryLayout getDefaultLayout(AbstractCustomClass customClass) {
         InventoryLayout layout = DefaultLayouts.common();
 
+        customClass.configureDefaultLayout(layout);
+
         for (LayoutKey key : customClass.getDefaultLayoutKeys()) {
             if (!layout.contains(key)) {
                 int freeSlot = findFirstFreeSlot(layout);

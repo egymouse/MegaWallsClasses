@@ -25,7 +25,7 @@ public class InventoryApplier {
     }
 
     public void apply(Player player, AbstractCustomClass customClass) {
-        player.getInventory().clear();
+        clearStorageContents(player);
 
         InventoryLayout layout = layoutResolver.resolve(player, customClass);
 
@@ -43,4 +43,11 @@ public class InventoryApplier {
     public void apply(Player player, ClassEnum classEnum) {
         apply(player, classEnum.customClass);
     }
+
+    private void clearStorageContents(Player player) {
+        for (int i = 0; i < 36; i++) {
+            player.getInventory().setItem(i, null);
+        }
+    }
+
 }

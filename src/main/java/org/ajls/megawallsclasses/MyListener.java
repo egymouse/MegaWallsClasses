@@ -11,6 +11,10 @@ import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.customclasses.DragonClass;
 import org.ajls.megawallsclasses.displayname.DisplayNameManager;
+import org.ajls.megawallsclasses.inventory.editor.InventoryOrderEditor;
+import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
+import org.ajls.megawallsclasses.inventory.layout.LayoutRepository;
+import org.ajls.megawallsclasses.inventory.layout.LayoutResolver;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
 import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
 import org.ajls.megawallsclasses.nmsmodify.TamedTeleport;
@@ -792,6 +796,15 @@ public class MyListener implements Listener {
 //                    player.setMetadata("WhichClassReorder", new FixedMetadataValue(plugin, index));
                     player_whichClassReorder.put(player.getUniqueId(), index);
                     player.openInventory(loadClassReorderInventory(player, index));
+
+
+//                    Configuration configuration = MegaWallsClasses.getPlugin().getConfig();
+//                    LayoutRepository layoutRepository = new LayoutRepository(configuration);
+//                    LayoutResolver layoutResolver = new LayoutResolver(layoutRepository);
+//                    InventoryLayout inventoryLayout = layoutResolver.resolve(player, ClassEnum.ZOMBIE.customClass);
+//                    InventoryOrderEditor inventoryOrderEditor = new InventoryOrderEditor();
+//                    Inventory inventory = inventoryOrderEditor.createClassEditor(player, ClassEnum.ZOMBIE.customClass, inventoryLayout);
+//                    player.openInventory(inventory);
                 }
             }
         }

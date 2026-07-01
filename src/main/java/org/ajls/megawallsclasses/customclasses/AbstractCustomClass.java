@@ -8,6 +8,7 @@ import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.inventory.item.CommonItemFactory;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
+import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -70,6 +71,11 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 
         return keys;
     }
+
+    public void configureDefaultLayout(InventoryLayout layout) {
+        // 默认不做任何事
+    }
+
 
     /**
      * 根据 key 生成真实物品。

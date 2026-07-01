@@ -282,6 +282,8 @@ public class InitializeClass {
 //        player.getInventory().setItem(35, new ItemStack(Material.HAY_BLOCK, 16));
 //        player.getInventory().setItem(35, setUnbreakable(new ItemStack(Material.ARROW, 64)));
         //stop here
+
+
         Inventory classInventory = InventoryManager.loadClassReorderInventory(player, ClassU.getClass(player));
         if (loadAsTF) {
             classInventory = InventoryManager.loadClassReorderInventory(player, 29);
@@ -324,6 +326,7 @@ public class InitializeClass {
                 player.getInventory().setItem(slotToChange, stack);
             }
         }
+
 //        Inventory classReorderInventory = InventoryManager.loadClassReorderInventory(player, ScoreboardsAndTeams.getScore(player, "class"), false);  //only changed to false so it can load normal items
 //        for (int i = 0; i < 36; i++) {
 //            ItemStack stack = classReorderInventory.getItem(i);
@@ -332,6 +335,9 @@ public class InitializeClass {
 //                player.getInventory().setItem(i, stack);
 //            }
 //        }
+
+
+//        MegaWallsClasses.getPlugin().getInventoryApplier().apply(player, ClassEnum.getCustomClassByPlayer(player));
     }
 
     public static void initializeAutoEnergyAccumulationFlexible(Player player) {

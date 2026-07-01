@@ -4,7 +4,6 @@ import org.ajls.lib.advanced.BukkitTaskMap;
 import org.ajls.lib.advanced.HaxhMap;
 import org.ajls.megawallsclasses.EnergyAccumulate;
 import org.ajls.megawallsclasses.MegaWallsClasses;
-import org.ajls.megawallsclasses.MyListener;
 import org.ajls.megawallsclasses.ScoreboardsAndTeams;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.*;
@@ -14,7 +13,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -28,7 +26,6 @@ import java.util.*;
 import static org.ajls.megawallsclasses.EnergyAccumulate.addEnergy;
 import static org.ajls.megawallsclasses.MegaWallsClasses.getPlugin;
 import static org.ajls.megawallsclasses.MegaWallsClasses.plugin;
-import static org.bukkit.Bukkit.getServer;
 import static org.bukkit.Bukkit.getWorld;
 
 public class DragonClass extends AbstractCustomClass {
@@ -77,12 +74,13 @@ public class DragonClass extends AbstractCustomClass {
 
 
 
-    public static HashMap<Location, Pair<BlockState, UUID>> netherrack_dragon = new HashMap<>();
+    public static HashMap<Location, DragonNetherrackData> netherrack_data = new HashMap<>();
     @Override
     public void activeSkill(Player player) {
         Location location = player.getLocation();
         Block centerBlock = location.getBlock();
         Location centerBlockLocation = centerBlock.getLocation();
+        UUID playerUUID = player.getUniqueId();
 
 
         Vector direction = player.getLocation().getDirection().setY(0).normalize();
@@ -114,8 +112,9 @@ public class DragonClass extends AbstractCustomClass {
                     }
 
                     BlockState blockState = relativeBlock.getState();
-                    Pair<BlockState, UUID> pair = Pair.of(blockState, player.getUniqueId());
-                    netherrack_dragon.put(relativeLocation, pair);
+                    DragonNetherrackData dragonNetherrackData = new DragonNetherrackData(blockState, playerUUID);
+                    dragonNetherrackData.increase();
+                    netherrack_data.put(relativeLocation, dragonNetherrackData);
 
                     relativeBlock.setType(Material.NETHERRACK, false);
                     BlockState netherrackBlockState = relativeBlock.getState();
@@ -133,13 +132,17 @@ public class DragonClass extends AbstractCustomClass {
 
                         boolean changed = hasBlockStateChanged(oldState, newState);
 
-                        if (changed) {
+                        if (dragonNetherrackData.decrease()) {  //最后一个持续的技能了，结束了就真的结束了
+                            if (changed) {
 //                            System.out.println("BlockState 改变了");
+                            }
+                            else {
+                                blockState.update(true);
+                            }
+                            netherrack_data.remove(relativeLocation);
                         }
-                        else {
-                            blockState.update(true);
-                        }
-                        netherrack_dragon.remove(relativeLocation);
+
+
 
 //                            }
                     }, 40);
@@ -159,6 +162,52 @@ public class DragonClass extends AbstractCustomClass {
 
     }
 
+    public static class DragonNetherrackData {
+        private BlockState blockState;
+        private UUID uuid;
+        private int count = 0;
+
+        public DragonNetherrackData(BlockState blockState, UUID uuid) {
+            setBlockState(blockState);
+            setUuid(uuid);
+        }
+
+        // Getter / Setter（可按需添加校验）
+        public BlockState getBlockState() { return blockState; }
+        public void setBlockState(BlockState blockState) {
+            if (blockState == null) throw new IllegalArgumentException("blockState must not be null");
+            this.blockState = blockState;
+        }
+
+        public UUID getUuid() { return uuid; }
+        public void setUuid(UUID uuid) {
+            if (uuid == null) throw new IllegalArgumentException("uuid must not be null");
+            this.uuid = uuid;
+        }
+
+        public int getCount() { return count; }
+        public void setCount(int count) {
+            if (count < 0) throw new IllegalArgumentException("count must be non-negative");
+            this.count = count;
+        }
+
+        public void increase() {
+            count++;
+        }
+
+        public boolean decrease() {
+            count--;
+            return count <= 0;
+        }
+
+//        @Override
+//        public boolean equals(Object o) { /* 自动生成或手动实现 */ }
+//        @Override
+//        public int hashCode() { /* 自动生成或手动实现 */ }
+//        @Override
+//        public String toString() { return "BlockStateWrapper{...}"; }
+    }
+
     public static boolean hasBlockStateChanged(BlockState oldState, BlockState newState) {
         return oldState.getType() != newState.getType()
                 || !oldState.getBlockData().equals(newState.getBlockData());
@@ -169,10 +218,10 @@ public class DragonClass extends AbstractCustomClass {
         Location floorLoc = floorBlock.getLocation();
 
         // 检查这个位置是否在被替换的集合中
-         if (DragonClass.netherrack_dragon.containsKey(floorLoc)) {
+         if (DragonClass.netherrack_data.containsKey(floorLoc)) {
             // 触发踩踏逻辑！
             // 这里可以根据你的需求选择方案 A 或 B（见下文）
-            Pair<BlockState, UUID> blockState_UUID = DragonClass.netherrack_dragon.get(floorLoc);
+            org.ajls.megawallsclasses.customclasses.DragonClass.DragonNetherrackData dragonNetherrackData = DragonClass.netherrack_data.get(floorLoc);
 //            BlockState oldBlockState = blockState_UUID.getLeft();
 //            BlockState newBlockState = oldBlockState.getBlock().getState();
 //            if (hasBlockStateChanged(oldBlockState, newBlockState)) {
@@ -180,11 +229,11 @@ public class DragonClass extends AbstractCustomClass {
 //                return;
 //            }
              if (floorBlock.getType() != Material.NETHERRACK) {
-                 DragonClass.netherrack_dragon.remove(floorLoc);
+                 DragonClass.netherrack_data.remove(floorLoc);
                 return;
              }
 
-            UUID uuid = blockState_UUID.getRight();
+            UUID uuid = dragonNetherrackData.getUuid();
             Player dragon = Bukkit.getPlayer(uuid);
             if (dragon != null) {  //todo 把team存储在combust方块里面，这样龙下线了也能正常使用
                 if (ScoreboardsAndTeams.isPlayerSameTeam(player, dragon)) return;

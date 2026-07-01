@@ -24,6 +24,17 @@ public enum ItemKind {
     这default layout的common 只有ClassDefaultLayoutResolver getDefaultLayout才修改，其他都是只读，copy会不会浪费性能
     如果class想要自定义职业默认layout特殊物品的位置呢？ 估计不会
     getDefaultLayoutKeys能不能在override执行增量操作 可以call super就行
+
+    血药，速度药这些信息配置在config里面
+    需要config结构重置 包括之前的职业名称
+
+    把itemFactory在生成key的时候就绑定在一起，减少物品反复生成和if判断
+
+
+
+
+
+
      */
     TOOLKIT("toolkit"),
     COMPASS("compass"),
