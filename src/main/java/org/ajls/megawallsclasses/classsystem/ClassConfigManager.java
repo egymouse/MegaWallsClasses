@@ -1,5 +1,6 @@
 package org.ajls.megawallsclasses.classsystem;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -7,16 +8,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClassConfigManager {
+
     private static ClassConfigManager instance;
+
     private final JavaPlugin plugin;
-    private final Map<Integer, ClassNameEntry> cache = new HashMap<>();
+    private final Map<Integer, ClassConfigEntry> cache = new HashMap<>();
 
     private ClassConfigManager(JavaPlugin plugin) {
         this.plugin = plugin;
         reloadCache();
-//        if (instance == null) {
-//            instance = this;
-//        }
     }
 
     public static ClassConfigManager getInstance(JavaPlugin plugin) {
@@ -26,8 +26,6 @@ public class ClassConfigManager {
         return instance;
     }
 
-
-
     public void reloadFromDisk() {
         plugin.reloadConfig();
         reloadCache();
@@ -35,59 +33,88 @@ public class ClassConfigManager {
 
     public void reloadCache() {
         cache.clear();
-        FileConfiguration config = plugin.getConfig();
-        var classNamesSection = config.getConfigurationSection("classes");
-        if (classNamesSection == null) return;
 
-        for (String key : classNamesSection.getKeys(false)) {
+        FileConfiguration config = plugin.getConfig();
+        ConfigurationSection classesSection =
+                config.getConfigurationSection(ClassConfigKeys.CLASSES);
+
+        if (classesSection == null) return;
+
+        for (String key : classesSection.getKeys(false)) {
             try {
-                int id = Integer.parseInt(key);
-                String name = classNamesSection.getString(key + ".names.name");
-                String shortName = classNamesSection.getString(key + ".names.short-name");
-                if (name != null && shortName != null) {
-                    cache.put(id, new ClassNameEntry(name, shortName));
-                }
-            } catch (NumberFormatException ignored) {}
+                int classId = Integer.parseInt(key);
+                ClassConfigEntry entry = loadClassConfig(classesSection, key);
+                cache.put(classId, entry);
+            } catch (NumberFormatException ignored) {
+            }
         }
     }
 
+    private ClassConfigEntry loadClassConfig(ConfigurationSection classesSection, String key) {
+        String basePath = key + ".";
 
-    // 重载配置文件
-    public void reload() {  //todo 看看服务器reload会发生什么，并把这个也注册进去
-        cache.clear();
-        plugin.reloadConfig();
-        FileConfiguration config = plugin.getConfig();
-        var classNamesSection = config.getConfigurationSection("classes");
-        if (classNamesSection == null) return;
+        String name = classesSection.getString(
+                basePath + ClassConfigKeys.NAMES + "." + ClassConfigKeys.NAME,
+                "无职业"
+        );
 
-        for (String key : classNamesSection.getKeys(false)) {
-            try {
-                int id = Integer.parseInt(key);
-                String name = classNamesSection.getString(key + ".names.name");
-                String shortName = classNamesSection.getString(key + ".names.short-name");
-                if (name != null && shortName != null) {
-                    cache.put(id, new ClassNameEntry(name, shortName));
-                }
-            } catch (NumberFormatException ignored) {}
-        }
+        String shortName = classesSection.getString(
+                basePath + ClassConfigKeys.NAMES + "." + ClassConfigKeys.SHORT_NAME,
+                "无职"
+        );
+
+        PotionConfig healthPotion = loadHealthPotionConfig(classesSection, basePath);
+        PotionConfig speedPotion = loadSpeedPotionConfig(classesSection, basePath);
+
+        return new ClassConfigEntry(name, shortName, healthPotion, speedPotion);
     }
+
+    private ClassConfigEntry getEntry(int classId) {
+        ClassConfigEntry entry = cache.get(classId);
+        if (entry != null) return entry;
+
+        return ClassConfigEntry.defaultEntry();
+    }
+
+
+
+
 
     public String getClassName(int classId) {
-        ClassNameEntry entry = cache.get(classId);
-        return entry != null ? entry.name : "无职业";  //未知职业
+        return getEntry(classId).name();
     }
 
     public String getClassShortName(int classId) {
-        ClassNameEntry entry = cache.get(classId);
-        return entry != null ? entry.shortName : "无职";  //未知
+        return getEntry(classId).shortName();
     }
 
-    private static class ClassNameEntry {
-        final String name;
-        final String shortName;
-        ClassNameEntry(String name, String shortName) {
-            this.name = name;
-            this.shortName = shortName;
-        }
+    public int getHealthPotionAmount(int classId) {
+        return getEntry(classId).healthPotion().amount();
     }
+
+    public int getHealthPotionHp(int classId) {
+        return getEntry(classId).healthPotion().hp();
+    }
+
+    public int getHealthPotionStackAmount(int classId) {
+        return getEntry(classId).healthPotion().stackAmount();
+    }
+
+    public int getSpeedPotionAmount(int classId) {
+        return getEntry(classId).speedPotion().amount();
+    }
+
+    public int getSpeedPotionDurationTicks(int classId) {
+        return getEntry(classId).speedPotion().durationTicks();
+    }
+
+    public int getSpeedPotionAmplifier(int classId) {
+        return getEntry(classId).speedPotion().amplifier();
+    }
+
+    public int getSpeedPotionStackAmount(int classId) {
+        return getEntry(classId).speedPotion().stackAmount();
+    }
+
+
 }

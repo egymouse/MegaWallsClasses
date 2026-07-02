@@ -86,42 +86,51 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
      * 大部分职业不需要重写全部，只重写 getSwordMaterial / getBow / getPotionProfile 即可。
      */
     public ItemStack createInventoryItem(Player player, LayoutKey key) {
-        ItemKind kind = key.kind();
-
-        switch (kind) {
+        switch (key.kind()) {
             case SWORD:
-                return ClassItemFactory.classSword(getSwordMaterial());
+                return createClassSword(player, key);
 
             case BOW:
-                return createClassBow();
+                return createClassBow(player, key);
 
             case HEAL_POTION:
-                return ClassItemFactory.healPotion(
-                        getHealPotionHp(key.index()),
-                        getHealPotionAmount(key.index()),
-                        key.index()
-                );
+                return createHealthPotion(player, key);
 
             case SPEED_POTION:
-                return ClassItemFactory.speedPotion(
-                        getSpeedPotionDurationTicks(key.index()),
-                        getSpeedPotionAmplifier(key.index()),
-                        getSpeedPotionAmount(key.index()),
-                        key.index()
-                );
+                return createSpeedPotion(player, key);
 
             default:
                 return CommonItemFactory.create(player, key);
         }
     }
 
-    public Material getSwordMaterial() {
-        return Material.IRON_SWORD;
+
+    public ItemStack createClassSword(Player player, LayoutKey key) {
+        return ClassItemFactory.classSword(Material.IRON_SWORD, key);
     }
 
-    public ItemStack createClassBow() {
-        return ClassItemFactory.classBow();
+    public ItemStack createClassBow(Player player, LayoutKey key) {
+        return ClassItemFactory.classBow(key);
     }
+
+
+    public ItemStack createHealthPotion(Player player, LayoutKey key) {
+        return ClassItemFactory.healPotion(
+                getHealthPotionHp(key.index()),
+                getHealthPotionStackAmount(key.index()),
+                key.index()
+        );
+    }
+
+    public ItemStack createSpeedPotion(Player player, LayoutKey key) {
+        return ClassItemFactory.speedPotion(
+                getSpeedPotionDurationTicks(key.index()),
+                getSpeedPotionAmplifier(key.index()),
+                getSpeedPotionStackAmount(key.index()),
+                key.index()
+        );
+    }
+
 
 
     public static final String health_potion = "health_potion";

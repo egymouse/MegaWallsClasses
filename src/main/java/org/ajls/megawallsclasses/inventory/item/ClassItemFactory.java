@@ -37,6 +37,21 @@ public final class ClassItemFactory {
         return mark(LayoutKey.of(ItemKind.SWORD), item);
     }
 
+    public static ItemStack classSword(Material material, LayoutKey key) {
+        ItemStack item = new ItemStack(material);
+        setDisplayName(item, "iron_sword");
+        setUnbreakable(item);
+        setClassItem(item);
+        addLore(item, "classSword");
+
+        if (true) {
+            item.addEnchantment(Enchantment.UNBREAKING, 3);
+        }
+
+        return mark(key, item);
+    }
+
+
     public static ItemStack classBow() {
         ItemStack item = new ItemStack(Material.BOW);
         setDisplayName(item, "bow");
@@ -47,6 +62,17 @@ public final class ClassItemFactory {
 
         return mark(LayoutKey.of(ItemKind.BOW), item);
     }
+
+    public static ItemStack classBow(LayoutKey key) {
+        ItemStack item = new ItemStack(Material.BOW);
+        setDisplayName(item, "bow");
+        setUnbreakable(item);
+        setClassItem(item);
+        addLore(item, "classBow");
+        item.addEnchantment(Enchantment.UNBREAKING, 3);
+        return mark(key, item);
+    }
+
 
     public static ItemStack healPotion(int hp, int amount, int index) {
         ItemStack item = new ItemStack(Material.POTION, amount);
