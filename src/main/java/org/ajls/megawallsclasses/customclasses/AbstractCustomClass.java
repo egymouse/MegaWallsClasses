@@ -3,7 +3,7 @@ package org.ajls.megawallsclasses.customclasses;
 import org.ajls.megawallsclasses.ClassEnum;
 import org.ajls.megawallsclasses.MegaWallsClasses;
 import org.ajls.megawallsclasses.MyListener;
-import org.ajls.megawallsclasses.classsystem.ClassNamesConfig;
+import org.ajls.megawallsclasses.classsystem.ClassConfigManager;
 import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.inventory.item.CommonItemFactory;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
@@ -34,13 +34,13 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     // 默认实现：通过枚举获取 classId，再到配置文件读取名称
     public String getClassName() {
         int classId = getClassEnum().classId;
-        return ClassNamesConfig.getInstance(MegaWallsClasses.getPlugin())
+        return ClassConfigManager.getInstance(MegaWallsClasses.getPlugin())
                 .getClassName(classId);
     }
 
     public String getClassShortName() {
         int classId = getClassEnum().classId;
-        return ClassNamesConfig.getInstance(MegaWallsClasses.getPlugin())
+        return ClassConfigManager.getInstance(MegaWallsClasses.getPlugin())
                 .getClassShortName(classId);
     }
 
@@ -64,10 +64,14 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         keys.add(LayoutKey.of(ItemKind.AXE));
         keys.add(LayoutKey.of(ItemKind.HAY_BLOCK));
 
-        keys.add(LayoutKey.of(ItemKind.HEAL_POTION, 1));
-        keys.add(LayoutKey.of(ItemKind.HEAL_POTION, 2));
-        keys.add(LayoutKey.of(ItemKind.SPEED_POTION, 1));
-        keys.add(LayoutKey.of(ItemKind.SPEED_POTION, 2));
+        for (int i = 1; i <= getHealthPotionAmount(); i++) {
+            keys.add(LayoutKey.of(ItemKind.HEAL_POTION, i));
+        }
+
+        for (int i = 1; i <= getSpeedPotionAmount(); i++) {
+            keys.add(LayoutKey.of(ItemKind.SPEED_POTION, i));
+        }
+
 
         return keys;
     }
@@ -119,25 +123,42 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         return ClassItemFactory.classBow();
     }
 
-    public int getHealPotionHp(int index) {
-        return 16;
+
+    public static final String health_potion = "health_potion";
+
+    public int getHealthPotionHp(int index) {
+        return getClassConfigManager().getHealthPotionHp(getClassEnum().classId);
     }
 
-    public int getHealPotionAmount(int index) {
-        return 1;
+    public int getHealthPotionAmount() {
+        return getClassConfigManager().getHealthPotionAmount(getClassEnum().classId);
+    }
+
+    public int getHealthPotionStackAmount(int index) {
+        return getClassConfigManager().getHealthPotionStackAmount(getClassEnum().classId);
+    }
+
+    public int getSpeedPotionAmount() {
+        return getClassConfigManager().getSpeedPotionAmount(getClassEnum().classId);
     }
 
     public int getSpeedPotionDurationTicks(int index) {
-        return 300;
+        return getClassConfigManager().getSpeedPotionDurationTicks(getClassEnum().classId);
     }
 
     public int getSpeedPotionAmplifier(int index) {
-        return 1;
+        return getClassConfigManager().getSpeedPotionAmplifier(getClassEnum().classId);
     }
 
-    public int getSpeedPotionAmount(int index) {
-        return 1;
+    public int getSpeedPotionStackAmount(int index) {
+        return getClassConfigManager().getSpeedPotionStackAmount(getClassEnum().classId);
     }
+
+    protected ClassConfigManager getClassConfigManager() {
+        return ClassConfigManager.getInstance(MegaWallsClasses.getPlugin());
+    }
+
+
 
     public boolean hasInventoryItem(LayoutKey key) {
         return getDefaultLayoutKeys().contains(key);

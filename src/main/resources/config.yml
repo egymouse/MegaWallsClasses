@@ -46,6 +46,10 @@ classes:
     names:
       name: "无职业"
       short-name: "无职"
+    inventory:
+      health_potion:
+        amount: 2
+        hp: 20
   1:
     names:
       name: "僵尸"

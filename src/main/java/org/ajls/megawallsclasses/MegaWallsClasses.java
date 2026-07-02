@@ -1,10 +1,9 @@
 package org.ajls.megawallsclasses;
 
 import org.ajls.cactusgenerator.cosmetics.Bloody;
-import org.ajls.lib.api.LIbAPI;
 import org.ajls.lib.utils.ScoreboardU;
+import org.ajls.megawallsclasses.classsystem.ClassConfigManager;
 import org.ajls.megawallsclasses.commands.*;
-import org.ajls.megawallsclasses.classsystem.ClassNamesConfig;
 import org.ajls.megawallsclasses.custommusic.MidiMusicPlayer;
 import org.ajls.megawallsclasses.inventory.apply.InventoryApplier;
 import org.ajls.megawallsclasses.inventory.editor.InventoryOrderEditor;
@@ -12,7 +11,6 @@ import org.ajls.megawallsclasses.inventory.layout.LayoutRepository;
 import org.ajls.megawallsclasses.inventory.layout.LayoutResolver;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
 import org.ajls.megawallsclasses.packetlisteners.PacketListener;
-import org.ajls.megawallsclasses.playerdata.PlayerData;
 import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
@@ -123,7 +121,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         tracked_teams.add("red_team");
         setTracked_teams(tracked_teams);
         Bloody.registerPlayerDeathItems(CustomEventsOld.getPlayer_deathItems());
-        ClassNamesConfig.getInstance(this);  //其实也不用写，反正调用时会自动传入instance
+        ClassConfigManager.getInstance(this);  //其实也不用写，反正调用时会自动传入instance
         getServer().getPluginManager().registerEvents(new MyListener(), this);
 //        LIbAPI.registerListener(new MyListener());
         new SpawnProtectionListener();

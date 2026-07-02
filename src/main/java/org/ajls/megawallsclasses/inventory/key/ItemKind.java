@@ -30,6 +30,8 @@ public enum ItemKind {
 
     把itemFactory在生成key的时候就绑定在一起，减少物品反复生成和if判断
 
+    class sword和class bow是先获取白板，然后再添加新东西
+
 
 
 
