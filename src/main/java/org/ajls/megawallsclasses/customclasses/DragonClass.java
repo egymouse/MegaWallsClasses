@@ -196,6 +196,7 @@ public class DragonClass extends AbstractCustomClass {
         }
 
         public boolean decrease() {
+            if (count <= 0)  throw new IllegalArgumentException("count must be positive");
             count--;
             return count <= 0;
         }

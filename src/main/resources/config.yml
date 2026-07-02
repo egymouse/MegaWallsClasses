@@ -40,59 +40,76 @@ locations:
     y: 383 #-128
     z: 31
 # 职业显示名称配置
-class-names:
+classes:
   # 职业ID -> 名称配置
   0:
-    name: "无职业"
-    short-name: "无职"
+    names:
+      name: "无职业"
+      short-name: "无职"
   1:
-    name: "僵尸"
-    short-name: "僵尸"
+    names:
+      name: "僵尸"
+      short-name: "僵尸"
   2:
-    name: "Herobrine"
-    short-name: "HB"
+    names:
+      name: "Herobrine"
+      short-name: "HB"
   3:
-    name: "骷髅"
-    short-name: "小白"
+    names:
+      name: "骷髅"
+      short-name: "小白"
   4:
-    name: "末影人"
-    short-name: "小黑"
+    names:
+      name: "末影人"
+      short-name: "小黑"
   5:
-    name: "黑暗君主"
-    short-name: "黑君"
+    names:
+      name: "黑暗君主"
+      short-name: "黑君"
   6:
-    name: "恐惧魔王"
-    short-name: "恐惧"
+    names:
+      name: "恐惧魔王"
+      short-name: "恐惧"
   7:
-    name: "实体303"
-    short-name: "303"
+    names:
+      name: "实体303"
+      short-name: "303"
   8:
-    name: "苦力怕"
-    short-name: "苦力怕"
+    names:
+      name: "苦力怕"
+      short-name: "苦力怕"
   9:
-    name: "死灵骑士"
-    short-name: "死灵"
+    names:
+      name: "死灵骑士"
+      short-name: "死灵"
   10:
-    name: "溺尸王"
-    short-name: "水鬼"
+    names:
+      name: "溺尸王"
+      short-name: "水鬼"
   11:
-    name: "蜘蛛"
-    short-name: "蜘蛛"
+    names:
+      name: "蜘蛛"
+      short-name: "蜘蛛"
   12:
-    name: "萨满"
-    short-name: "萨满"
+    names:
+      name: "萨满"
+      short-name: "萨满"
   13:
-    name: "雪人"
-    short-name: "雪人"
+    names:
+      name: "雪人"
+      short-name: "雪人"
   14:
-    name: "鼹鼠"
-    short-name: "老鼠" #腐竹
+    names:
+      name: "鼹鼠"
+      short-name: "老鼠"  #腐竹
   15:
-    name: "灰之魔女"
-    short-name: "魔女"
+    names:
+      name: "灰之魔女"
+      short-name: "魔女"
   18:
-    name: "鱿鱼"
-    short-name: "鱿鱼"
+    names:
+      name: "鱿鱼"
+      short-name: "鱿鱼"
 #    10:
 #      name: "溺尸王(旧)"
 #      short-name: "水鬼(旧)"

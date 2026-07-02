@@ -31,14 +31,14 @@ public class ClassNamesConfig {
         cache.clear();
         plugin.reloadConfig();
         FileConfiguration config = plugin.getConfig();
-        var classNamesSection = config.getConfigurationSection("class-names");
+        var classNamesSection = config.getConfigurationSection("classes");
         if (classNamesSection == null) return;
 
         for (String key : classNamesSection.getKeys(false)) {
             try {
                 int id = Integer.parseInt(key);
-                String name = classNamesSection.getString(key + ".name");
-                String shortName = classNamesSection.getString(key + ".short-name");
+                String name = classNamesSection.getString(key + ".names.name");
+                String shortName = classNamesSection.getString(key + "names.short-name");
                 if (name != null && shortName != null) {
                     cache.put(id, new ClassNameEntry(name, shortName));
                 }
