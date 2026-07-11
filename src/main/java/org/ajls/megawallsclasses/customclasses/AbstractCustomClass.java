@@ -1,16 +1,21 @@
 package org.ajls.megawallsclasses.customclasses;
 
-import org.ajls.megawallsclasses.ClassEnum;
-import org.ajls.megawallsclasses.MegaWallsClasses;
-import org.ajls.megawallsclasses.MyListener;
+import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.*;
 import org.ajls.megawallsclasses.classsystem.ClassConfigManager;
+import org.ajls.megawallsclasses.commands.Order;
 import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.inventory.item.CommonItemFactory;
+import org.ajls.megawallsclasses.inventory.item.ItemStackProvider;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
+import org.ajls.trackercompass.CompassItemStack;
+import org.ajls.trackercompass.TrackerCompass;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -18,10 +23,15 @@ import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.ajls.megawallsclasses.ItemStackModify.*;
 
 public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象类implement之前那个接口的，但算了反正一样
     private ClassEnum classEnum = null;  // 存储注入的枚举
+    public Map<ItemKind, ItemStack> itemKind_itemStack = new HashMap<>();
 
     public void setClassEnum(ClassEnum classEnum) {
         this.classEnum = classEnum;
@@ -44,9 +54,63 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
                 .getClassShortName(classId);
     }
 
+    public void addItem(ItemKind itemKind, ItemStackProvider itemStackProvider) {
+        ItemStack itemStack = itemStackProvider.getItemStack();
+        ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.INVENTORY_PATH, itemKind.id());
+        itemKind_itemStack.put(itemKind, itemStack);
+    }
+
 
     public List<LayoutKey> getDefaultLayoutKeys() {
         List<LayoutKey> keys = new ArrayList<>();
+
+        addItem(ItemKind.TOOLKIT, () -> {
+            ItemStack item = new ItemStack(Material.CLOCK);
+            setDisplayName(item, "超级战墙工具箱");
+            setClassItem(item);
+            return item;
+        });
+        addItem(ItemKind.COMPASS, () -> {
+            return CompassItemStack.trackerCompass.clone();
+        });
+        addItem(ItemKind.PICKAXE, () -> {
+            ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
+//            setDisplayName(item, "diamond_pickaxe");
+            setUnbreakable(item);
+            item.addEnchantment(Enchantment.EFFICIENCY, 3);
+            setClassItem(item);
+            return item;
+        });
+        addItem(ItemKind.ENDER_CHEST, () -> {
+            ItemStack ender_chest = new ItemStack(Material.ENDER_CHEST);
+            setClassItem(ender_chest);
+            return ender_chest;
+        });
+        addItem(ItemKind.NETHER_STAR, () -> {
+            ItemStack nether_star = new ItemStack(Material.NETHER_STAR);
+            setClassItem(nether_star);
+            return nether_star;
+        });
+
+        addItem(ItemKind.SWORD, () -> {
+            ItemStack iron_sword = new ItemStack(Material.IRON_SWORD);
+//            setDisplayName(iron_sword, "iron_sword");
+            setUnbreakable(iron_sword);
+            iron_sword.addEnchantment(Enchantment.UNBREAKING, 3);
+            setClassItem(iron_sword);
+            return iron_sword;
+        });
+
+        addItem(ItemKind.FOOD, () -> {
+            ItemStack cooked_porkchop = new ItemStack(Material.COOKED_PORKCHOP, 64);
+            return cooked_porkchop;
+        });
+
+        addItem(ItemKind.BOW, () -> {
+
+        });
+
+
 
         keys.add(LayoutKey.of(ItemKind.TOOLKIT));
         keys.add(LayoutKey.of(ItemKind.COMPASS));
@@ -105,6 +169,19 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     }
 
 
+    public ItemStack createClassSword() {
+        ItemStack classSword = new ItemStack(Material.IRON_SWORD);
+        setUnbreakable(classSword);
+        setClassItem(classSword);
+        addLore(classSword, "classSword");
+        classSword.addEnchantment(Enchantment.UNBREAKING, 3);
+        return classSword;
+    }
+
+    public ItemStack createClassBow() {
+
+    }
+
     public ItemStack createClassSword(Player player, LayoutKey key) {
         return ClassItemFactory.classSword(Material.IRON_SWORD, key);
     }
@@ -133,7 +210,6 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 
 
 
-    public static final String health_potion = "health_potion";
 
     public int getHealthPotionHp(int index) {
         return getClassConfigManager().getHealthPotionHp(getClassEnum().classId);
@@ -174,8 +250,8 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     }
 
     public int getPotionCount(ItemKind kind) {
-        if (kind == ItemKind.HEAL_POTION) return 2;
-        if (kind == ItemKind.SPEED_POTION) return 2;
+        if (kind == ItemKind.HEAL_POTION) return getHealthPotionAmount();
+        if (kind == ItemKind.SPEED_POTION) return getSpeedPotionAmount();
         return 1;
     }
 

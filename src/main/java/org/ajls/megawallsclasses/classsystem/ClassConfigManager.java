@@ -69,6 +69,58 @@ public class ClassConfigManager {
         return new ClassConfigEntry(name, shortName, healthPotion, speedPotion);
     }
 
+    private PotionConfig loadHealthPotionConfig(ConfigurationSection classesSection, String basePath) {
+        String potionPath = basePath
+                + ClassConfigKeys.INVENTORY + "."
+                + ClassConfigKeys.HEALTH_POTION + ".";
+
+        ClassConfigEntry defaults = ClassConfigEntry.defaultEntry();
+        PotionConfig defaultPotion = defaults.healthPotion();
+
+        int amount = classesSection.getInt(
+                potionPath + ClassConfigKeys.AMOUNT,
+                defaultPotion.amount()
+        );
+        int stackAmount = classesSection.getInt(
+                potionPath + ClassConfigKeys.STACK_AMOUNT,
+                defaultPotion.stackAmount()
+        );
+        int hp = classesSection.getInt(
+                potionPath + ClassConfigKeys.HP,
+                defaultPotion.hp()
+        );
+
+        return PotionConfig.healthPotion(amount, stackAmount, hp);
+    }
+
+    private PotionConfig loadSpeedPotionConfig(ConfigurationSection classesSection, String basePath) {
+        String potionPath = basePath
+                + ClassConfigKeys.INVENTORY + "."
+                + ClassConfigKeys.SPEED_POTION + ".";
+
+        ClassConfigEntry defaults = ClassConfigEntry.defaultEntry();
+        PotionConfig defaultPotion = defaults.speedPotion();
+
+        int amount = classesSection.getInt(
+                potionPath + ClassConfigKeys.AMOUNT,
+                defaultPotion.amount()
+        );
+        int stackAmount = classesSection.getInt(
+                potionPath + ClassConfigKeys.STACK_AMOUNT,
+                defaultPotion.stackAmount()
+        );
+        int durationTicks = classesSection.getInt(
+                potionPath + ClassConfigKeys.DURATION_TICKS,
+                defaultPotion.durationTicks()
+        );
+        int amplifier = classesSection.getInt(
+                potionPath + ClassConfigKeys.AMPLIFIER,
+                defaultPotion.amplifier()
+        );
+
+        return PotionConfig.speedPotion(amount, stackAmount, durationTicks, amplifier);
+    }
+
     private ClassConfigEntry getEntry(int classId) {
         ClassConfigEntry entry = cache.get(classId);
         if (entry != null) return entry;

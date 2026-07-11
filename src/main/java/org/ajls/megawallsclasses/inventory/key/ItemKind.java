@@ -1,5 +1,7 @@
 package org.ajls.megawallsclasses.inventory.key;
 
+import org.bukkit.inventory.ItemStack;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +33,19 @@ public enum ItemKind {
     把itemFactory在生成key的时候就绑定在一起，减少物品反复生成和if判断
 
     class sword和class bow是先获取白板，然后再添加新东西
+
+    getHealthPotionHp(int index)这些index是何意味
+    速度药水是300tick
+    loadHealthPotionConfig和loadSpeedPotionConfig没对应method(ClassConfigManager)
+    为什么createClassSword(Player player, LayoutKey key）需要加入这么多参数的？pdc又是什么？
+    重排物品栏顺序入口不是order命令，而是右键种打开的MW menu菜单，可以选择重新排序物品栏还是职业物品栏，计划搞一个职业类型选择菜单，也就是选择自己做的职业还是饭制职业还是d服职业之类的，当然职业物品栏顺序重排也会有这个菜单。
+    根据代码生成一下所有职业的职业特殊物品，包括实际的和preview的,看看能不能在职业物品栏重排时就展示职业物品（比如如果职业是钻石剑什么的就要展示对应的钻石剑而非铁剑）
+    速度药是默认一组叠起来的两个，血药也是。
+    对物品的mark其实只是为了适配幻变大师特别的机制，有三类型物品，第一类是剑/弓这些可以直接替换的物品，第二类就是消耗品不给予补充(专指速度药，血药，还有给每个人的鱿鱼药，如果有职业，第三类就是职业特殊物品，我想清除掉之前的然后补发下一个职业的。isTF表示是不是幻变大师，loadAsTF表示是不是初始化职业（也就是要加载幻变大师的补给品那些）
+    squid_potion_for_everyone本质上和squid_potion没有区别，只是每个职业都有所以取了一个特殊名字，唯一区别就是是要适配tf消耗品不给补充的机制，给大家的鱿鱼药不补充，但是如果是作为职业专属物品（我后面计划给鱿鱼多补5组药，每组默认三个，等价于是一共有6组），比如鱿鱼，那么那专属的5组药会补充。
+
+
+
 
 
 
