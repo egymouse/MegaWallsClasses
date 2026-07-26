@@ -64,6 +64,8 @@ public enum ItemKind {
     ARROW("arrow"),
 
     BLOCK("block"),
+    COBBLESTONE("cobblestone"),
+    PLANKS("planks"),
     FOOD("food"),
     AXE("axe"),
     HAY_BLOCK("hay_block"),

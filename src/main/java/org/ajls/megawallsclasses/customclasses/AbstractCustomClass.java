@@ -56,13 +56,16 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 
     public void addItem(ItemKind itemKind, ItemStackProvider itemStackProvider) {
         ItemStack itemStack = itemStackProvider.getItemStack();
-        ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.INVENTORY_PATH, itemKind.id());
+        ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE, itemKind.id());  //注入pdc为了重编辑物品栏时能知道什么在什么位上
         itemKind_itemStack.put(itemKind, itemStack);
     }
 
+    List<LayoutKey> getDefaultLayoutKeys() {
 
-    public List<LayoutKey> getDefaultLayoutKeys() {
-        List<LayoutKey> keys = new ArrayList<>();
+    }
+
+
+    public void createItemStackForItemKind() {  //这是注入itemKind与ItemStack的映射
 
         addItem(ItemKind.TOOLKIT, () -> {
             ItemStack item = new ItemStack(Material.CLOCK);
@@ -93,12 +96,14 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         });
 
         addItem(ItemKind.SWORD, () -> {
-            ItemStack iron_sword = new ItemStack(Material.IRON_SWORD);
-//            setDisplayName(iron_sword, "iron_sword");
-            setUnbreakable(iron_sword);
-            iron_sword.addEnchantment(Enchantment.UNBREAKING, 3);
-            setClassItem(iron_sword);
-            return iron_sword;
+//            ItemStack iron_sword = new ItemStack(Material.IRON_SWORD);
+////            setDisplayName(iron_sword, "iron_sword");
+//            setUnbreakable(iron_sword);
+//            iron_sword.addEnchantment(Enchantment.UNBREAKING, 3);
+//            setClassItem(iron_sword);
+//            return iron_sword;
+
+            return createClassSword();
         });
 
         addItem(ItemKind.FOOD, () -> {
@@ -107,37 +112,51 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         });
 
         addItem(ItemKind.BOW, () -> {
+            return createClassBow();
+        });
 
+        addItem(ItemKind.SPEED_POTION, () -> {
+            return createSpeedPotion();
+        });
+
+        addItem(ItemKind.HEAL_POTION, () -> {
+            return createHealthPotion();
+        });
+        addItem(ItemKind.ARROW, () -> {
+            return new ItemStack(Material.ARROW, 64);
+        });
+        addItem(ItemKind.COBBLESTONE, () -> {
+            return new ItemStack(Material.COBBLESTONE, 64);
+        });
+        addItem(ItemKind.PLANKS, () -> {
+            return new ItemStack(Material.OAK_PLANKS, 64);
+        });
+        addItem(ItemKind.AXE, () -> {
+            return new ItemStack(Material.IRON_AXE, 64);
+        });
+        addItem(ItemKind.HAY_BLOCK, () -> {
+            return new ItemStack(Material.HAY_BLOCK, 16);
+        });
+        addItem(ItemKind.SQUID_POTION, () -> {
+            return ClassItemFactory.squidPotion();
         });
 
 
 
-        keys.add(LayoutKey.of(ItemKind.TOOLKIT));
-        keys.add(LayoutKey.of(ItemKind.COMPASS));
-        keys.add(LayoutKey.of(ItemKind.PICKAXE));
-        keys.add(LayoutKey.of(ItemKind.ENDER_CHEST));
-        keys.add(LayoutKey.of(ItemKind.NETHER_STAR));
+        List<LayoutKey> classKeys = getClassDefaultLayoutKeys();
+        keys.addAll(classKeys);
 
-        keys.add(LayoutKey.of(ItemKind.SWORD));
-        keys.add(LayoutKey.of(ItemKind.BOW));
-        keys.add(LayoutKey.of(ItemKind.ARROW));
-        keys.add(LayoutKey.of(ItemKind.FOOD));
-
-        keys.add(LayoutKey.of(ItemKind.BLOCK, 1));
-        keys.add(LayoutKey.of(ItemKind.BLOCK, 2));
-        keys.add(LayoutKey.of(ItemKind.AXE));
-        keys.add(LayoutKey.of(ItemKind.HAY_BLOCK));
-
-        for (int i = 1; i <= getHealthPotionAmount(); i++) {
-            keys.add(LayoutKey.of(ItemKind.HEAL_POTION, i));
-        }
-
-        for (int i = 1; i <= getSpeedPotionAmount(); i++) {
-            keys.add(LayoutKey.of(ItemKind.SPEED_POTION, i));
-        }
 
 
         return keys;
+    }
+
+    public void createClassItemStackForItemKind() {
+        //给其他class 比如摩尔来override用的
+    }
+
+    public List<LayoutKey> getClassDefaultLayoutKeys() {
+        return new ArrayList<>();  //给其他class override用的
     }
 
     public void configureDefaultLayout(InventoryLayout layout) {
@@ -149,69 +168,55 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
      * 根据 key 生成真实物品。
      * 大部分职业不需要重写全部，只重写 getSwordMaterial / getBow / getPotionProfile 即可。
      */
-    public ItemStack createInventoryItem(Player player, LayoutKey key) {
-        switch (key.kind()) {
-            case SWORD:
-                return createClassSword(player, key);
-
-            case BOW:
-                return createClassBow(player, key);
-
-            case HEAL_POTION:
-                return createHealthPotion(player, key);
-
-            case SPEED_POTION:
-                return createSpeedPotion(player, key);
-
-            default:
-                return CommonItemFactory.create(player, key);
-        }
+    public ItemStack createInventoryItem(LayoutKey key) {
+        return itemKind_itemStack.get(key.kind());
     }
+
+    public static final String CLASS_SAME = "ClassSame";  //比如剑 弓
+    public static final String CLASS_DIFF = "ClassDiff";  //比如魔女药 鱿鱼的鱿鱼药
+//    public static final String CLASS_NOT_LOAD = "ClassNotLoad";  //比如速度药血药 通用鱿鱼药  不对啊 只要遍历新物品 筛选class Same和class diff加载 当然这之前原物品栏要遍历删除class diff物品
 
 
     public ItemStack createClassSword() {
-        ItemStack classSword = new ItemStack(Material.IRON_SWORD);
-        setUnbreakable(classSword);
-        setClassItem(classSword);
-        addLore(classSword, "classSword");
-        classSword.addEnchantment(Enchantment.UNBREAKING, 3);
-        return classSword;
+//        ItemStack classSword = new ItemStack(Material.IRON_SWORD);
+//        setUnbreakable(classSword);
+//        setClassItem(classSword);
+//        addLore(classSword, "classSword");
+//        classSword.addEnchantment(Enchantment.UNBREAKING, 3);
+//        ItemStackU.setStringPersistentData(classSword, NameSpacedKeys.ITEM_CATEGORY, CLASS_SAME);
+//        return classSword;
+
+
+        return ClassItemFactory.classSword(Material.IRON_SWORD);
+
+        //可以用ClassItemFactory的模板来快速加载职业武器
     }
 
     public ItemStack createClassBow() {
+        return ClassItemFactory.classBow();
 
     }
 
-    public ItemStack createClassSword(Player player, LayoutKey key) {
-        return ClassItemFactory.classSword(Material.IRON_SWORD, key);
-    }
 
-    public ItemStack createClassBow(Player player, LayoutKey key) {
-        return ClassItemFactory.classBow(key);
-    }
-
-
-    public ItemStack createHealthPotion(Player player, LayoutKey key) {
+    public ItemStack createHealthPotion() {
         return ClassItemFactory.healPotion(
-                getHealthPotionHp(key.index()),
-                getHealthPotionStackAmount(key.index()),
-                key.index()
+                getHealthPotionHp(),
+                getHealthPotionStackAmount()
         );
     }
 
-    public ItemStack createSpeedPotion(Player player, LayoutKey key) {
+    public ItemStack createSpeedPotion() {
         return ClassItemFactory.speedPotion(
-                getSpeedPotionDurationTicks(key.index()),
-                getSpeedPotionAmplifier(key.index()),
-                getSpeedPotionStackAmount(key.index()),
-                key.index()
+                getSpeedPotionDurationTicks(),
+                getSpeedPotionAmplifier(),
+                getSpeedPotionStackAmount()
         );
     }
 
 
 
 
-    public int getHealthPotionHp(int index) {
+    public int getHealthPotionHp() {
         return getClassConfigManager().getHealthPotionHp(getClassEnum().classId);
     }
 
@@ -219,7 +224,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         return getClassConfigManager().getHealthPotionAmount(getClassEnum().classId);
     }
 
-    public int getHealthPotionStackAmount(int index) {
+    public int getHealthPotionStackAmount() {
         return getClassConfigManager().getHealthPotionStackAmount(getClassEnum().classId);
     }
 
@@ -227,15 +232,15 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         return getClassConfigManager().getSpeedPotionAmount(getClassEnum().classId);
     }
 
-    public int getSpeedPotionDurationTicks(int index) {
+    public int getSpeedPotionDurationTicks() {
         return getClassConfigManager().getSpeedPotionDurationTicks(getClassEnum().classId);
     }
 
-    public int getSpeedPotionAmplifier(int index) {
+    public int getSpeedPotionAmplifier() {
         return getClassConfigManager().getSpeedPotionAmplifier(getClassEnum().classId);
     }
 
-    public int getSpeedPotionStackAmount(int index) {
+    public int getSpeedPotionStackAmount() {
         return getClassConfigManager().getSpeedPotionStackAmount(getClassEnum().classId);
     }
 

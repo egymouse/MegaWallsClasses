@@ -1,10 +1,14 @@
 package org.ajls.megawallsclasses.inventory.item;
 
 import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.ItemStackModify;
 import org.ajls.megawallsclasses.NameSpacedKeys;
+import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
+import org.ajls.megawallsclasses.utils.PotionU;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -25,92 +29,76 @@ public final class ClassItemFactory {
 
     public static ItemStack classSword(Material material, boolean unbreaking) {
         ItemStack item = new ItemStack(material);
-        setDisplayName(item, "iron_sword");
         setUnbreakable(item);
         setClassItem(item);
-        addLore(item, "classSword");
-
         if (unbreaking) {
             item.addEnchantment(Enchantment.UNBREAKING, 3);
         }
-
-        return mark(LayoutKey.of(ItemKind.SWORD), item);
-    }
-
-    public static ItemStack classSword(Material material, LayoutKey key) {
-        ItemStack item = new ItemStack(material);
-        setDisplayName(item, "iron_sword");
-        setUnbreakable(item);
-        setClassItem(item);
-        addLore(item, "classSword");
-
-        if (true) {
-            item.addEnchantment(Enchantment.UNBREAKING, 3);
-        }
-
-        return mark(key, item);
+        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_SAME);
+        return item;
+        //物品不用mark，职业在配置enum与物品对应时才mark，
     }
 
 
     public static ItemStack classBow() {
         ItemStack item = new ItemStack(Material.BOW);
-        setDisplayName(item, "bow");
         setUnbreakable(item);
         setClassItem(item);
-        addLore(item, "classBow");
         item.addEnchantment(Enchantment.UNBREAKING, 3);
 
-        return mark(LayoutKey.of(ItemKind.BOW), item);
-    }
+        return item;
 
-    public static ItemStack classBow(LayoutKey key) {
-        ItemStack item = new ItemStack(Material.BOW);
-        setDisplayName(item, "bow");
-        setUnbreakable(item);
-        setClassItem(item);
-        addLore(item, "classBow");
-        item.addEnchantment(Enchantment.UNBREAKING, 3);
-        return mark(key, item);
     }
 
 
-    public static ItemStack healPotion(int hp, int amount, int index) {
+
+    public static ItemStack healPotion(int hp, int amount) {
         ItemStack item = new ItemStack(Material.POTION, amount);
 
         setBasePotionTye(item, PotionType.HEALING);
         setEffect(item, PotionEffectType.INSTANT_HEALTH, hp, 0);
 
-        setDisplayName(item, "heal_potion_" + index);
-        org.ajls.megawallsclasses.InventoryManager.setLoadDisplayName(
+        setDisplayName(
                 item,
                 ChatColor.RED + "" + hp + "HP"
         );
 
-        setLore(item, "heal_potion");
         setMaxStackSize(item, amount);
         setClassItem(item);
 
-        return mark(LayoutKey.of(ItemKind.HEAL_POTION, index), item);
+        return item;
     }
 
-    public static ItemStack speedPotion(int durationTicks, int amplifier, int amount, int index) {
+    public static ItemStack speedPotion(int durationTicks, int amplifier, int amount) {
         ItemStack item = new ItemStack(Material.POTION, amount);
 
         setBasePotionTye(item, PotionType.SWIFTNESS);
         setEffect(item, PotionEffectType.SPEED, durationTicks, amplifier, false, true);
 
-        setDisplayName(item, "speed_potion_" + index);
-        org.ajls.megawallsclasses.InventoryManager.setLoadDisplayName(
+        setDisplayName(
                 item,
                 ChatColor.AQUA + "" + durationTicks / 20 + "s " + toRomanPotionLevel(amplifier)
         );
 
-        setLore(item, "speed_potion");
-        addLore(item, "custom_potion");
         setMaxStackSize(item, amount);
         setClassItem(item);
 
-        return mark(LayoutKey.of(ItemKind.SPEED_POTION, index), item);
+        return item;
+    }
+
+    public static ItemStack squidPotion() {
+        ItemStack squid_potion = new ItemStack(Material.POTION, 3);
+        ItemStackModify.setBasePotionTye(squid_potion, PotionType.NIGHT_VISION);
+//        PotionU.setColor(squid_potion, 255, 255, 255);
+        PotionU.setColor(squid_potion, Color.BLACK);
+        ItemStackModify.setEffect(squid_potion, PotionEffectType.ABSORPTION, 1200, 1);
+//        setDisplayName(squid_potion, ChatColor.GOLD + "\"陈皮茶\"");  //60s IIv  //60s 8HP(II)
+        setDisplayName(squid_potion, ChatColor.GOLD + "60s 8HP(II)");  //60s IIv  //60s 8HP(II)
+//        addLore(squid_potion, "感觉怪怪的...(限定款)");  //ChatColor.GOLD +  //跟陈皮茶的味道差不多(限定款)
+        addLore(squid_potion, "squid_potion");
+        addLore(squid_potion, "custom_potion");
+        ItemStackModify.setMaxStackSize(squid_potion, 3);
+        return squid_potion;
     }
 
     public static ItemStack snowmanBloodBlock() {
