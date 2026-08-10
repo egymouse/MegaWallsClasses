@@ -7,21 +7,23 @@ public final class ClassDefaultLayoutResolver {
 
     //用来给直接创建默认顺序的
     public static InventoryLayout getDefaultLayout(AbstractCustomClass customClass) {
-        InventoryLayout layout = DefaultLayouts.common();
+//        InventoryLayout layout = DefaultLayouts.common();
+//
+//        customClass.configureDefaultLayout(layout);
+//
+//        for (LayoutKey key : customClass.getDefaultLayoutKeys()) {
+//            if (!layout.contains(key)) {
+//                int freeSlot = findFirstFreeSlot(layout);
+//                layout.setSlot(key, freeSlot);
+//            }
+//        }
+//
+//        return layout;
 
-        customClass.configureDefaultLayout(layout);
-
-        for (LayoutKey key : customClass.getDefaultLayoutKeys()) {
-            if (!layout.contains(key)) {
-                int freeSlot = findFirstFreeSlot(layout);
-                layout.setSlot(key, freeSlot);
-            }
-        }
-
-        return layout;
+        return customClass.getDefaultInventoryLayout();
     }
 
-    private static int findFirstFreeSlot(InventoryLayout layout) {
+    public static int findFirstFreeSlot(InventoryLayout layout) {
         boolean[] used = new boolean[36];
 
         for (int slot : layout.asMap().values()) {

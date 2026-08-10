@@ -28,16 +28,19 @@ public class InventoryApplier {
         clearStorageContents(player);
 
         InventoryLayout layout = layoutResolver.resolve(player, customClass);
+        layout.asMap().forEach((key, value) -> {
+            player.getInventory().setItem(value, customClass.createInventoryItem(key));
+        });
 
-        for (LayoutKey key : customClass.getDefaultLayoutKeys()) {
-            OptionalInt slotOpt = layout.getSlot(key);
-            if (!slotOpt.isPresent()) continue;
-
-            ItemStack item = customClass.createInventoryItem(player, key);
-            if (item == null || item.getType() == Material.AIR) continue;
-
-            player.getInventory().setItem(slotOpt.getAsInt(), item);
-        }
+//        for (LayoutKey key : customClass.getDefaultLayoutKeys()) {
+//            OptionalInt slotOpt = layout.getSlot(key);
+//            if (!slotOpt.isPresent()) continue;
+//
+//            ItemStack item = customClass.createInventoryItem(player, key);
+//            if (item == null || item.getType() == Material.AIR) continue;
+//
+//            player.getInventory().setItem(slotOpt.getAsInt(), item);
+//        }
     }
 
     public void apply(Player player, ClassEnum classEnum) {

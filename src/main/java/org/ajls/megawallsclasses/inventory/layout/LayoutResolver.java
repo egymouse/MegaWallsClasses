@@ -22,36 +22,16 @@ public class LayoutResolver {
         InventoryLayout result = new InventoryLayout();
 
         InventoryLayout commonPlayerLayout = repository.loadCommonLayout(player);
-        Optional<InventoryLayout> classPlayerLayoutOpt =
+        InventoryLayout classPlayerLayout =
                 repository.loadClassLayout(player, customClass.getClassEnum().classId);
 
-        InventoryLayout classDefaultLayout = ClassDefaultLayoutResolver.getDefaultLayout(customClass);
-        InventoryLayout commonDefaultLayout = DefaultLayouts.common();
+//        InventoryLayout classDefaultLayout = ClassDefaultLayoutResolver.getDefaultLayout(customClass);
+//        InventoryLayout commonDefaultLayout = DefaultLayouts.common();
 
-        Set<Integer> usedSlots = new HashSet<>();
 
-        for (LayoutKey key : customClass.getDefaultLayoutKeys()) {
-            OptionalInt slotOpt = firstPresent(
-                    classPlayerLayoutOpt.map(layout -> layout.getSlot(key)).orElse(OptionalInt.empty()),
-                    commonPlayerLayout.getSlot(key),
-                    classDefaultLayout.getSlot(key),
-                    commonDefaultLayout.getSlot(key)
-            );
-
-            int finalSlot;
-
-            if (slotOpt.isPresent() && isValidSlot(slotOpt.getAsInt()) && !usedSlots.contains(slotOpt.getAsInt())) {
-                finalSlot = slotOpt.getAsInt();
-            } else {
-                finalSlot = findFirstFreeSlot(usedSlots);
-            }
-
-            result.setSlot(key, finalSlot);
-            usedSlots.add(finalSlot);
-        }
-
-        return result;
+        return classPlayerLayout;
     }
+
 
     private OptionalInt firstPresent(OptionalInt... options) {
         for (OptionalInt option : options) {

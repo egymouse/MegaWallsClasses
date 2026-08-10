@@ -1,5 +1,6 @@
 package org.ajls.megawallsclasses.inventory.layout;
 
+import org.ajls.megawallsclasses.ClassEnum;
 import org.ajls.megawallsclasses.MegaWallsClasses;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.bukkit.configuration.Configuration;
@@ -20,12 +21,14 @@ public class LayoutRepository {
 
     public InventoryLayout loadCommonLayout(Player player) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".common";
+        path = "custom_inventory_order." + player.getName();
         return loadLayout(path).orElse(DefaultLayouts.common());
     }
 
-    public Optional<InventoryLayout> loadClassLayout(Player player, int classId) {
+    public InventoryLayout loadClassLayout(Player player, int classId) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".classes." + classId;
-        return loadLayout(path);
+        path = "class_inventory_order."  + player.getName() + "." + classId;
+        return loadLayout(path).orElse(ClassEnum.getClassEnumByClassID(classId).customClass.getDefaultInventoryLayout());
     }
 
     public void saveCommonLayout(Player player, InventoryLayout layout) {

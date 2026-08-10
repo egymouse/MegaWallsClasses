@@ -1,5 +1,7 @@
 package org.ajls.megawallsclasses.inventory.layout;
 
+import org.ajls.megawallsclasses.ClassEnum;
+import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 
@@ -37,7 +39,9 @@ public final class DefaultLayouts {
         layout.setSlot(LayoutKey.of(ItemKind.HAY_BLOCK), 16);
         layout.setSlot(LayoutKey.of(ItemKind.NETHER_STAR), 17);
 
-        return layout;
+        return ClassEnum.NONE.customClass.getDefaultInventoryLayout();
+
+//        return layout;
     }
 
     public static InventoryLayout common() {
