@@ -53,26 +53,6 @@ public final class MegaWallsClasses extends JavaPlugin {
         return plugin;
     }
 
-    private LayoutRepository layoutRepository;
-    private LayoutResolver layoutResolver;
-    private InventoryOrderEditor inventoryOrderEditor;
-    private InventoryApplier inventoryApplier;
-    public LayoutRepository getLayoutRepository() {
-        return layoutRepository;
-    }
-
-    public LayoutResolver getLayoutResolver() {
-        return layoutResolver;
-    }
-
-    public InventoryOrderEditor getInventoryOrderEditor() {
-        return inventoryOrderEditor;
-    }
-
-    public InventoryApplier getInventoryApplier() {
-        return inventoryApplier;
-    }
-
 
 
 //    public static int time = 0;
@@ -111,10 +91,6 @@ public final class MegaWallsClasses extends JavaPlugin {
         //todo 我不知道，反正新增职业名称这段代码时实测根本没有copyDefaults，这怎么办（）
         saveConfig(); //保存到磁盘
 
-        layoutRepository = new LayoutRepository(getConfig());
-        layoutResolver = new LayoutResolver(layoutRepository);
-        inventoryOrderEditor = new InventoryOrderEditor();
-        inventoryApplier = new InventoryApplier(layoutResolver);
 
         tracked_teams.add("blue_team");
 //        org.ajls.

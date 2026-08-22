@@ -13,35 +13,40 @@ import java.util.Optional;
 public class LayoutRepository {
     //用来对配置读取/写入的
 
-    private final Configuration config;
+//    private static final Configuration config;
 
-    public LayoutRepository(Configuration config) {  //todo 把这里的全部看一遍
-        this.config = config;
-    }
+//    public LayoutRepository(Configuration config) {
+//        this.config = config;
+//    }
 
-    public InventoryLayout loadCommonLayout(Player player) {
+//    public void initialize(Configuration config) {
+//
+//    }
+
+    public static InventoryLayout loadCommonLayout(Player player) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".common";
         path = "custom_inventory_order." + player.getName();
         return loadLayout(path).orElse(ClassEnum.NONE.customClass.getDefaultInventoryLayout());
     }
 
-    public InventoryLayout loadClassLayout(Player player, int classId) {
+    public static InventoryLayout loadClassLayout(Player player, int classId) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".classes." + classId;
         path = "class_inventory_order."  + player.getName() + "." + classId;
         return loadLayout(path).orElse(ClassEnum.getClassEnumByClassID(classId).customClass.getDefaultInventoryLayout());
     }
 
-    public void saveCommonLayout(Player player, InventoryLayout layout) {
+    public static void saveCommonLayout(Player player, InventoryLayout layout) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".common";
         saveLayout(path, layout);
     }
 
-    public void saveClassLayout(Player player, int classId, InventoryLayout layout) {
+    public static void saveClassLayout(Player player, int classId, InventoryLayout layout) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".classes." + classId;
         saveLayout(path, layout);
     }
 
-    private Optional<InventoryLayout> loadLayout(String path) {
+    private static Optional<InventoryLayout> loadLayout(String path) {
+        Configuration config = MegaWallsClasses.getPlugin().getConfig();
         ConfigurationSection section = config.getConfigurationSection(path);
         if (section == null) {
             return Optional.empty();
@@ -58,7 +63,8 @@ public class LayoutRepository {
         return Optional.of(layout);
     }
 
-    private void saveLayout(String path, InventoryLayout layout) {
+    private static void saveLayout(String path, InventoryLayout layout) {
+        Configuration config = MegaWallsClasses.getPlugin().getConfig();
         config.set(path, null);
 
         for (Map.Entry<LayoutKey, Integer> entry : layout.asMap().entrySet()) {

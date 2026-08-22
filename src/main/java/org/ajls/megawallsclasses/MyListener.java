@@ -884,9 +884,7 @@ public class MyListener implements Listener {
 //                        player.openInventory(createReorderInventory(player));
 
 //                                player.openInventory(loadReorderInventoryFromConfig(player));
-
-                                InventoryOrderEditor inventoryOrderEditor = MegaWallsClasses.getPlugin().getInventoryOrderEditor();
-                                player.openInventory(inventoryOrderEditor.createCommonEditor(player));
+                                player.openInventory(InventoryOrderEditor.createCommonEditor(player));
 
                                 player.setMetadata("ReorderInventory", new FixedMetadataValue(plugin, true));
                                 break;

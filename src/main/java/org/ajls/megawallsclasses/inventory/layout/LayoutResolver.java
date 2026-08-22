@@ -19,23 +19,23 @@ import java.util.Set;
 public class LayoutResolver {
     //用来根据玩家职业加载顺序的
 
-    private final LayoutRepository repository;
+//    private final LayoutRepository repository;
+//
+//    public LayoutResolver(LayoutRepository repository) {
+//        this.repository = repository;
+//    }
 
-    public LayoutResolver(LayoutRepository repository) {
-        this.repository = repository;
-    }
-
-    public InventoryLayout resolve(Player player, AbstractCustomClass customClass) {
+    public static InventoryLayout resolve(Player player, AbstractCustomClass customClass) {
 
         if (customClass == ClassEnum.NONE.customClass) {
-            return repository.loadCommonLayout(player);
+            return LayoutRepository.loadCommonLayout(player);
         }
         InventoryLayout classPlayerLayout =
-                repository.loadClassLayout(player, customClass.getClassEnum().classId);
+                LayoutRepository.loadClassLayout(player, customClass.getClassEnum().classId);
         return classPlayerLayout;
     }
 
-    public InventoryLayout toLayout(Inventory inventory) {
+    public static InventoryLayout toLayout(Inventory inventory) {
         InventoryLayout inventoryLayout = new InventoryLayout();
         for (int i = 0; i < 36; i++) {
             ItemStack itemStack = inventory.getItem(i);
@@ -51,7 +51,7 @@ public class LayoutResolver {
     }
 
 
-    private OptionalInt firstPresent(OptionalInt... options) {
+    private static OptionalInt firstPresent(OptionalInt... options) {
         for (OptionalInt option : options) {
             if (option != null && option.isPresent()) {
                 return option;
@@ -60,11 +60,11 @@ public class LayoutResolver {
         return OptionalInt.empty();
     }
 
-    private boolean isValidSlot(int slot) {
+    private static boolean isValidSlot(int slot) {
         return slot >= 0 && slot < 36;
     }
 
-    private int findFirstFreeSlot(Set<Integer> usedSlots) {
+    private static int findFirstFreeSlot(Set<Integer> usedSlots) {
         for (int i = 0; i < 36; i++) {
             if (!usedSlots.contains(i)) {
                 return i;

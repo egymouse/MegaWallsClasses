@@ -13,21 +13,21 @@ import java.util.OptionalInt;
 
 public class InventoryApplier {
 
-    private final LayoutResolver layoutResolver;
+//    private final LayoutResolver layoutResolver;
+//
+//    public InventoryApplier(LayoutResolver layoutResolver) {
+//        this.layoutResolver = layoutResolver;
+//    }
 
-    public InventoryApplier(LayoutResolver layoutResolver) {
-        this.layoutResolver = layoutResolver;
-    }
-
-    public void apply(Player player) {
+    public static void apply(Player player) {
         AbstractCustomClass customClass = ClassEnum.getCustomClassByPlayer(player);
         apply(player, customClass);
     }
 
-    public void apply(Player player, AbstractCustomClass customClass) {
+    public static void apply(Player player, AbstractCustomClass customClass) {
         clearStorageContents(player);
 
-        InventoryLayout layout = layoutResolver.resolve(player, customClass);
+        InventoryLayout layout = LayoutResolver.resolve(player, customClass);
         layout.asMap().forEach((key, value) -> {
             player.getInventory().setItem(value, customClass.createInventoryItem(key));
         });
@@ -43,11 +43,11 @@ public class InventoryApplier {
 //        }
     }
 
-    public void apply(Player player, ClassEnum classEnum) {
+    public static void apply(Player player, ClassEnum classEnum) {
         apply(player, classEnum.customClass);
     }
 
-    private void clearStorageContents(Player player) {
+    private static void clearStorageContents(Player player) {
         for (int i = 0; i < 36; i++) {
             player.getInventory().setItem(i, null);
         }
