@@ -36,7 +36,6 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     InventoryLayout inventoryLayout = new InventoryLayout();
 
     AbstractCustomClass() {
-        createItemStackForItemKind();
     }
 
     public void setClassEnum(ClassEnum classEnum) {

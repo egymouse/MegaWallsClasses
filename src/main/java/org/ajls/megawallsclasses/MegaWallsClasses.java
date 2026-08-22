@@ -134,6 +134,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         getCommand("test").setExecutor(new Test());
         getCommand("l").setExecutor(new L());
         getCommand("energetic").setExecutor(new Energetic());
+        getCommand("ec").setExecutor(new ECCommand());
 
         PacketListener.registerPacketListener();
 

@@ -154,11 +154,17 @@ public class MyListener implements Listener {
                         "指南针：左键最近敌人，右键切换队伍");  //todo 改成从resources文档中读取内容，要不然文本太多了
             }, 100L);
         }
+
+        /*  不用了 因为createCommonEditor有OrElse判断默认了
         if (configuration.get("custom_inventory_order." + playerName) == null) {
-            saveInventoryOrder(player, createReorderInventory(player));
+            InventoryOrderEditor inventoryOrderEditor = MegaWallsClasses.getPlugin().getInventoryOrderEditor();
+            saveInventoryOrder(player, inventoryOrderEditor.createCommonEditor(player));
         }
         tryCreateReorderInventorySection(player, "hay_block");
         tryCreateReorderInventorySection(player, "squid_potion_everyone_1");
+        */
+
+
 //        if (org.ajls.lib.utils.ScoreboardU.getPlayerTeam(player) == null) {
 //            ScoreboardU.joinTeam("red_team", player);
 //        }
@@ -876,7 +882,12 @@ public class MyListener implements Listener {
                                 break;
                             case 1:
 //                        player.openInventory(createReorderInventory(player));
-                                player.openInventory(loadReorderInventoryFromConfig(player));
+
+//                                player.openInventory(loadReorderInventoryFromConfig(player));
+
+                                InventoryOrderEditor inventoryOrderEditor = MegaWallsClasses.getPlugin().getInventoryOrderEditor();
+                                player.openInventory(inventoryOrderEditor.createCommonEditor(player));
+
                                 player.setMetadata("ReorderInventory", new FixedMetadataValue(plugin, true));
                                 break;
                             case 2:
@@ -890,19 +901,6 @@ public class MyListener implements Listener {
                                 break;
                             case 6:
                                 player.openInventory(createDomcerLegendaryClassSelectionInventory(player));
-                                break;
-                        }
-                        switch (event.getCurrentItem().getType()) {
-                            case IRON_SWORD:
-                                player.openInventory(createClassSelectionInventory(player));
-                                break;
-                            case CHEST:
-//                        player.openInventory(createReorderInventory(player));
-                                player.openInventory(loadReorderInventoryFromConfig(player));
-                                player.setMetadata("ReorderInventory", new FixedMetadataValue(plugin, true));
-                                break;
-                            case TRAPPED_CHEST:
-                                player.openInventory(createWhichClassReorderInventory(player));
                                 break;
                         }
                     }

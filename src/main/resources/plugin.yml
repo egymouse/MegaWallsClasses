@@ -40,6 +40,10 @@ commands:
     description: Becomes full of energy
     usage: /<command>
     permission: energetic
+  ec:
+    description: Opens ender chest
+    usage: /<command>
+
 permissions:
   energetic:
     description: Allows energetic command

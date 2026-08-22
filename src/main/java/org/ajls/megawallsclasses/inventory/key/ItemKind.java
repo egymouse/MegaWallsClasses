@@ -53,27 +53,27 @@ public enum ItemKind {
 
 
      */
-    TOOLKIT("toolkit"),
+    TOOLKIT("超级战墙工具箱"),
     COMPASS("compass"),
-    PICKAXE("pickaxe"),
+    PICKAXE("diamond_pickaxe"),
     ENDER_CHEST("ender_chest"),
     NETHER_STAR("nether_star"),
 
-    SWORD("sword"),
+    SWORD("iron_sword"),
     BOW("bow"),
     ARROW("arrow"),
 
     BLOCK("block"),
     COBBLESTONE("cobblestone"),
-    PLANKS("planks"),
-    FOOD("food"),
-    AXE("axe"),
+    PLANKS("plank"),
+    FOOD("cooked_porkchop"),
+    AXE("iron_axe"),
     HAY_BLOCK("hay_block"),
 
     SPEED_POTION("speed_potion"),
     HEAL_POTION("heal_potion"),
 
-    SQUID_POTION("squid_potion"),
+    SQUID_POTION("squid_potion_everyone"),
 
     // 职业特殊物品
     SNOWMAN_BLOOD_BLOCK("snowman_blood_block"),
