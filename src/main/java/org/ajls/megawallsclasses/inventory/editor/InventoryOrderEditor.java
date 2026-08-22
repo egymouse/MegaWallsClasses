@@ -11,11 +11,14 @@ import org.ajls.megawallsclasses.inventory.layout.LayoutRepository;
 import org.ajls.megawallsclasses.inventory.layout.LayoutResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
+
+import static org.ajls.megawallsclasses.MegaWallsClasses.plugin;
 
 public class InventoryOrderEditor {
 
@@ -68,9 +71,23 @@ public class InventoryOrderEditor {
         LayoutRepository.saveCommonLayout(player, inventoryLayout);
     }
 
-    public static void saveClassEditor(Player player, int classID, Inventory inventory) {
+    public static void saveClassEditor(Player player, Inventory inventory, int classID) {
         InventoryLayout inventoryLayout = readLayoutFromInventory(inventory);
         LayoutRepository.saveClassLayout(player, classID, inventoryLayout);
+    }
+
+    public static void resetClassEditor(Player player, int classIndex) {
+        Configuration configuration = plugin.getConfig();
+        String playerName = player.getName();
+        configuration.set("class_inventory_order." + playerName + "." + classIndex, null);
+        MegaWallsClasses.plugin.saveConfig();
+    }
+
+    public static void resetCommonEditor(Player player) {
+        Configuration configuration = plugin.getConfig();
+        String playerName = player.getName();
+        configuration.set("custom_inventory_order." + playerName, null);
+        MegaWallsClasses.plugin.saveConfig();
     }
 
     public static InventoryLayout readLayoutFromInventory(Inventory inventory) {
@@ -83,7 +100,7 @@ public class InventoryOrderEditor {
             String keyId = ItemStackU.getStringPersistentData(item, NameSpacedKeys.ITEM_TYPE);
             if (keyId == null) continue;
 
-            LayoutKey key = LayoutKey.fromId(keyId);
+            LayoutKey key = LayoutKey.fromId(keyId);  //todo 在这里的id只有Kind没index 要思考要不要把index也注入 还是说根据kind自动分配index
             layout.setSlot(key, slot);
         }
 

@@ -181,7 +181,7 @@ public final class MegaWallsClasses extends JavaPlugin {
 
     public static HashMap<Location, org.bukkit.block.BlockState> blockRegenWhenDisabled = new HashMap<>();
     @Override
-    public void onDisable() {
+    public void onDisable() {  //todo 搞config mark dirty 然后最后再保存
         // Plugin shutdown logic
         for (UUID uuid : wither_team.keySet()) {
             Wither wither = (Wither) Bukkit.getEntity(uuid);

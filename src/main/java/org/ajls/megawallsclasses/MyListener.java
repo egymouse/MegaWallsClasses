@@ -739,13 +739,15 @@ public class MyListener implements Listener {
                     if (isLegal) {
                         switch (event.getCurrentItem().getType()) {
                             case GREEN_CONCRETE:
-                                saveInventoryOrder(player, topInventory);
+//                                saveInventoryOrder(player, topInventory);
+                                InventoryOrderEditor.saveCommonEditor(player, topInventory);
                                 event.setCancelled(true);
                                 player.closeInventory();
                                 player.sendMessage(ChatColor.GREEN + "物品栏成功保存");
                                 break;
                             case YELLOW_CONCRETE:
-                                saveInventoryOrder(player, createReorderInventory(player));
+//                                saveInventoryOrder(player, createReorderInventory(player));
+                                InventoryOrderEditor.resetCommonEditor(player);
                                 event.setCancelled(true);
                                 player.closeInventory();
                                 player.sendMessage(ChatColor.YELLOW + "物品栏成功重置到默认");
@@ -772,14 +774,15 @@ public class MyListener implements Listener {
                     if (isLegal) {
                         switch (event.getCurrentItem().getType()) {
                             case GREEN_CONCRETE:
-                                saveClassInventoryOrder(player, topInventory, index);
+//                                saveClassInventoryOrder(player, topInventory, index);
+                                InventoryOrderEditor.saveClassEditor(player, topInventory, index);
                                 event.setCancelled(true);
                                 player.openInventory(createWhichClassReorderInventory(player));
                                 player.sendMessage(ChatColor.GREEN + "职业物品栏成功保存");
                                 break;
                             case YELLOW_CONCRETE:
 //                            saveClassInventoryOrder(player, createClassReorderInventory(player, index), index);
-                                resetClassReorderInventory(player, index);
+                                InventoryOrderEditor.resetClassEditor(player, index);
                                 event.setCancelled(true);
                                 player.openInventory(createWhichClassReorderInventory(player));
                                 player.sendMessage(ChatColor.YELLOW + "职业物品栏成功重置到默认");
@@ -801,7 +804,8 @@ public class MyListener implements Listener {
                     int index = event.getSlot() + 1;
 //                    player.setMetadata("WhichClassReorder", new FixedMetadataValue(plugin, index));
                     player_whichClassReorder.put(player.getUniqueId(), index);
-                    player.openInventory(loadClassReorderInventory(player, index));
+//                    player.openInventory(loadClassReorderInventory(player, index));
+                    player.openInventory(InventoryOrderEditor.createClassEditor(player, ClassEnum.getCustomClassByClassID(index)));
 
 
 //                    Configuration configuration = MegaWallsClasses.getPlugin().getConfig();

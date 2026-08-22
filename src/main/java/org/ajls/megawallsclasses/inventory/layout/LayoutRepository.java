@@ -37,11 +37,13 @@ public class LayoutRepository {
 
     public static void saveCommonLayout(Player player, InventoryLayout layout) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".common";
+        path = "custom_inventory_order." + player.getName();
         saveLayout(path, layout);
     }
 
     public static void saveClassLayout(Player player, int classId, InventoryLayout layout) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".classes." + classId;
+        path = "class_inventory_order."  + player.getName() + "." + classId;
         saveLayout(path, layout);
     }
 
