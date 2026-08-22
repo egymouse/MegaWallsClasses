@@ -1,8 +1,15 @@
 package org.ajls.megawallsclasses.inventory.layout;
 
+import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.ClassEnum;
+import org.ajls.megawallsclasses.NameSpacedKeys;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -19,17 +26,28 @@ public class LayoutResolver {
     }
 
     public InventoryLayout resolve(Player player, AbstractCustomClass customClass) {
-        InventoryLayout result = new InventoryLayout();
 
-        InventoryLayout commonPlayerLayout = repository.loadCommonLayout(player);
+        if (customClass == ClassEnum.NONE.customClass) {
+            return repository.loadCommonLayout(player);
+        }
         InventoryLayout classPlayerLayout =
                 repository.loadClassLayout(player, customClass.getClassEnum().classId);
-
-//        InventoryLayout classDefaultLayout = ClassDefaultLayoutResolver.getDefaultLayout(customClass);
-//        InventoryLayout commonDefaultLayout = DefaultLayouts.common();
-
-
         return classPlayerLayout;
+    }
+
+    public InventoryLayout toLayout(Inventory inventory) {
+        InventoryLayout inventoryLayout = new InventoryLayout();
+        for (int i = 0; i < 36; i++) {
+            ItemStack itemStack = inventory.getItem(i);
+            if (itemStack != null) {
+                if (itemStack.getType() != Material.AIR) {
+                    String itemType = ItemStackU.getStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE);
+                    LayoutKey layoutKey = LayoutKey.fromId(itemType);
+                    inventoryLayout.setSlot(layoutKey, i);
+                }
+            }
+        }
+        return inventoryLayout;
     }
 
 

@@ -9,6 +9,7 @@ public class NameSpacedKeys {
 
     public static NamespacedKey ITEM_TYPE = new NamespacedKey(MegaWallsClasses.getPlugin(), "ItemType");  // //存储config的路径,仅限自定义物品栏顺序，给玩家时要去掉 给物品标记类型的 同时用于config路径的标记 当然现在要独立两个功能（路径标记在加载后会取消）所以废弃了。 或者config路径标注和itemType两个用同一个功能？
     //写清晰一点 在没加载时表示config路径，加载后第一用于标记物品类型，第二用于tf来找到对应的物品 当然对于石头木板这些要要删掉防止无法合并。
+    //todo 注意判断的时候要阶段后面的index，在LayoutKey里面有对应的方法
 
 
 

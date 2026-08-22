@@ -15,14 +15,14 @@ public class LayoutRepository {
 
     private final Configuration config;
 
-    public LayoutRepository(Configuration config) {
+    public LayoutRepository(Configuration config) {  //todo 把这里的全部看一遍
         this.config = config;
     }
 
     public InventoryLayout loadCommonLayout(Player player) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".common";
         path = "custom_inventory_order." + player.getName();
-        return loadLayout(path).orElse(DefaultLayouts.common());
+        return loadLayout(path).orElse(ClassEnum.NONE.customClass.getDefaultInventoryLayout());
     }
 
     public InventoryLayout loadClassLayout(Player player, int classId) {

@@ -1,9 +1,10 @@
 package org.ajls.megawallsclasses.inventory.editor;
 
 import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.ClassEnum;
+import org.ajls.megawallsclasses.MegaWallsClasses;
 import org.ajls.megawallsclasses.NameSpacedKeys;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
-import org.ajls.megawallsclasses.inventory.item.EditorPreviewItemFactory;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.bukkit.Bukkit;
@@ -12,28 +13,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.OptionalInt;
+import java.util.Map;
 
 public class InventoryOrderEditor {
 
     public Inventory createEditor(
             Player player,
             String title,
-            List<LayoutKey> keys,
-            InventoryLayout layout,
-            ItemPreviewProvider previewProvider
+            AbstractCustomClass abstractCustomClass
     ) {
+
+
+        InventoryLayout inventoryLayout = MegaWallsClasses.getPlugin().getLayoutResolver().resolve(player, abstractCustomClass);
+
+        Map<LayoutKey, Integer> inventoryLayoutMap = inventoryLayout.asMap();
         Inventory inventory = Bukkit.createInventory(player, 45, title);
 
-        for (LayoutKey key : keys) {
-            OptionalInt slotOpt = layout.getSlot(key);
-            if (!slotOpt.isPresent()) continue;
+        for (LayoutKey key : inventoryLayoutMap.keySet()) {
+            int index = inventoryLayoutMap.get(key);
+            ItemStack itemStack = abstractCustomClass.createInventoryItem(key);
 
-            ItemStack item = previewProvider.createPreviewItem(player, key);
-            markLayoutKey(item, key);
-
-            inventory.setItem(slotOpt.getAsInt(), item);
+            inventory.setItem(index, itemStack);
         }
 
         inventory.setItem(36, createResetButton());
@@ -42,24 +42,33 @@ public class InventoryOrderEditor {
         return inventory;
     }
 
-    public Inventory createCommonEditor(Player player, InventoryLayout layout, List<LayoutKey> commonKeys) {
+
+
+    public Inventory createCommonEditor(Player player) {
         return createEditor(
                 player,
                 "Reorder inventory",
-                commonKeys,
-                layout,
-                (p, key) -> EditorPreviewItemFactory.commonPreview(p, key)
+                ClassEnum.NONE.customClass
         );
+
     }
 
-    public Inventory createClassEditor(Player player, AbstractCustomClass customClass, InventoryLayout layout) {
+    public Inventory createClassEditor(Player player, AbstractCustomClass customClass) {
         return createEditor(
                 player,
                 "ClassReorderInventory",
-                customClass.getDefaultLayoutKeys(),
-                layout,
-                customClass::createInventoryItem
+                customClass
         );
+    }
+
+    public void saveCommonEditor(Player player, Inventory inventory) {
+        InventoryLayout inventoryLayout = readLayoutFromInventory(inventory);
+        MegaWallsClasses.getPlugin().getLayoutRepository().saveCommonLayout(player, inventoryLayout);
+    }
+
+    public void saveClassEditor(Player player, int classID, Inventory inventory) {
+        InventoryLayout inventoryLayout = readLayoutFromInventory(inventory);
+        MegaWallsClasses.getPlugin().getLayoutRepository().saveClassLayout(player, classID, inventoryLayout);
     }
 
     public InventoryLayout readLayoutFromInventory(Inventory inventory) {

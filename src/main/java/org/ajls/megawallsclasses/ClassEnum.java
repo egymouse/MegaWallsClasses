@@ -58,9 +58,9 @@ public enum ClassEnum {
 
     // ===================== 核心：根据ID查找 =====================
     // 1. 静态Map缓存：类加载时就把ID和枚举绑定好，查找速度极快（O(1)）
-    private static final Map<Integer, ClassEnum> JOB_CACHE;
+    private static final Map<Integer, ClassEnum> ClassID_ClassEnum;
     static {
-        JOB_CACHE = Arrays.stream(values())
+        ClassID_ClassEnum = Arrays.stream(values())
                 .collect(Collectors.toMap(
                         job -> job.classId,   // Key：职业ID
                         job -> job          // Value：枚举对象
@@ -68,16 +68,16 @@ public enum ClassEnum {
     }
 
     /**
-     * 根据 jobId 获取职业枚举（推荐使用！）
-     * @param jobId 职业ID
+     * 根据 classID 获取职业枚举（推荐使用！）
+     * @param classID 职业ID
      * @return 对应的枚举，找不到返回null
      */
-    public static ClassEnum getClassEnumByClassID(int jobId) {
-        ClassEnum classEnum = JOB_CACHE.get(jobId);
+    public static ClassEnum getClassEnumByClassID(int classID) {
+        ClassEnum classEnum = ClassID_ClassEnum.get(classID);
         if (classEnum == null) {
 //            Bukkit.broadcastMessage("有人无职转生了bruh");
             Bukkit.broadcastMessage("有人正在尝试新职业");
-//            throw new IllegalArgumentException("无效的职业ID：" + jobId);
+//            throw new IllegalArgumentException("无效的职业ID：" + classID);
             return NONE;
         }
         return classEnum;
