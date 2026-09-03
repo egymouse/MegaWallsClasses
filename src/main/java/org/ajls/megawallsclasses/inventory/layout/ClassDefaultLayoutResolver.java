@@ -26,7 +26,7 @@ public final class ClassDefaultLayoutResolver {
     public static int findFirstFreeSlot(InventoryLayout layout) {
         boolean[] used = new boolean[36];
 
-        for (int slot : layout.asMap().values()) {
+        for (int slot : layout.asMap().keySet()) {
             if (slot >= 0 && slot < 36) {
                 used[slot] = true;
             }

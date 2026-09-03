@@ -32,6 +32,9 @@ public class LayoutRepository {
     public static InventoryLayout loadClassLayout(Player player, int classId) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".classes." + classId;
         path = "class_inventory_order."  + player.getName() + "." + classId;
+
+
+        InventoryLayout commonLayout = loadCommonLayout(player);  //todo  想办法把class的给注入进common
         return loadLayout(path).orElse(ClassEnum.getClassEnumByClassID(classId).customClass.getDefaultInventoryLayout());
     }
 

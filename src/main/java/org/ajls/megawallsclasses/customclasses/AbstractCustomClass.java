@@ -3,19 +3,15 @@ package org.ajls.megawallsclasses.customclasses;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.*;
 import org.ajls.megawallsclasses.classsystem.ClassConfigManager;
-import org.ajls.megawallsclasses.commands.Order;
 import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
-import org.ajls.megawallsclasses.inventory.item.CommonItemFactory;
 import org.ajls.megawallsclasses.inventory.item.ItemStackProvider;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.inventory.layout.ClassDefaultLayoutResolver;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.ajls.trackercompass.CompassItemStack;
-import org.ajls.trackercompass.TrackerCompass;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.*;
@@ -23,17 +19,15 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.ajls.megawallsclasses.ItemStackModify.*;
 
 public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象类implement之前那个接口的，但算了反正一样
     private ClassEnum classEnum = null;  // 存储注入的枚举
-    public Map<ItemKind, ItemStack> itemKind_itemStack = new HashMap<>();
-    InventoryLayout inventoryLayout = new InventoryLayout();
+    public Map<ItemKind, ItemStack> itemKind_itemStack = new HashMap<>();  //不同的职业 同类物品对应不同的itemStack
+    public static InventoryLayout inventoryLayout = new InventoryLayout();  //直接static，毕竟其他职业以玩家自定义默认物品配置来加载
+    public static HashMap<ItemKind, Integer> classItemKind_count = new HashMap<>();
 
     AbstractCustomClass() {
     }
@@ -59,24 +53,44 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
                 .getClassShortName(classId);
     }
 
-    public void addItem(ItemKind itemKind, ItemStackProvider itemStackProvider, int... indexes) {  //如果没indexes就默认加入第一个空位
+    public void addCommonItem(ItemKind itemKind, ItemStackProvider itemStackProvider, int... indexes) {  //如果没indexes就默认加入第一个空位
         ItemStack itemStack = itemStackProvider.getItemStack();
         ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE, itemKind.id());  //注入pdc为了重编辑物品栏时能知道什么在什么位上
         itemKind_itemStack.put(itemKind, itemStack);
-        if (indexes != null && indexes.length > 0) {
-            for (int i = 0; i < indexes.length; i++) {
-                LayoutKey layoutKey = LayoutKey.of(itemKind, i+1);
-                inventoryLayout.setSlot(layoutKey, indexes[i]);
+
+        if (this.classEnum == null) {
+            if (indexes != null && indexes.length > 0) {
+                for (int i = 0; i < indexes.length; i++) {
+                    inventoryLayout.setSlot(indexes[i], itemKind);
+                }
+            }
+            else {
+                //say 有bug
+                int freeSlot = ClassDefaultLayoutResolver.findFirstFreeSlot(inventoryLayout);
+                inventoryLayout.setSlot(freeSlot, itemKind);
             }
         }
-        else {
-            //say 有bug
-            int freeSlot = ClassDefaultLayoutResolver.findFirstFreeSlot(inventoryLayout);
-            inventoryLayout.setSlot(LayoutKey.of(itemKind), freeSlot);
-        }
+
 
 
     }
+
+    //itemKind_itemStack每个类都有，来决定对应类的实例物品
+    //inventoryLayout是默认的布局，classItemKind_count决定了职业默认物品以及数量（都是默认的）
+    //玩家自己会保存，所以有load的都很简单，只需要查询itemKind_itemStack就行了
+    //记得补充从config读取和写入的代码，还有默认没用布局时候获取默认布局的代码（读取玩家的通用默认布局，然后加入职业默认物品的itemKind就行了）
+    //todo 记得改成slot: itemKind:count的格式
+    public void addItem(ItemKind itemKind, ItemStackProvider itemStackProvider) {
+        addItem(itemKind, itemStackProvider, 1);
+    }
+
+    public void addItem(ItemKind itemKind, ItemStackProvider itemStackProvider, int amount) {  //如果没indexes就默认加入第一个空位
+        ItemStack itemStack = itemStackProvider.getItemStack();
+        ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE, itemKind.id());  //注入pdc为了重编辑物品栏时能知道什么在什么位上
+        itemKind_itemStack.put(itemKind, itemStack);
+        classItemKind_count.put(itemKind, amount);
+    }
+
 
 
     public InventoryLayout getDefaultInventoryLayout() {
@@ -88,18 +102,21 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 //    }
 
 
-    public void createItemStackForItemKind() {  //这是注入itemKind与ItemStack的映射
+    public void initializeCommonItems() {
+        //这是注入itemKind与ItemStack的映射
+        // 只有none使用时候是默认配置+物品对应，那其他class使用的时候就需要对应处理了
+        // 比方说addItem只是加入一个hashset，然后根据是initialize还是inject layout来决定
 
-        addItem(ItemKind.TOOLKIT, () -> {
+        addCommonItem(ItemKind.TOOLKIT, () -> {
             ItemStack item = new ItemStack(Material.CLOCK);
             setDisplayName(item, "超级战墙工具箱");
             setClassItem(item);
             return item;
         }, 0);
-        addItem(ItemKind.COMPASS, () -> {
+        addCommonItem(ItemKind.COMPASS, () -> {
             return CompassItemStack.trackerCompass.clone();
         }, 1);
-        addItem(ItemKind.PICKAXE, () -> {
+        addCommonItem(ItemKind.PICKAXE, () -> {
             ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
 //            setDisplayName(item, "diamond_pickaxe");
             setUnbreakable(item);
@@ -107,18 +124,18 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
             setClassItem(item);
             return item;
         }, 2);
-        addItem(ItemKind.ENDER_CHEST, () -> {
+        addCommonItem(ItemKind.ENDER_CHEST, () -> {
             ItemStack ender_chest = new ItemStack(Material.ENDER_CHEST);
             setClassItem(ender_chest);
             return ender_chest;
         }, 13);
-        addItem(ItemKind.NETHER_STAR, () -> {
+        addCommonItem(ItemKind.NETHER_STAR, () -> {
             ItemStack nether_star = new ItemStack(Material.NETHER_STAR);
             setClassItem(nether_star);
             return nether_star;
         }, 17);
 
-        addItem(ItemKind.SWORD, () -> {
+        addCommonItem(ItemKind.SWORD, () -> {
 //            ItemStack iron_sword = new ItemStack(Material.IRON_SWORD);
 ////            setDisplayName(iron_sword, "iron_sword");
 //            setUnbreakable(iron_sword);
@@ -129,43 +146,50 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
             return createClassSword();
         }, 5);
 
-        addItem(ItemKind.FOOD, () -> {
+        addCommonItem(ItemKind.FOOD, () -> {
             ItemStack cooked_porkchop = new ItemStack(Material.COOKED_PORKCHOP, 64);
             return cooked_porkchop;
         }, 6);
 
-        addItem(ItemKind.BOW, () -> {
+        addCommonItem(ItemKind.BOW, () -> {
             return createClassBow();
         }, 7);
 
-        addItem(ItemKind.SPEED_POTION, () -> {
+        addCommonItem(ItemKind.SPEED_POTION, () -> {
             return createSpeedPotion();
         }, 10);
 
-        addItem(ItemKind.HEAL_POTION, () -> {
+        addCommonItem(ItemKind.HEAL_POTION, () -> {
             return createHealthPotion();
         }, 8);
-        addItem(ItemKind.ARROW, () -> {
+        addCommonItem(ItemKind.ARROW, () -> {
             return new ItemStack(Material.ARROW, 64);
         }, 12);
-        addItem(ItemKind.COBBLESTONE, () -> {
+        addCommonItem(ItemKind.COBBLESTONE, () -> {
             return new ItemStack(Material.COBBLESTONE, 64);
         }, 3);
-        addItem(ItemKind.PLANKS, () -> {
+        addCommonItem(ItemKind.PLANKS, () -> {
             return new ItemStack(Material.OAK_PLANKS, 64);
         }, 14);
-        addItem(ItemKind.AXE, () -> {
+        addCommonItem(ItemKind.AXE, () -> {
             return new ItemStack(Material.IRON_AXE, 64);
         }, 15);
-        addItem(ItemKind.HAY_BLOCK, () -> {
+        addCommonItem(ItemKind.HAY_BLOCK, () -> {
             return new ItemStack(Material.HAY_BLOCK, 16);
         }, 16);
-        addItem(ItemKind.SQUID_POTION, () -> {
+        addCommonItem(ItemKind.SQUID_POTION, () -> {
             return ClassItemFactory.squidPotion();
         }, 4);
+    }
+
+    public void createItemStackForItemKind() {
+        //其他class  override来添加职业特殊物品
+
+    }
 
 
-
+    public InventoryLayout getClassInventoryLayout() {
+        return inventoryLayout; //其他职业override来修改添加特殊物品
     }
 
     public void createClassItemStackForItemKind() {

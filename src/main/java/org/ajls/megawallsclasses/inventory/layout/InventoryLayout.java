@@ -1,5 +1,7 @@
 package org.ajls.megawallsclasses.inventory.layout;
 
+import org.ajls.megawallsclasses.inventory.key.ItemCount;
+import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 
 import java.util.Collections;
@@ -9,7 +11,7 @@ import java.util.OptionalInt;
 
 public class InventoryLayout {
 
-    private final Map<LayoutKey, Integer> slots = new HashMap<>();
+    private final Map<Integer, ItemCount> slots = new HashMap<>();
 
     public InventoryLayout() {
     }
@@ -19,22 +21,31 @@ public class InventoryLayout {
     }
 
     public void setSlot(LayoutKey key, int slot) {
+        setSlot(slot, key.kind(), -1);
+    }
+
+
+    public void setSlot(int slot, ItemKind itemKind, int count) {
         if (slot < 0 || slot >= 36) {
             throw new IllegalArgumentException("slot must be 0-35: " + slot);
         }
-        slots.put(key, slot);
+        slots.put(slot, new ItemCount(itemKind, count));
     }
 
-    public OptionalInt getSlot(LayoutKey key) {
-        Integer slot = slots.get(key);
-        return slot == null ? OptionalInt.empty() : OptionalInt.of(slot);
+    public void setSlot(int slot, ItemKind itemKind) {
+        setSlot(slot, itemKind, -1);
     }
+
+//    public OptionalInt getSlot(LayoutKey key) {
+//        Integer slot = slots.get(key);
+//        return slot == null ? OptionalInt.empty() : OptionalInt.of(slot);
+//    }
 
     public boolean contains(LayoutKey key) {
         return slots.containsKey(key);
     }
 
-    public Map<LayoutKey, Integer> asMap() {
+    public Map<Integer, ItemCount> asMap() {
         return Collections.unmodifiableMap(slots);
     }
 

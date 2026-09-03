@@ -100,7 +100,7 @@ public class InventoryOrderEditor {
             String keyId = ItemStackU.getStringPersistentData(item, NameSpacedKeys.ITEM_TYPE);
             if (keyId == null) continue;
 
-            LayoutKey key = LayoutKey.fromId(keyId);  //todo 在这里的id只有Kind没index 要思考要不要把index也注入 还是说根据kind自动分配index
+            LayoutKey key = LayoutKey.fromId(keyId);  //todo 在这里的id只有Kind没index 要思考要不要把index也注入 还是说根据kind自动分配index  改成item: slot:amount的形式 invlayout也要改
             layout.setSlot(key, slot);
         }
 

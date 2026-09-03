@@ -47,7 +47,8 @@ public enum ClassEnum {
         this.classId = classId;
         this.customClass = abstractCustomClass;
         this.customClass.setClassEnum(this);  // 同样为默认实现注入
-        this.customClass.createItemStackForItemKind();
+        this.customClass.initializeCommonItems();
+//        this.customClass.createItemStackForItemKind();
     }
 
     ClassEnum(int classId) {
