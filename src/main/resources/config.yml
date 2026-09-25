@@ -121,4 +121,13 @@ custom_inventory_order:
 class_inventory_order:
 rating:
 song_index:
+player-data:
+  alsdfajsdfl:
+    name: ad
+    inventory_order:
+      common:
+      class:
+        1:
+
+
 

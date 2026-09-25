@@ -41,9 +41,13 @@ public class InventoryLayout {
 //        return slot == null ? OptionalInt.empty() : OptionalInt.of(slot);
 //    }
 
-    public boolean contains(LayoutKey key) {
-        return slots.containsKey(key);
+    public ItemCount getSlot(int slot) {
+        return slots.get(slot);
     }
+
+//    public boolean contains(LayoutKey key) {
+//        return slots.containsKey(key);
+//    }
 
     public Map<Integer, ItemCount> asMap() {
         return Collections.unmodifiableMap(slots);
