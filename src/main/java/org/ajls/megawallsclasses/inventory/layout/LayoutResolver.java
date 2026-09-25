@@ -19,12 +19,6 @@ import java.util.Set;
 public class LayoutResolver {
     //用来根据玩家职业加载顺序的
 
-//    private final LayoutRepository repository;
-//
-//    public LayoutResolver(LayoutRepository repository) {
-//        this.repository = repository;
-//    }
-
     public static InventoryLayout resolve(Player player, AbstractCustomClass customClass) {
 
         if (customClass == ClassEnum.NONE.customClass) {

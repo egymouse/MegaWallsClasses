@@ -5,9 +5,9 @@ import org.ajls.megawallsclasses.*;
 import org.ajls.megawallsclasses.classsystem.ClassConfigManager;
 import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.inventory.item.ItemStackProvider;
+import org.ajls.megawallsclasses.inventory.key.ItemCount;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
-import org.ajls.megawallsclasses.inventory.layout.ClassDefaultLayoutResolver;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.ajls.trackercompass.CompassItemStack;
 import org.bukkit.ChatColor;
@@ -54,6 +54,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     }
 
     public void addCommonItem(ItemKind itemKind, ItemStackProvider itemStackProvider, int... indexes) {  //如果没indexes就默认加入第一个空位
+        //传入的只能是一维数组 要实现指定位置+数量很麻烦
         ItemStack itemStack = itemStackProvider.getItemStack();
         ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE, itemKind.id());  //注入pdc为了重编辑物品栏时能知道什么在什么位上
         itemKind_itemStack.put(itemKind, itemStack);
@@ -61,18 +62,36 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         if (this.classEnum == null) {
             if (indexes != null && indexes.length > 0) {
                 for (int i = 0; i < indexes.length; i++) {
-                    inventoryLayout.setSlot(indexes[i], itemKind);
+                    inventoryLayout.setSlot(indexes[i], itemKind, itemStack.getAmount());
                 }
             }
             else {
                 //say 有bug
-                int freeSlot = ClassDefaultLayoutResolver.findFirstFreeSlot(inventoryLayout);
-                inventoryLayout.setSlot(freeSlot, itemKind);
+                int freeSlot = findFirstFreeSlot(inventoryLayout);
+                inventoryLayout.setSlot(freeSlot, itemKind, itemStack.getAmount());
             }
         }
 
 
 
+    }
+
+    public static int findFirstFreeSlot(InventoryLayout layout) {
+        boolean[] used = new boolean[36];
+
+        for (int slot : layout.asMap().keySet()) {
+            if (slot >= 0 && slot < 36) {
+                used[slot] = true;
+            }
+        }
+
+        for (int i = 0; i < 36; i++) {
+            if (!used[i]) {
+                return i;
+            }
+        }
+
+        throw new IllegalStateException("No free inventory slot");
     }
 
     //itemKind_itemStack每个类都有，来决定对应类的实例物品
@@ -182,6 +201,19 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         }, 4);
     }
 
+    public InventoryLayout injectClassItems(InventoryLayout inventoryLayout) {
+        Map<Integer, ItemCount> integerItemCountMap = inventoryLayout.asMap();
+        for (Map.Entry<Integer, ItemCount> entry : integerItemCountMap.entrySet()) {
+            int slot = entry.getKey();
+            ItemCount itemCount = entry.getValue();
+            ItemKind itemKind = itemCount.getKind();
+            int count = itemCount.getCount();
+
+
+
+        }
+    }
+
     public void createItemStackForItemKind() {
         //其他class  override来添加职业特殊物品
 
@@ -211,6 +243,11 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
      */
     public ItemStack createInventoryItem(LayoutKey key) {
         return itemKind_itemStack.get(key.kind());
+    }
+    public ItemStack createInventoryItem(ItemKind kind, int count) {
+        ItemStack itemStack = itemKind_itemStack.get(kind).clone();
+        itemStack.setAmount(count);
+        return itemStack;
     }
 
     public static final String CLASS_SAME = "ClassSame";  //比如剑 弓

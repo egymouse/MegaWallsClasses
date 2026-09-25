@@ -36,18 +36,13 @@ public class InventoryLayout {
         setSlot(slot, itemKind, -1);
     }
 
-//    public OptionalInt getSlot(LayoutKey key) {
-//        Integer slot = slots.get(key);
-//        return slot == null ? OptionalInt.empty() : OptionalInt.of(slot);
-//    }
+    public void removeSlot(int slot) {
+        slots.remove(slot);
+    }
 
     public ItemCount getSlot(int slot) {
         return slots.get(slot);
     }
-
-//    public boolean contains(LayoutKey key) {
-//        return slots.containsKey(key);
-//    }
 
     public Map<Integer, ItemCount> asMap() {
         return Collections.unmodifiableMap(slots);

@@ -7,6 +7,8 @@ import org.ajls.megawallsclasses.commands.*;
 import org.ajls.megawallsclasses.custommusic.MidiMusicPlayer;
 import org.ajls.megawallsclasses.inventory.apply.InventoryApplier;
 import org.ajls.megawallsclasses.inventory.editor.InventoryOrderEditor;
+import org.ajls.megawallsclasses.inventory.key.ItemCount;
+import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.layout.LayoutRepository;
 import org.ajls.megawallsclasses.inventory.layout.LayoutResolver;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
@@ -90,6 +92,11 @@ public final class MegaWallsClasses extends JavaPlugin {
         //这行代码设置了一个“开关// ”（copyDefaults），告诉Bukkit的配置API：当从getConfig()读取一个不存在的配置项时，自动用插件JAR里config.yml的预设值去填充。
         //todo 我不知道，反正新增职业名称这段代码时实测根本没有copyDefaults，这怎么办（）
         saveConfig(); //保存到磁盘
+
+        getConfig().set("test", new ItemCount(ItemKind.ARROW, 12));
+        saveConfig();
+        ItemCount itemCount = (ItemCount) getConfig().get("test", ItemCount.class);
+        Bukkit.broadcastMessage(itemCount.toString());
 
 
         tracked_teams.add("blue_team");
