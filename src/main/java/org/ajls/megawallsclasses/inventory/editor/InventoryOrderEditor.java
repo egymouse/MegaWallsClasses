@@ -5,6 +5,8 @@ import org.ajls.megawallsclasses.ClassEnum;
 import org.ajls.megawallsclasses.MegaWallsClasses;
 import org.ajls.megawallsclasses.NameSpacedKeys;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
+import org.ajls.megawallsclasses.inventory.key.ItemCount;
+import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.ajls.megawallsclasses.inventory.layout.LayoutRepository;
@@ -31,14 +33,17 @@ public class InventoryOrderEditor {
 
         InventoryLayout inventoryLayout = LayoutResolver.resolve(player, abstractCustomClass);
 
-        Map<LayoutKey, Integer> inventoryLayoutMap = inventoryLayout.asMap();
+        Map<Integer, ItemCount> inventoryLayoutMap = inventoryLayout.asMap();
         Inventory inventory = Bukkit.createInventory(player, 45, title);
 
-        for (LayoutKey key : inventoryLayoutMap.keySet()) {
-            int index = inventoryLayoutMap.get(key);
-            ItemStack itemStack = abstractCustomClass.createInventoryItem(key);
+        for (Map.Entry<Integer, ItemCount> entry : inventoryLayoutMap.entrySet()) {
+            int slot = entry.getKey();
+            ItemCount itemCount = entry.getValue();
+            int count = itemCount.getCount();
+            ItemKind itemKind = itemCount.getKind();
+            ItemStack itemStack = abstractCustomClass.createInventoryItem(itemKind, count);
 
-            inventory.setItem(index, itemStack);
+            inventory.setItem(slot, itemStack);
         }
 
         inventory.setItem(36, createResetButton());
@@ -100,8 +105,7 @@ public class InventoryOrderEditor {
             String keyId = ItemStackU.getStringPersistentData(item, NameSpacedKeys.ITEM_TYPE);
             if (keyId == null) continue;
 
-            LayoutKey key = LayoutKey.fromId(keyId);  //todo 在这里的id只有Kind没index 要思考要不要把index也注入 还是说根据kind自动分配index  改成item: slot:amount的形式 invlayout也要改
-            layout.setSlot(key, slot);
+            layout.setSlot(slot, ItemKind.fromId(keyId), item.getAmount());
         }
 
         return layout;

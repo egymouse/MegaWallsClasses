@@ -24,9 +24,7 @@ public class LayoutResolver {
         if (customClass == ClassEnum.NONE.customClass) {
             return LayoutRepository.loadCommonLayout(player);
         }
-        InventoryLayout classPlayerLayout =
-                LayoutRepository.loadClassLayout(player, customClass.getClassEnum().classId);
-        return classPlayerLayout;
+        return LayoutRepository.loadClassLayout(player, customClass.getClassEnum().classId);
     }
 
     public static InventoryLayout toLayout(Inventory inventory) {

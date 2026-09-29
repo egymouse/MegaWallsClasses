@@ -7,9 +7,9 @@ public final class ItemCount {
     private final int count;
 
     public ItemCount(ItemKind kind, int count) {
-        if (count < 0) {
-            throw new IllegalArgumentException("Count cannot be negative");
-        }
+//        if (count < 0) {
+//            throw new IllegalArgumentException("Count cannot be negative");
+//        }
         this.kind = kind;
         this.count = count;
     }

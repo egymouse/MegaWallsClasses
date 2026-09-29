@@ -93,10 +93,10 @@ public final class MegaWallsClasses extends JavaPlugin {
         //todo 我不知道，反正新增职业名称这段代码时实测根本没有copyDefaults，这怎么办（）
         saveConfig(); //保存到磁盘
 
-        getConfig().set("test", new ItemCount(ItemKind.ARROW, 12));
-        saveConfig();
-        ItemCount itemCount = (ItemCount) getConfig().get("test", ItemCount.class);
-        Bukkit.broadcastMessage(itemCount.toString());
+//        getConfig().set("test", new ItemCount(ItemKind.ARROW, 12));
+//        saveConfig();
+//        ItemCount itemCount = (ItemCount) getConfig().get("test", ItemCount.class);
+//        Bukkit.broadcastMessage(itemCount.toString());
 
 
         tracked_teams.add("blue_team");

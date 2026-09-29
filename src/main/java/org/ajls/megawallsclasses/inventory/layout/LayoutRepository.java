@@ -23,7 +23,12 @@ public class LayoutRepository {
     public static InventoryLayout loadCommonLayout(Player player) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".common";
         path = "custom_inventory_order." + player.getName();
-        return loadLayout(path).orElse(ClassEnum.NONE.customClass.getDefaultInventoryLayout());
+        Optional<InventoryLayout> commonLayoutOptional = loadLayout(path);
+        if (commonLayoutOptional.isPresent()) {
+            return potionCondense(commonLayoutOptional.get());
+        }
+        InventoryLayout defaultInventoryLayout = ClassEnum.NONE.customClass.getDefaultInventoryLayout();
+        return defaultInventoryLayout;
     }
 
     public static InventoryLayout loadClassLayout(Player player, int classId) {
@@ -44,37 +49,7 @@ public class LayoutRepository {
 //        Map<Integer, ItemCount> classLayoutMap = defaultClassLayout.asMap();
 
 
-        boolean speed = false;
-        boolean health = false;
-        for (Map.Entry<Integer, ItemCount> entry : commonLayoutMap.entrySet()) {  //防止玩家把血药和速度药拆开了
-            int slot = entry.getKey();
-            ItemCount itemCount = entry.getValue();
-            ItemKind itemKind = itemCount.getKind();
-            int count = itemCount.getCount();
-            if (itemKind == ItemKind.SPEED_POTION) {
-                if (speed) {
-                    commonLayout.removeSlot(slot);
-                }
-                else {
-                    ItemCount newItemCount = new ItemCount(itemKind, -1);
-                    commonLayoutMap.put(slot, newItemCount);
-                    speed = true;
-                }
-
-            }
-            else if (itemKind == ItemKind.HEAL_POTION) {
-                if (health) {
-                    commonLayout.removeSlot(slot);
-                }
-                else {
-                    ItemCount newItemCount = new ItemCount(itemKind, -1);
-                    commonLayoutMap.put(slot, newItemCount);
-                    health = true;
-                }
-
-            }
-
-        }
+        potionCondense(commonLayout);
 
         for (Map.Entry<ItemKind, Integer> entry : customClass.classItemKind_count.entrySet()) {
             ItemKind itemKind = entry.getKey();
@@ -98,9 +73,47 @@ public class LayoutRepository {
 //        return loadLayout(path).orElse(ClassEnum.getClassEnumByClassID(classId).customClass.getDefaultInventoryLayout());
     }
 
+    public static InventoryLayout potionCondense(InventoryLayout inventoryLayout) {
+        Map<Integer, ItemCount> layoutMap = inventoryLayout.asMap();
+        boolean speed = false;
+        boolean health = false;
+        for (Map.Entry<Integer, ItemCount> entry : layoutMap.entrySet()) {  //防止玩家把血药和速度药拆开了
+            int slot = entry.getKey();
+            ItemCount itemCount = entry.getValue();
+            ItemKind itemKind = itemCount.getKind();
+            int count = itemCount.getCount();
+            if (itemKind == ItemKind.SPEED_POTION) {
+                if (speed) {
+                    inventoryLayout.removeSlot(slot);
+                }
+                else {
+                    ItemCount newItemCount = new ItemCount(itemKind, -1);
+                    inventoryLayout.setSlot(slot, newItemCount);
+                    speed = true;
+                }
+
+            }
+            else if (itemKind == ItemKind.HEAL_POTION) {
+                if (health) {
+                    inventoryLayout.removeSlot(slot);
+                }
+                else {
+                    ItemCount newItemCount = new ItemCount(itemKind, -1);
+                    inventoryLayout.setSlot(slot, newItemCount);
+                    health = true;
+                }
+
+            }
+
+        }
+
+        return inventoryLayout;
+    }
+
     public static void saveCommonLayout(Player player, InventoryLayout layout) {
         String path = "inventory_layouts.players." + player.getUniqueId() + ".common";
         path = "custom_inventory_order." + player.getName();
+        potionCondense(layout);
         saveLayout(path, layout);
     }
 

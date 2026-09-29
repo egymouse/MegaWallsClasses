@@ -59,19 +59,16 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE, itemKind.id());  //注入pdc为了重编辑物品栏时能知道什么在什么位上
         itemKind_itemStack.put(itemKind, itemStack);
 
-        if (this.classEnum == null) {
-            if (indexes != null && indexes.length > 0) {
-                for (int i = 0; i < indexes.length; i++) {
-                    inventoryLayout.setSlot(indexes[i], itemKind, itemStack.getAmount());
-                }
-            }
-            else {
-                //say 有bug
-                int freeSlot = findFirstFreeSlot(inventoryLayout);
-                inventoryLayout.setSlot(freeSlot, itemKind, itemStack.getAmount());
+        if (indexes != null && indexes.length > 0) {
+            for (int i = 0; i < indexes.length; i++) {
+                inventoryLayout.setSlot(indexes[i], itemKind, itemStack.getAmount());
             }
         }
-
+        else {
+            //say 有bug
+            int freeSlot = findFirstFreeSlot(inventoryLayout);
+            inventoryLayout.setSlot(freeSlot, itemKind, itemStack.getAmount());
+        }
 
 
     }
@@ -201,18 +198,6 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         }, 4);
     }
 
-    public InventoryLayout injectClassItems(InventoryLayout inventoryLayout) {
-        Map<Integer, ItemCount> integerItemCountMap = inventoryLayout.asMap();
-        for (Map.Entry<Integer, ItemCount> entry : integerItemCountMap.entrySet()) {
-            int slot = entry.getKey();
-            ItemCount itemCount = entry.getValue();
-            ItemKind itemKind = itemCount.getKind();
-            int count = itemCount.getCount();
-
-
-
-        }
-    }
 
     public void createItemStackForItemKind() {
         //其他class  override来添加职业特殊物品
@@ -246,7 +231,9 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     }
     public ItemStack createInventoryItem(ItemKind kind, int count) {
         ItemStack itemStack = itemKind_itemStack.get(kind).clone();
-        itemStack.setAmount(count);
+        if (count > 0) {
+            itemStack.setAmount(count);
+        }
         return itemStack;
     }
 

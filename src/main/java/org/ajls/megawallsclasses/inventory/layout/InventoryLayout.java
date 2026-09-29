@@ -26,10 +26,14 @@ public class InventoryLayout {
 
 
     public void setSlot(int slot, ItemKind itemKind, int count) {
+        setSlot(slot, new ItemCount(itemKind, count));
+    }
+
+    public void setSlot(int slot, ItemCount itemCount) {
         if (slot < 0 || slot >= 36) {
             throw new IllegalArgumentException("slot must be 0-35: " + slot);
         }
-        slots.put(slot, new ItemCount(itemKind, count));
+        slots.put(slot, itemCount);
     }
 
     public void setSlot(int slot, ItemKind itemKind) {
