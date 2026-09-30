@@ -4,6 +4,7 @@ import org.ajls.lib.advanced.HaxhMap;
 import org.ajls.lib.references.Time;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
+import org.ajls.megawallsclasses.inventory.apply.InventoryApplier;
 import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
 import org.bukkit.*;
 import org.bukkit.configuration.Configuration;
@@ -233,61 +234,25 @@ public class InitializeClass {
         initializeClassSpecific(player, false);
     }
     public static void initializeClassSpecific(Player player, boolean loadAsTF) {
-        Inventory playerInventory = player.getInventory();
-//        player.getInventory().clear();
-
-
-        //        player.getInventory().setHelmet(setUnbreakable(new ItemStack(Material.IRON_HELMET)));
-//        player.getInventory().setChestplate(setUnbreakable(new ItemStack(Material.IRON_CHESTPLATE)));
-//        player.getInventory().setLeggings(setUnbreakable(new ItemStack(Material.IRON_LEGGINGS)));
-//        player.getInventory().setBoots(setUnbreakable(new ItemStack(Material.IRON_BOOTS)));
-//
-////        player.getInventory().setItem(0, setUnbreakable(new ItemStack(Material.CLOCK)));
-//        givePlayerCompass(player, 0);
-//        player.getInventory().setItem(1, setUnbreakable(new ItemStack(Material.IRON_AXE)));
-//        ItemStack diamond_pickaxe = setUnbreakable(new ItemStack(Material.DIAMOND_PICKAXE));
-//        diamond_pickaxe.addEnchantment(Enchantment.EFFICIENCY, 3);
-//        player.getInventory().setItem(2, diamond_pickaxe);
-//        player.getInventory().setItem(3, new ItemStack(Material.OAK_PLANKS, 128));
-//        player.getInventory().setItem(4, new ItemStack(Material.COBBLESTONE, 128));
-//        player.getInventory().setItem(5, new ItemStack(Material.NETHER_STAR, 1));
-//        player.getInventory().setItem(6, setUnbreakable(new ItemStack(Material.IRON_SWORD, 1)));
-//        player.getInventory().setItem(7, new ItemStack(Material.COOKED_PORKCHOP, 5));
-//        player.getInventory().setItem(8, setUnbreakable(new ItemStack(Material.BOW, 1)));
-//        player.getInventory().setItem(34, setUnbreakable(new ItemStack(Material.ARROW, 128)));
-////        player.getInventory().setItem(35, setUnbreakable(new ItemStack(Material.ARROW, 64)));
         player.getInventory().setHelmet(setClassItem(setUnbreakable(new ItemStack(Material.IRON_HELMET))));
         player.getInventory().setChestplate(setClassItem(setUnbreakable(new ItemStack(Material.IRON_CHESTPLATE))));
         player.getInventory().setLeggings(setClassItem(setUnbreakable(new ItemStack(Material.IRON_LEGGINGS))));
         player.getInventory().setBoots(setClassItem(setUnbreakable(new ItemStack(Material.IRON_BOOTS))));
-        //start here
-//        Configuration configuration = plugin.getConfig();
-//        String playerName = player.getName();
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".超级战墙工具箱"), setUnbreakable(addLore(new ItemStack(Material.CLOCK), "classItem")));
-//        givePlayerCompass(player, configuration.getInt("custom_inventory_order." + playerName + ".compass"));
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".iron_axe"), setUnbreakable(setAttributeAttackDamage(new ItemStack(Material.IRON_AXE), 4))); // 1+4 = 5 iron sword 6
-//        ItemStack diamond_pickaxe = setUnbreakable(new ItemStack(Material.DIAMOND_PICKAXE));
-//        diamond_pickaxe.addEnchantment(Enchantment.EFFICIENCY, 3);
-//        addLore(diamond_pickaxe, "classItem");
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".diamond_pickaxe"), diamond_pickaxe);
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".ender_chest"), setClassItem(new ItemStack(Material.ENDER_CHEST, 1)));
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".plank"), new ItemStack(Material.OAK_PLANKS, 64));
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".cobblestone"), new ItemStack(Material.COBBLESTONE, 64));
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".nether_star"), setClassItem(new ItemStack(Material.NETHER_STAR, 1)));
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".iron_sword"), setUnbreakable(new ItemStack(Material.IRON_SWORD, 1)));
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".cooked_porkchop"), new ItemStack(Material.COOKED_PORKCHOP, 64));
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".bow"), setClassItem(setUnbreakable(new ItemStack(Material.BOW, 1))));
-//        player.getInventory().setItem(configuration.getInt("custom_inventory_order." + playerName + ".arrow"), setUnbreakable(new ItemStack(Material.ARROW, 64)));
-//        setItem(player, "hay_block", new ItemStack(Material.HAY_BLOCK, 16));
-//        player.getInventory().setItem(35, new ItemStack(Material.HAY_BLOCK, 16));
-//        player.getInventory().setItem(35, setUnbreakable(new ItemStack(Material.ARROW, 64)));
-        //stop here
-
+        InventoryApplier.apply(player);
+        /*
+        Inventory playerInventory = player.getInventory();
+        player.getInventory().setHelmet(setClassItem(setUnbreakable(new ItemStack(Material.IRON_HELMET))));
+        player.getInventory().setChestplate(setClassItem(setUnbreakable(new ItemStack(Material.IRON_CHESTPLATE))));
+        player.getInventory().setLeggings(setClassItem(setUnbreakable(new ItemStack(Material.IRON_LEGGINGS))));
+        player.getInventory().setBoots(setClassItem(setUnbreakable(new ItemStack(Material.IRON_BOOTS))));
 
         Inventory classInventory = InventoryManager.loadClassReorderInventory(player, ClassU.getClass(player));
         if (loadAsTF) {
             classInventory = InventoryManager.loadClassReorderInventory(player, 29);
         }
+
+
+
         boolean isTF = ClassU.isTransformationMaster(player);
         for (int i = 0; i < 36; i++) {
             int slotToChange = i;
@@ -327,17 +292,11 @@ public class InitializeClass {
             }
         }
 
-//        Inventory classReorderInventory = InventoryManager.loadClassReorderInventory(player, ScoreboardsAndTeams.getScore(player, "class"), false);  //only changed to false so it can load normal items
-//        for (int i = 0; i < 36; i++) {
-//            ItemStack stack = classReorderInventory.getItem(i);
-//            if (stack != null && !stack.getType().equals(Material.AIR)) {
-//                setDisplayName(stack, null);
-//                player.getInventory().setItem(i, stack);
-//            }
-//        }
 
 
 //        MegaWallsClasses.getPlugin().getInventoryApplier().apply(player, ClassEnum.getCustomClassByPlayer(player));
+
+         */
     }
 
     public static void initializeAutoEnergyAccumulationFlexible(Player player) {

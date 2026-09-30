@@ -40,6 +40,13 @@ public enum ClassEnum {
 
     DRAGON(311, new DragonClass());  //todo 改成每个玩家一个职业instance 存储在Playerdata里面
 
+
+    static {
+        for (ClassEnum ce : values()) {
+            ce.customClass.initializeCommonItems();  //等enum全部初始化后再执行
+        }
+    }
+
     public final int classId;
     public final AbstractCustomClass customClass;
 
@@ -47,9 +54,6 @@ public enum ClassEnum {
         this.classId = classId;
         this.customClass = abstractCustomClass;
         this.customClass.setClassEnum(this);  // 同样为默认实现注入
-        if (classId == 0) {
-            this.customClass.initializeCommonItems();
-        }
 
 //        this.customClass.createItemStackForItemKind();
     }

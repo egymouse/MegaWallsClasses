@@ -90,6 +90,10 @@ public enum ItemKind {
         this.id = id;
     }
 
+    ItemKind() {
+        this.id = this.name();
+    }
+
     public String id() {
         return id;
     }
@@ -108,5 +112,10 @@ public enum ItemKind {
             throw new IllegalArgumentException("Unknown item kind: " + id);
         }
         return kind;
+    }
+
+    @Override
+    public String toString() {
+        return this.id;
     }
 }

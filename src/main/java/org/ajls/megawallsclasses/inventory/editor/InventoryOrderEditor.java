@@ -10,7 +10,6 @@ import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.ajls.megawallsclasses.inventory.layout.LayoutRepository;
-import org.ajls.megawallsclasses.inventory.layout.LayoutResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
@@ -31,7 +30,7 @@ public class InventoryOrderEditor {
     ) {
 
 
-        InventoryLayout inventoryLayout = LayoutResolver.resolve(player, abstractCustomClass);
+        InventoryLayout inventoryLayout = LayoutRepository.resolve(player, abstractCustomClass);
 
         Map<Integer, ItemCount> inventoryLayoutMap = inventoryLayout.asMap();
         Inventory inventory = Bukkit.createInventory(player, 45, title);

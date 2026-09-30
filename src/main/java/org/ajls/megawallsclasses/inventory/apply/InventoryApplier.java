@@ -3,14 +3,9 @@ package org.ajls.megawallsclasses.inventory.apply;
 import org.ajls.megawallsclasses.ClassEnum;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
-import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
-import org.ajls.megawallsclasses.inventory.layout.LayoutResolver;
-import org.bukkit.Material;
+import org.ajls.megawallsclasses.inventory.layout.LayoutRepository;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.OptionalInt;
 
 public class InventoryApplier {
 
@@ -22,7 +17,7 @@ public class InventoryApplier {
     public static void apply(Player player, AbstractCustomClass customClass) {
 //        clearStorageContents(player);  //自己手动清理
 
-        InventoryLayout layout = LayoutResolver.resolve(player, customClass);
+        InventoryLayout layout = LayoutRepository.resolve(player, customClass);
         layout.asMap().forEach((slot, itemCount) -> {
             ItemKind itemKind = itemCount.getKind();
             int count = itemCount.getCount();

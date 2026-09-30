@@ -5,9 +5,7 @@ import org.ajls.megawallsclasses.*;
 import org.ajls.megawallsclasses.classsystem.ClassConfigManager;
 import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.inventory.item.ItemStackProvider;
-import org.ajls.megawallsclasses.inventory.key.ItemCount;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
-import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.ajls.trackercompass.CompassItemStack;
 import org.bukkit.ChatColor;
@@ -26,7 +24,7 @@ import static org.ajls.megawallsclasses.ItemStackModify.*;
 public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象类implement之前那个接口的，但算了反正一样
     private ClassEnum classEnum = null;  // 存储注入的枚举
     public Map<ItemKind, ItemStack> itemKind_itemStack = new HashMap<>();  //不同的职业 同类物品对应不同的itemStack
-    public static InventoryLayout inventoryLayout = new InventoryLayout();  //直接static，毕竟其他职业以玩家自定义默认物品配置来加载
+    public InventoryLayout inventoryLayout = new InventoryLayout();  //直接static，毕竟其他职业以玩家自定义默认物品配置来加载
     public static HashMap<ItemKind, Integer> classItemKind_count = new HashMap<>();
 
     AbstractCustomClass() {
@@ -59,15 +57,18 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE, itemKind.id());  //注入pdc为了重编辑物品栏时能知道什么在什么位上
         itemKind_itemStack.put(itemKind, itemStack);
 
-        if (indexes != null && indexes.length > 0) {
-            for (int i = 0; i < indexes.length; i++) {
-                inventoryLayout.setSlot(indexes[i], itemKind, itemStack.getAmount());
+        if (this.classEnum == ClassEnum.NONE) {
+            if (indexes != null && indexes.length > 0) {
+                for (int i = 0; i < indexes.length; i++) {
+                    inventoryLayout.setSlot(indexes[i], itemKind, itemStack.getAmount());
+                }
             }
-        }
-        else {
-            //say 有bug
-            int freeSlot = findFirstFreeSlot(inventoryLayout);
-            inventoryLayout.setSlot(freeSlot, itemKind, itemStack.getAmount());
+            else {
+                //say 有bug
+                int freeSlot = findFirstFreeSlot(inventoryLayout);
+                inventoryLayout.setSlot(freeSlot, itemKind, itemStack.getAmount());
+            }
+
         }
 
 
@@ -96,11 +97,11 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     //玩家自己会保存，所以有load的都很简单，只需要查询itemKind_itemStack就行了
     //记得补充从config读取和写入的代码，还有默认没用布局时候获取默认布局的代码（读取玩家的通用默认布局，然后加入职业默认物品的itemKind就行了）
     //todo 记得改成slot: itemKind:count的格式
-    public void addItem(ItemKind itemKind, ItemStackProvider itemStackProvider) {
-        addItem(itemKind, itemStackProvider, 1);
+    public void addClassItem(ItemKind itemKind, ItemStackProvider itemStackProvider) {
+        addClassItem(itemKind, itemStackProvider, 1);
     }
 
-    public void addItem(ItemKind itemKind, ItemStackProvider itemStackProvider, int amount) {  //如果没indexes就默认加入第一个空位
+    public void addClassItem(ItemKind itemKind, ItemStackProvider itemStackProvider, int amount) {  //如果没indexes就默认加入第一个空位
         ItemStack itemStack = itemStackProvider.getItemStack();
         ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE, itemKind.id());  //注入pdc为了重编辑物品栏时能知道什么在什么位上
         itemKind_itemStack.put(itemKind, itemStack);
@@ -118,7 +119,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 //    }
 
 
-    public void initializeCommonItems() {
+    public void initializeCommonItems() {  //todo addcommon只有none会注入默认物品栏配置，其他的只注入itemKind_itemStack，而不写入物品栏配置
         //这是注入itemKind与ItemStack的映射
         // 只有none使用时候是默认配置+物品对应，那其他class使用的时候就需要对应处理了
         // 比方说addItem只是加入一个hashset，然后根据是initialize还是inject layout来决定
@@ -198,37 +199,20 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         }, 4);
     }
 
-
-    public void createItemStackForItemKind() {
-        //其他class  override来添加职业特殊物品
-
+    public void initializeClassItems() {
+        addClassItem(ItemKind.ELAINA_GOLDEN_CARROT, () -> {
+            return new ItemStack(Material.GOLDEN_CARROT, 1);
+        });
     }
 
 
-    public InventoryLayout getClassInventoryLayout() {
-        return inventoryLayout; //其他职业override来修改添加特殊物品
-    }
 
-    public void createClassItemStackForItemKind() {
-        //给其他class 比如摩尔来override用的
-    }
-
-    public List<LayoutKey> getClassDefaultLayoutKeys() {
-        return new ArrayList<>();  //给其他class override用的
-    }
-
-    public void configureDefaultLayout(InventoryLayout layout) {
-        // 默认不做任何事
-    }
 
 
     /**
      * 根据 key 生成真实物品。
      * 大部分职业不需要重写全部，只重写 getSwordMaterial / getBow / getPotionProfile 即可。
      */
-    public ItemStack createInventoryItem(LayoutKey key) {
-        return itemKind_itemStack.get(key.kind());
-    }
     public ItemStack createInventoryItem(ItemKind kind, int count) {
         ItemStack itemStack = itemKind_itemStack.get(kind).clone();
         if (count > 0) {

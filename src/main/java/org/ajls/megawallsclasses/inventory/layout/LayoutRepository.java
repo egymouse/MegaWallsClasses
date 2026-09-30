@@ -12,6 +12,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,7 +26,7 @@ public class LayoutRepository {
         path = "custom_inventory_order." + player.getName();
         Optional<InventoryLayout> commonLayoutOptional = loadLayout(path);
         if (commonLayoutOptional.isPresent()) {
-            return potionCondense(commonLayoutOptional.get());
+            return commonLayoutOptional.get();
         }
         InventoryLayout defaultInventoryLayout = ClassEnum.NONE.customClass.getDefaultInventoryLayout();
         return defaultInventoryLayout;
@@ -36,11 +37,13 @@ public class LayoutRepository {
         path = "class_inventory_order."  + player.getName() + "." + classId;
 
 
-        InventoryLayout commonLayout = loadCommonLayout(player);
+
         Optional<InventoryLayout> optionalClassLayout = loadLayout(path);
         if (optionalClassLayout.isPresent()) {
             return optionalClassLayout.get();
         }
+
+        InventoryLayout commonLayout = loadCommonLayout(player);
         AbstractCustomClass customClass = ClassEnum.getClassEnumByClassID(classId).customClass;
 
 //        InventoryLayout defaultClassLayout = ClassEnum.getClassEnumByClassID(classId).customClass.getDefaultInventoryLayout();
@@ -49,7 +52,6 @@ public class LayoutRepository {
 //        Map<Integer, ItemCount> classLayoutMap = defaultClassLayout.asMap();
 
 
-        potionCondense(commonLayout);
 
         for (Map.Entry<ItemKind, Integer> entry : customClass.classItemKind_count.entrySet()) {
             ItemKind itemKind = entry.getKey();
@@ -77,7 +79,7 @@ public class LayoutRepository {
         Map<Integer, ItemCount> layoutMap = inventoryLayout.asMap();
         boolean speed = false;
         boolean health = false;
-        for (Map.Entry<Integer, ItemCount> entry : layoutMap.entrySet()) {  //防止玩家把血药和速度药拆开了
+        for (Map.Entry<Integer, ItemCount> entry : new ArrayList<>(layoutMap.entrySet())) {  //防止玩家把血药和速度药拆开了
             int slot = entry.getKey();
             ItemCount itemCount = entry.getValue();
             ItemKind itemKind = itemCount.getKind();
@@ -158,7 +160,7 @@ public class LayoutRepository {
             ConfigurationSection slotSection = section.getConfigurationSection(slotString);
             slotSection.getKeys(false).forEach(key -> {
                 int count = slotSection.getInt(key);
-                ItemKind itemKind = ItemKind.valueOf(key);
+                ItemKind itemKind = ItemKind.fromId(key);
 //                    ConfigurationSection kindSection = slotSection.getConfigurationSection(key);
                 layout.setSlot(slot, itemKind, count);
 
@@ -174,7 +176,7 @@ public class LayoutRepository {
         config.set(path, null);
 
         for (Map.Entry<Integer, ItemCount> entry : layout.asMap().entrySet()) {
-            config.set(path + "." + entry.getKey() + "." + entry.getValue().getKind(), entry.getValue().getCount()); //0:axe:2
+            config.set(path + "." + entry.getKey() + "." + entry.getValue().getKind().id(), entry.getValue().getCount()); //0:axe:2
 
         }
 
@@ -184,5 +186,13 @@ public class LayoutRepository {
     private static void resetLayout(String path) {
         Configuration config = MegaWallsClasses.getPlugin().getConfig();
         ConfigU.remove(config, path);
+    }
+
+    public static InventoryLayout resolve(Player player, AbstractCustomClass customClass) {
+
+        if (customClass == ClassEnum.NONE.customClass) {
+            return loadCommonLayout(player);
+        }
+        return loadClassLayout(player, customClass.getClassEnum().classId);
     }
 }
