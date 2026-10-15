@@ -39,8 +39,8 @@ public final class ClassConfigEntry {
         return new ClassConfigEntry(
                 "无职业",
                 "无职",
-                PotionConfig.healthPotion(1, 2, 16),
-                PotionConfig.speedPotion(1, 2, 300, 1)
+                PotionConfig.healthPotion(2, 1, 16),
+                PotionConfig.speedPotion(2, 1, 300, 1)
         );
     }
 }

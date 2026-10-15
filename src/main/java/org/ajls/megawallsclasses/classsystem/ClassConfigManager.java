@@ -82,7 +82,7 @@ public class ClassConfigManager {
                 defaultPotion.amount()
         );
         int stackAmount = classesSection.getInt(
-                potionPath + ClassConfigKeys.STACK_AMOUNT,
+                potionPath + ClassConfigKeys.TOTAL_STACKS,
                 defaultPotion.stackAmount()
         );
         int hp = classesSection.getInt(
@@ -106,7 +106,7 @@ public class ClassConfigManager {
                 defaultPotion.amount()
         );
         int stackAmount = classesSection.getInt(
-                potionPath + ClassConfigKeys.STACK_AMOUNT,
+                potionPath + ClassConfigKeys.TOTAL_STACKS,
                 defaultPotion.stackAmount()
         );
         int durationTicks = classesSection.getInt(

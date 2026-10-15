@@ -5,6 +5,7 @@ import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.lib.utils.PlayerU;
 import org.ajls.lib.utils.ScoreboardU;
+import org.ajls.megawallsclasses.classsystem.ClassConfigKeys;
 import org.ajls.megawallsclasses.commands.Energetic;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
@@ -2188,7 +2189,7 @@ public class MyListener implements Listener {
             BukkitScheduler scheduler = getServer().getScheduler();
             scheduler.scheduleSyncDelayedTask(getPlugin(), () -> player.getInventory().remove(Material.GLASS_BOTTLE), 1L);
             if (getLore(item) != null) {
-                if (containsLore(item, "heal_potion")) {  //MegaWallsClasses.getLore(item).equals(MegaWallsClasses.getLore(setLore(new ItemStack(Material.POTION), "heal_potion"))
+                if (containsLore(item, "heal_potion") || containsLore(item, ClassConfigKeys.HEALTH_POTION)) {  //MegaWallsClasses.getLore(item).equals(MegaWallsClasses.getLore(setLore(new ItemStack(Material.POTION), "heal_potion"))
                     //todo heal_potion全部统一改成heatlh_potion
                     event.setCancelled(true);
                     addHealth(player, PotionU.getDuration(item, 0));

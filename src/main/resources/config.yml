@@ -48,12 +48,16 @@ classes:
       short-name: "无职"
     inventory:
       health_potion:
-        amount: 2
+        amount: 1
         hp: 20
   1:
     names:
       name: "僵尸"
       short-name: "僵尸"
+    inventory:
+      health_potion:
+        amount: 1
+        hp: 20
   2:
     names:
       name: "Herobrine"
@@ -78,6 +82,10 @@ classes:
     names:
       name: "实体303"
       short-name: "303"
+    inventory:
+      health_potion:
+        amount: 1
+        hp: 20
   8:
     names:
       name: "苦力怕"
@@ -86,10 +94,18 @@ classes:
     names:
       name: "死灵骑士"
       short-name: "死灵"
+    inventory:
+      health_potion:
+        amount: 2
+        hp: 14
   10:
     names:
       name: "溺尸王"
       short-name: "水鬼"
+    inventory:
+      health_potion:
+        amount: 2
+        hp: 14
   11:
     names:
       name: "蜘蛛"
@@ -110,6 +126,11 @@ classes:
     names:
       name: "灰之魔女"
       short-name: "魔女"
+    inventory:
+      speed_potion:
+        amount: 2
+        duration_ticks: 240
+        amplifier: 2
   18:
     names:
       name: "鱿鱼"

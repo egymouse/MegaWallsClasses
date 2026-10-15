@@ -177,6 +177,11 @@ public final class MegaWallsClasses extends JavaPlugin {
         }, 1, 1);
 //        BlocksModify.fill(configuration.getInt("locations.loc_map_min.x"), configuration.getInt("locations.loc_map_min.y"), configuration.getInt("locations.loc_map_min.z"), configuration.getInt("locations.loc_map_max.x"), configuration.getInt("locations.loc_map_max.y"), configuration.getInt("locations.loc_map_max.z"));configuration.getInt("locations.loc_map_min.x"), configuration.getInt("locations.loc_map_min.y"), configuration.getInt("locations.loc_map_min.z"), configuration.getInt("locations.loc_map_max.x"), configuration.getInt("locations.loc_map_max.y"), configuration.getInt("locations.loc_map_max.z")
         BlocksModify.setBiome(configuration.getInt("locations.loc_map_min.x"), configuration.getInt("locations.loc_map_min.y"), configuration.getInt("locations.loc_map_min.z"), configuration.getInt("locations.loc_map_max.x"), configuration.getInt("locations.loc_map_max.y"), configuration.getInt("locations.loc_map_max.z"), Biome.SNOWY_PLAINS);
+
+
+        for (ClassEnum ce : ClassEnum.values()) {
+            ce.customClass.initializeCommonItems();  //等enum全部初始化后再执行
+        }
     }
 
 

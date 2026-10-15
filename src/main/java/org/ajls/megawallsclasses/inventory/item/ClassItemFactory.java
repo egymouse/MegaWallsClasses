@@ -3,6 +3,7 @@ package org.ajls.megawallsclasses.inventory.item;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.ItemStackModify;
 import org.ajls.megawallsclasses.NameSpacedKeys;
+import org.ajls.megawallsclasses.classsystem.ClassConfigKeys;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
@@ -63,6 +64,8 @@ public final class ClassItemFactory {
                 ChatColor.RED + "" + hp + "HP"
         );
 
+        addLore(item, ClassConfigKeys.HEALTH_POTION);
+
         setMaxStackSize(item, amount);
         setClassItem(item);
 
@@ -79,6 +82,8 @@ public final class ClassItemFactory {
                 item,
                 ChatColor.AQUA + "" + durationTicks / 20 + "s " + toRomanPotionLevel(amplifier)
         );
+
+        addLore(item, ClassConfigKeys.CUSTOM_POTION);
 
         setMaxStackSize(item, amount);
         setClassItem(item);

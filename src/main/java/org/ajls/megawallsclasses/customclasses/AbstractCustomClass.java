@@ -250,7 +250,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     public ItemStack createHealthPotion() {
         return ClassItemFactory.healPotion(
                 getHealthPotionHp(),
-                getHealthPotionStackAmount()
+                getHealthPotionAmount()
         );
     }
 
@@ -258,7 +258,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         return ClassItemFactory.speedPotion(
                 getSpeedPotionDurationTicks(),
                 getSpeedPotionAmplifier(),
-                getSpeedPotionStackAmount()
+                getSpeedPotionAmount()
         );
     }
 
