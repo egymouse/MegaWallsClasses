@@ -1,6 +1,7 @@
 package org.ajls.megawallsclasses.customclasses;
 
 import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.NameSpacedKeys;
 import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.bukkit.Material;
@@ -13,17 +14,17 @@ public class SnowmanClass extends AbstractCustomClass {
     public void initializeClassItems() {
         addClassItem(ItemKind.SNOWMAN_SHOVEL, () -> {
             ItemStack diamond_shovel = new ItemStack(Material.DIAMOND_SHOVEL, 1);
-            ItemStackU.setDisplayName(diamond_shovel, "diamond_shovel");
+            ItemStackU.setStringPersistentData(diamond_shovel, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);
             return diamond_shovel;
         });
         addClassItem(ItemKind.SNOWMAN_SNOW_BLOCK, () -> {
             ItemStack snow_block_1 = new ItemStack(Material.SNOW_BLOCK, 64);
-            setDisplayName(snow_block_1, "snow_block_1");
+            ItemStackU.setStringPersistentData(snow_block_1, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);
             return snow_block_1;
         }, 2);
         addClassItem(ItemKind.SNOWMAN_PUMPKIN, () -> {
             ItemStack pumpkin = new ItemStack(Material.PUMPKIN, 64);
-            setDisplayName(pumpkin, "pumpkin");
+            ItemStackU.setStringPersistentData(pumpkin, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);
             return pumpkin;
         });
 

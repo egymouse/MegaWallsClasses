@@ -5,6 +5,7 @@ import org.ajls.megawallsclasses.ClassEnum;
 import org.ajls.megawallsclasses.ClassU;
 import org.ajls.megawallsclasses.NameSpacedKeys;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
+import org.ajls.megawallsclasses.inventory.key.ItemCount;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.ajls.megawallsclasses.inventory.layout.LayoutRepository;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class InventoryApplier {
 
@@ -26,63 +28,77 @@ public class InventoryApplier {
 //        clearStorageContents(player);  //自己手动清理
 
         boolean isTF = ClassU.isTransformationMaster(player);
+        Inventory playerInventory = player.getInventory();
 
 
         InventoryLayout layout = LayoutRepository.resolve(player, customClass);
-        layout.asMap().forEach((slot, itemCount) -> {
-            int targetSlot = slot;  //适配神秘的幻变大师
+        Map<Integer, ItemCount> layoutMap = layout.asMap();
+        boolean TFImitate = isTF && customClass.getClassEnum() != ClassEnum.TRANSFIGURATION_MASTER;
+        if (!TFImitate) {  //todo 区分职业的魔女药和鱿鱼药 与 杀人的魔女药和自带鱿鱼药
+            for (int i2 = 0; i2 < playerInventory.getSize(); i2++) {
+                ItemStack playerItemStack = playerInventory.getItem(i2);
+                String itemCategory = ItemStackU.getStringPersistentData(playerItemStack, NameSpacedKeys.ITEM_CATEGORY);
+                if (itemCategory != null) {
+                    if (itemCategory.equals(AbstractCustomClass.CLASS_DIFF)) {
+                        playerInventory.setItem(i2, null);
+                    }
+                }
+            }
+        }
+        for (Map.Entry<Integer, ItemCount> entry : layoutMap.entrySet()) {
+            Integer slot = entry.getKey();
+            ItemCount itemCount = entry.getValue();
             ItemKind itemKind = itemCount.getKind();
             int count = itemCount.getCount();
+
             ItemStack itemStack = customClass.createInventoryItem(itemKind, count);
             String itemType = ItemStackU.getStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE);
             String itemCategory = ItemStackU.getStringPersistentData(itemStack, NameSpacedKeys.ITEM_CATEGORY);
-            if (!AbstractCustomClass.CLASS_SAME.equals(itemCategory)) {
-                ItemStackU.removePersistentData(itemStack, NameSpacedKeys.ITEM_TYPE); //新加的 不能让幻变大师影响正常职业物品合并，当然代价就是幻变大师废物消耗品会溢出，石头那些。
-            }
-
-
-            Inventory playerInventory = player.getInventory();
-            boolean dontload = false;
-            if (isTF && customClass.getClassEnum() != ClassEnum.TRANSFIGURATION_MASTER) {
-                //删除血药速度药自带鱿鱼药
-                //替换剑稿子弓，删除原本职业特殊物品，添加新职业特殊物品
-                if (itemKind == ItemKind.SPEED_POTION || itemKind == ItemKind.HEAL_POTION || itemKind == ItemKind.SQUID_POTION) {
-                    dontload = true;  //等价于循环结构的continue
-                }
-
-                if (!dontload) {
+            if (TFImitate) {
+                if (AbstractCustomClass.CLASS_SAME.equals(itemCategory)) {
                     boolean findSameItemType = false;
                     for (int i2 = 0; i2 < playerInventory.getSize(); i2++) {
                         ItemStack playerItemStack = playerInventory.getItem(i2);
                         String playerItemType = ItemStackU.getStringPersistentData(playerItemStack, NameSpacedKeys.ITEM_TYPE);
                         if (playerItemType != null) {
                             if (playerItemType.equals(itemType)) {
-                                targetSlot = i2;
+                                playerInventory.setItem(i2, itemStack);
                                 findSameItemType = true;
                                 break;
                             }
                         }
                     }
                     if (!findSameItemType) {
-                        ItemStack movedItem = playerInventory.getItem(slot);
-                        if (movedItem != null) {
-                            playerInventory.setItem(slot, new ItemStack(Material.COMMAND_BLOCK));  //添加一个占位符 强制插入对应位置
-                            HashMap<Integer, ItemStack> stack = playerInventory.addItem(movedItem);
-                            for (ItemStack extraItemStack : stack.values()) {
-                                player.getWorld().dropItemNaturally(player.getLocation(), extraItemStack);
-                            }
-                        }
+                        addItemToSlot(player, itemStack, slot);
                     }
 
                 }
-
-
+                else if (AbstractCustomClass.CLASS_DIFF.equals(itemCategory)) {
+                    addItemToSlot(player, itemStack, slot);
+                }
             }
-            if (!dontload) {
-                player.getInventory().setItem(targetSlot, itemStack);
+            else {
+                if (itemCategory == null) {
+                    ItemStackU.removePersistentData(itemStack, NameSpacedKeys.ITEM_TYPE);
+                }
+                playerInventory.setItem(slot, itemStack);
             }
-        });
 
+        }
+
+    }
+
+
+    public static void addItemToSlot(Player player, ItemStack itemStack, int slot) {
+        Inventory playerInventory = player.getInventory();
+        ItemStack movedItem = playerInventory.getItem(slot);
+        playerInventory.setItem(slot, itemStack);
+        if (movedItem != null) {
+            HashMap<Integer, ItemStack> stack = playerInventory.addItem(movedItem);
+            for (ItemStack extraItemStack : stack.values()) {
+                player.getWorld().dropItemNaturally(player.getLocation(), extraItemStack);
+            }
+        }
     }
 
     public static void apply(Player player, ClassEnum classEnum) {

@@ -11,6 +11,7 @@ import org.ajls.megawallsclasses.utils.PotionU;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
@@ -103,6 +104,8 @@ public final class ClassItemFactory {
 //        addLore(squid_potion, "感觉怪怪的...(限定款)");  //ChatColor.GOLD +  //跟陈皮茶的味道差不多(限定款)
         addLore(squid_potion, "squid_potion");
         addLore(squid_potion, "custom_potion");
+
+//        ItemStackU.setStringPersistentData(squid_potion, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);
         ItemStackModify.setMaxStackSize(squid_potion, 3);
         return squid_potion;
     }
@@ -111,6 +114,7 @@ public final class ClassItemFactory {
         ItemStack item = new ItemStack(Material.REDSTONE_BLOCK);
         setDisplayName(item, "snowman_blood_block");
         setClassItem(item);
+
         return mark(LayoutKey.of(ItemKind.SNOWMAN_SNOW_BLOCK), item);
     }
 
@@ -119,6 +123,7 @@ public final class ClassItemFactory {
         setDisplayName(item, "mole_pie");
         addLore(item, "junk_food");
 //        setClassItem(item);
+        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);
         return mark(LayoutKey.of(ItemKind.MOLE_PIE), item);
     }
 
@@ -127,6 +132,7 @@ public final class ClassItemFactory {
         setDisplayName(item, "mole_beef");
         addLore(item, "junk_food");
 //        setClassItem(item);
+        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);
         return mark(LayoutKey.of(ItemKind.MOLE_BEEF), item);
     }
 
@@ -134,6 +140,7 @@ public final class ClassItemFactory {
         ItemStack item = new ItemStack(Material.SCULK_SENSOR, 2);
 //        setDisplayName(item, "warden_sensor");
 //        setClassItem(item);
+        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);
         return mark(LayoutKey.of(ItemKind.WARDEN_SENSOR), item);
     }
 
