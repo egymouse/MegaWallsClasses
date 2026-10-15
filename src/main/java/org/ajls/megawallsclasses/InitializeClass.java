@@ -238,7 +238,13 @@ public class InitializeClass {
         player.getInventory().setChestplate(setClassItem(setUnbreakable(new ItemStack(Material.IRON_CHESTPLATE))));
         player.getInventory().setLeggings(setClassItem(setUnbreakable(new ItemStack(Material.IRON_LEGGINGS))));
         player.getInventory().setBoots(setClassItem(setUnbreakable(new ItemStack(Material.IRON_BOOTS))));
-        InventoryApplier.apply(player);
+        if (!loadAsTF) {
+            InventoryApplier.apply(player);  //通过loadAsTF来区分
+        }
+        else {
+            InventoryApplier.apply(player, ClassEnum.TRANSFIGURATION_MASTER);
+        }
+
         /*
         Inventory playerInventory = player.getInventory();
         player.getInventory().setHelmet(setClassItem(setUnbreakable(new ItemStack(Material.IRON_HELMET))));
@@ -259,10 +265,6 @@ public class InitializeClass {
             ItemStack stack = classInventory.getItem(i);
             String itemType = ItemStackU.getStringPersistentData(stack, NameSpacedKeys.ITEM_TYPE);
             if (stack != null && !stack.getType().equals(Material.AIR)) {
-//                if (!stack.getType().equals(Material.POTION)) {  // change display name to persistentData
-//                    setDisplayName(stack, null);
-//                }
-                if(InventoryManager.whetherDontLoad(stack)) continue; //dont load
                 if (isTF && !loadAsTF) {
                     boolean findSameItemType = false;
                     //squid_potion_for_everyone
@@ -293,8 +295,6 @@ public class InitializeClass {
         }
 
 
-
-//        MegaWallsClasses.getPlugin().getInventoryApplier().apply(player, ClassEnum.getCustomClassByPlayer(player));
 
          */
     }

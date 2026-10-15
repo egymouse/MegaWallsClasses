@@ -72,7 +72,7 @@
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
-<!--        <repository>-->
+<!--        <repository>  &lt;!&ndash;到时候注释掉用自己的魔改服务端&ndash;&gt;-->
 <!--            <id>purpur</id>-->
 <!--            <url>https://repo.purpurmc.org/snapshots</url>-->
 <!--        </repository>-->
@@ -110,7 +110,7 @@
             <!--            <version>5.0.0</version>-->
             <version>5.4.0</version>
             <scope>system</scope>
-            <systemPath>D:\David\MC\server\itself\1.20.1minigame\mw_test\plugins\ProtocolLib.jar</systemPath>
+            <systemPath>C:\MC_Server\mw_test\plugins\ProtocolLib.jar</systemPath>
         </dependency>
 
 <!--        <dependency>-->
@@ -142,14 +142,14 @@
             <artifactId>spigot-api</artifactId>
             <version>1.21-R0.1-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>D:\David\MC\server\itself\1.20.1minigame\mw_test\versions\1.21.1\purpur-1.21.1.jar</systemPath>
+            <systemPath>C:\MC_Server\mw_test\versions\1.21.1\purpur-1.21.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.ajls</groupId>
             <artifactId>tracker-compass</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>D:\David\MC\server\itself\1.20.1minigame\mw_test\plugins\TrackerCompass.jar</systemPath>
+            <systemPath>C:\MC_Server\mw_test\plugins\TrackerCompass.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.ajls</groupId>
@@ -157,7 +157,7 @@
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
 <!--            <systemPath>D:/David/Java_Code/WIP/Lib/target/lib-1.0-SNAPSHOT.jar</systemPath>-->
-            <systemPath>D:\David\MC\server\itself\1.20.1minigame\mw_test\plugins\lib.jar</systemPath>
+            <systemPath>C:\MC_Server\mw_test\plugins\lib.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.ajls</groupId>
@@ -165,7 +165,7 @@
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
             <!--            <systemPath>D:/David/Java_Code/WIP/Lib/target/lib-1.0-SNAPSHOT.jar</systemPath>-->
-            <systemPath>D:\David\MC\server\itself\1.20.1minigame\mw_test\plugins\CactusGenerator.jar</systemPath>
+            <systemPath>C:\MC_Server\mw_test\plugins\CactusGenerator.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.geysermc.geyser</groupId>

@@ -25,7 +25,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     private ClassEnum classEnum = null;  // 存储注入的枚举
     public Map<ItemKind, ItemStack> itemKind_itemStack = new HashMap<>();  //不同的职业 同类物品对应不同的itemStack
     public InventoryLayout inventoryLayout = new InventoryLayout();  //直接static，毕竟其他职业以玩家自定义默认物品配置来加载
-    public static HashMap<ItemKind, Integer> classItemKind_count = new HashMap<>();
+    public HashMap<ItemKind, Integer> classItemKind_count = new HashMap<>();
 
     AbstractCustomClass() {
     }
