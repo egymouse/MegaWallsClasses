@@ -703,7 +703,7 @@ public class InitializeClass {
         PassiveSkills.elainaIcicleAccumulateTask.put(playerUUID, PassiveSkills.elaina_accumulate_icicle_task(player));
     }
 
-    static ItemStack elaina_potion() {
+    public static ItemStack elaina_potion() {
         ItemStack elaina_potion = new ItemStack(Material.SPLASH_POTION, 3);
         ItemStackModify.setEffect(elaina_potion, PotionEffectType.REGENERATION, 80, 2);
         setDisplayName(elaina_potion, ChatColor.LIGHT_PURPLE + "4s 6HP(III)");  //"4s III"

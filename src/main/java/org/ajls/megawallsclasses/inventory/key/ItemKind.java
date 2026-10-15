@@ -83,7 +83,7 @@ public enum ItemKind {
     MOLE_PIE("mole_pie"),
     MOLE_BEEF("mole_beef"),
     ELAINA_GOLDEN_CARROT("elaina_golden_carrot"),
-    ELAINA_IRON_SWORD("elaina_iron_sword"),
+//    ELAINA_IRON_SWORD("elaina_iron_sword"),
     ELAINA_POTION("elaina_potion"),
     WARDEN_SENSOR("warden_sensor");
 

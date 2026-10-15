@@ -319,6 +319,13 @@ public class MidiMusicPlayer {
         //this allows to calculation how long the song will end
     }
 
+    public static final int CENTER = 66;
+    public static final int RANGE = 12;
+    public static final int STEP = 24;
+
+    public static final int LOW = CENTER - RANGE;   // 54
+    public static final int HIGH = CENTER + RANGE;  // 78
+
     /**
      * Play a single note to all specified players.
      *
@@ -342,6 +349,55 @@ public class MidiMusicPlayer {
         } else {
             sound = instrumentMap.getOrDefault(instrument, Sound.BLOCK_NOTE_BLOCK_HARP);
         }
+
+        /*
+                // Convert MIDI pitch to exact frequency
+//        float notePitch = convertMidiPitchToExactFrequency(pitch);
+
+        int offset = 0;
+//        int middle = 66;
+//        while (pitch > 66 + 12 && offset < 2) {
+//            pitch -= 24; // Transpose down an octave
+//            offset++;
+//        }
+//        while (pitch < 66 - 12 && offset > 2) {
+//            pitch += 24; // Transpose up an octave
+//            offset--;
+//        }
+
+        // 优先选择靠近 0 的 offset，保证 54 和 78 在 offset=0 时不变
+        int[] offsets = {0, -1, 1, -2, 2};
+
+        for (int off : offsets) {
+            int out = pitch - STEP * off;
+            if (out >= LOW && out <= HIGH) {
+                offset = off;
+            }
+        }
+
+        // 超出可表示范围，向边界取整
+        if (pitch < LOW) {
+            // 最低可表示的实际音高是 6，对应 (54, -2)
+            pitch = LOW;
+            offset = -2;
+        } else {
+            // 最高可表示的实际音高是 126，对应 (78, 2)
+            pitch = HIGH;
+            offset = 2;
+        }
+
+        float notePitch = (float) Math.pow(2, (pitch - 66) / 12.0);
+
+//        while (notePitch > 2.0) {
+//            notePitch /= 4.0; // Transpose down an octave
+//            offset++;
+//        }
+//        while (notePitch < 0.5) {
+//            notePitch *= 4.0; // Transpose up an octave
+//            offset--;
+//        }
+        String soundPath = getPath("block.note_block.harp", offset);  //todo 更新到所有乐器都支持来支持我播放are you lost
+         */
 
         // Convert MIDI pitch to exact frequency
         float notePitch = convertMidiPitchToExactFrequency(pitch);
@@ -383,6 +439,12 @@ public class MidiMusicPlayer {
 //
 //            });
         }
+    }
+
+    private String getPath(String path, int offset) {
+        if (offset == 0) return path;
+        String soundPath =  "block.note_block.harp" + "_" + offset;   //sound.name().toLowerCase(Locale.ROOT)
+        return soundPath;
     }
 
     /**

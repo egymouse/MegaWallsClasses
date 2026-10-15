@@ -118,7 +118,7 @@ public final class ClassItemFactory {
         ItemStack item = new ItemStack(Material.PUMPKIN_PIE, 64);
         setDisplayName(item, "mole_pie");
         addLore(item, "junk_food");
-        setClassItem(item);
+//        setClassItem(item);
         return mark(LayoutKey.of(ItemKind.MOLE_PIE), item);
     }
 
@@ -126,20 +126,20 @@ public final class ClassItemFactory {
         ItemStack item = new ItemStack(Material.BEEF, 8);
         setDisplayName(item, "mole_beef");
         addLore(item, "junk_food");
-        setClassItem(item);
+//        setClassItem(item);
         return mark(LayoutKey.of(ItemKind.MOLE_BEEF), item);
     }
 
     public static ItemStack wardenSensor() {
-        ItemStack item = new ItemStack(Material.SCULK_SENSOR);
-        setDisplayName(item, "warden_sensor");
-        setClassItem(item);
+        ItemStack item = new ItemStack(Material.SCULK_SENSOR, 2);
+//        setDisplayName(item, "warden_sensor");
+//        setClassItem(item);
         return mark(LayoutKey.of(ItemKind.WARDEN_SENSOR), item);
     }
 
     public static ItemStack mark(LayoutKey key, ItemStack item) {
-        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_TYPE, key.id());
-        return item;
+//        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_TYPE, key.id());
+        return item;  //在addItem里面自动mark了
     }
 
     private static String toRomanPotionLevel(int amplifier) {

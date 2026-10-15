@@ -32,9 +32,9 @@ public enum ClassEnum {
 
 //    COW,
 //    GOLEM,
-    SKELETON_LORD(28),
-    TRANSFIGURATION_MASTER(29),
-    WARDEN(30),
+    SKELETON_LORD(28, new SkeletonLordClass()),
+    TRANSFIGURATION_MASTER(29, new TransfigurationMasterClass()),
+    WARDEN(30, new WardenClass()),
 //    NAC, //not a class
 
 
@@ -58,9 +58,9 @@ public enum ClassEnum {
 //        this.customClass.createItemStackForItemKind();
     }
 
-    ClassEnum(int classId) {
-        this(classId, new NoneClass());  //到时候可以给无职专门分配一个职业来玩玩
-    }
+//    ClassEnum(int classId) {  //不行，这样会导致无职的classEnum混乱
+//        this(classId, new NoneClass());  //到时候可以给无职专门分配一个职业来玩玩
+//    }
 
 
 
