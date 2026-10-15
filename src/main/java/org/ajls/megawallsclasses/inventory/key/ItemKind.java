@@ -3,6 +3,7 @@ package org.ajls.megawallsclasses.inventory.key;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public enum ItemKind {
@@ -76,7 +77,9 @@ public enum ItemKind {
     SQUID_POTION("squid_potion_everyone"),
 
     // 职业特殊物品
-    SNOWMAN_BLOOD_BLOCK("snowman_blood_block"),
+    SNOWMAN_SHOVEL("snowman_shovel"),
+    SNOWMAN_SNOW_BLOCK,
+    SNOWMAN_PUMPKIN,
     MOLE_PIE("mole_pie"),
     MOLE_BEEF("mole_beef"),
     ELAINA_GOLDEN_CARROT("elaina_golden_carrot"),
@@ -91,7 +94,7 @@ public enum ItemKind {
     }
 
     ItemKind() {
-        this.id = this.name();
+        this.id = this.name().toLowerCase(Locale.ENGLISH);
     }
 
     public String id() {

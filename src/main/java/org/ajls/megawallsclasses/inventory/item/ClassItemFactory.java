@@ -46,6 +46,7 @@ public final class ClassItemFactory {
         setUnbreakable(item);
         setClassItem(item);
         item.addEnchantment(Enchantment.UNBREAKING, 3);
+        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_SAME);
 
         return item;
 
@@ -110,7 +111,7 @@ public final class ClassItemFactory {
         ItemStack item = new ItemStack(Material.REDSTONE_BLOCK);
         setDisplayName(item, "snowman_blood_block");
         setClassItem(item);
-        return mark(LayoutKey.of(ItemKind.SNOWMAN_BLOOD_BLOCK), item);
+        return mark(LayoutKey.of(ItemKind.SNOWMAN_SNOW_BLOCK), item);
     }
 
     public static ItemStack molePie() {

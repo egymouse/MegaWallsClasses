@@ -6,8 +6,6 @@ import org.ajls.megawallsclasses.MegaWallsClasses;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.inventory.key.ItemCount;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
-import org.ajls.megawallsclasses.inventory.key.LayoutKey;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -15,7 +13,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LayoutRepository {
     //用来对配置读取/写入的
@@ -43,7 +40,7 @@ public class LayoutRepository {
             return optionalClassLayout.get();
         }
 
-        InventoryLayout commonLayout = loadCommonLayout(player);
+        InventoryLayout commonLayout = loadCommonLayout(player).copy();  //2026.10.15的bug 也就是每次编辑物品都会导致commonlayout加入职业物品 修复
         AbstractCustomClass customClass = ClassEnum.getClassEnumByClassID(classId).customClass;
 
 //        InventoryLayout defaultClassLayout = ClassEnum.getClassEnumByClassID(classId).customClass.getDefaultInventoryLayout();
@@ -53,7 +50,7 @@ public class LayoutRepository {
 
 
 
-        for (Map.Entry<ItemKind, Integer> entry : customClass.classItemKind_count.entrySet()) {
+        for (Map.Entry<ItemKind, Integer> entry : customClass.classItemKind_totalStacks.entrySet()) {
             ItemKind itemKind = entry.getKey();
             int amount = entry.getValue();
             for (int i = 0; i < amount; i++) {

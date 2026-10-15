@@ -14,7 +14,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class InventoryApplier {
 
@@ -36,6 +35,10 @@ public class InventoryApplier {
             int count = itemCount.getCount();
             ItemStack itemStack = customClass.createInventoryItem(itemKind, count);
             String itemType = ItemStackU.getStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE);
+            String itemCategory = ItemStackU.getStringPersistentData(itemStack, NameSpacedKeys.ITEM_CATEGORY);
+            if (!AbstractCustomClass.CLASS_SAME.equals(itemCategory)) {
+                ItemStackU.removePersistentData(itemStack, NameSpacedKeys.ITEM_TYPE); //新加的 不能让幻变大师影响正常职业物品合并，当然代价就是幻变大师废物消耗品会溢出，石头那些。
+            }
 
 
             Inventory playerInventory = player.getInventory();

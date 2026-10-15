@@ -8,6 +8,7 @@ import org.ajls.megawallsclasses.inventory.item.ItemStackProvider;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.layout.InventoryLayout;
 import org.ajls.trackercompass.CompassItemStack;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -25,7 +26,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
     private ClassEnum classEnum = null;  // 存储注入的枚举
     public Map<ItemKind, ItemStack> itemKind_itemStack = new HashMap<>();  //不同的职业 同类物品对应不同的itemStack
     public InventoryLayout inventoryLayout = new InventoryLayout();  //直接static，毕竟其他职业以玩家自定义默认物品配置来加载
-    public HashMap<ItemKind, Integer> classItemKind_count = new HashMap<>();
+    public HashMap<ItemKind, Integer> classItemKind_totalStacks = new HashMap<>();
 
     AbstractCustomClass() {
     }
@@ -101,11 +102,11 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         addClassItem(itemKind, itemStackProvider, 1);
     }
 
-    public void addClassItem(ItemKind itemKind, ItemStackProvider itemStackProvider, int amount) {  //如果没indexes就默认加入第一个空位
+    public void addClassItem(ItemKind itemKind, ItemStackProvider itemStackProvider, int totalStacks) {  //如果没indexes就默认加入第一个空位
         ItemStack itemStack = itemStackProvider.getItemStack();
         ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE, itemKind.id());  //注入pdc为了重编辑物品栏时能知道什么在什么位上
         itemKind_itemStack.put(itemKind, itemStack);
-        classItemKind_count.put(itemKind, amount);
+        classItemKind_totalStacks.put(itemKind, totalStacks);
     }
 
 
@@ -197,12 +198,15 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         addCommonItem(ItemKind.SQUID_POTION, () -> {
             return ClassItemFactory.squidPotion();
         }, 4);
+
+
+        initializeClassItems();
     }
 
     public void initializeClassItems() {
-        addClassItem(ItemKind.ELAINA_GOLDEN_CARROT, () -> {
-            return new ItemStack(Material.GOLDEN_CARROT, 1);
-        });
+//        addClassItem(ItemKind.ELAINA_GOLDEN_CARROT, () -> {
+//            return new ItemStack(Material.GOLDEN_CARROT, 1);
+//        });
     }
 
 

@@ -211,7 +211,7 @@ public class MyListener implements Listener {
             scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
                 //TODO: cancel this task when players quit, or even more, pause the task using a timer i-- and check if player is online
                 try {
-                    MegaWallsClasses.getMidiMusicPlayer().playMidiToPlayers(new File(MegaWallsClasses.getPlugin().getDataFolder(), "midis/Crucified.mid"), players);  //"midis/sss.mid"
+                    MegaWallsClasses.getMidiMusicPlayer().playMidiToPlayers(new File(MegaWallsClasses.getPlugin().getDataFolder(), "midis/Are You Lost.mid"), players);  //"midis/sss.mid"
                 } catch (InvalidMidiDataException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
