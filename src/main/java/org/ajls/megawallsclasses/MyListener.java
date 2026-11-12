@@ -1074,14 +1074,6 @@ public class MyListener implements Listener {
                                     }
                                 }
                                 break;
-                            case 311:
-                                if (event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
-                                    DragonClass dragonClass = (DragonClass) ClassEnum.getCustomClassByPlayer(damager);
-                                    if (dragonClass.combustPlayers_dragons.contains(damagerUUID, victim.getUniqueId())) {
-                                        addHealth(damager, org.ajls.lib.utils.EventU.getFinalDamage(event) * 1.5);
-                                    }
-                                }
-                                break;
                         }
                         switch (getScore(victim, "class")) {
 //                        case 2:
@@ -1624,6 +1616,7 @@ public class MyListener implements Listener {
         
         if (entity instanceof Player) {
             Player player = (Player) entity;
+            UUID playerUUID = player.getUniqueId();
 //            double playerHealthBefore = player.getHealth();
 //            double playerHealthAfter = playerHealthBefore - event.getFinalDamage();
             double playerHealthBefore = player.getHealth();
@@ -1680,6 +1673,26 @@ public class MyListener implements Listener {
                     };
                 }
             }
+            else if (ClassEnum.getClassEnumByPlayer(player) == ClassEnum.DRAGON) {
+                if (event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+                    DragonClass dragonClass = (DragonClass) ClassEnum.DRAGON.customClass;
+                    HashSet<UUID> dragonUUIDs = DragonClass.combustPlayers_dragons.getValues(playerUUID);
+                    for  (UUID dragonUUID : dragonUUIDs) {
+                        Player dragon = Bukkit.getPlayer(dragonUUID);
+                        if (dragon != null) {
+                            addHealth(dragon, org.ajls.lib.utils.EventU.getFinalDamage(event) * 1.5);
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
             if (playerHealthAfter == 0) { //player.getHealth() <= event.getFinalDamage()  //player will die
                 if (!event.isCancelled()) {
                     event.setCancelled(true);
@@ -2548,7 +2561,7 @@ public class MyListener implements Listener {
                     Player warden = getPlayer(wardenUUID);
                     if (isPlayerPlayableEnemy(warden, player)) {
                         addEnergy(warden, 3);  //1 //5
-                        player.sendMessage("The sculk sensor has detected you!");
+//                        player.sendMessage("The sculk sensor has detected you!");
                         player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 0, false, false));
                     }
                 }

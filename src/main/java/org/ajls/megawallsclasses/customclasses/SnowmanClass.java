@@ -5,11 +5,18 @@ import org.ajls.megawallsclasses.NameSpacedKeys;
 import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import static org.ajls.megawallsclasses.ItemStackModify.setDisplayName;
 
 public class SnowmanClass extends AbstractCustomClass {
+    @Override
+    public ItemStack createClassSword() {
+        ItemStack classSword = ClassItemFactory.classSword(Material.DIAMOND_SWORD);
+        return classSword;
+    }
+
     @Override
     public void initializeClassItems() {
         addClassItem(ItemKind.SNOWMAN_SHOVEL, () -> {

@@ -62,7 +62,7 @@ public class Cooldown {
 //            }
             cooldown = cooldown - amount;
             if (cooldown <= 0) {
-                hashMap.remove(uuid);
+                hashMap.remove(uuid);  //todo Exception in thread "main" java.util.ConcurrentModificationException
                 Player player = Bukkit.getPlayer(uuid);
                 if (player != null) {
                     int classIndex = ClassU.getClass(player);

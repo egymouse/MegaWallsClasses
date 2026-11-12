@@ -20,6 +20,10 @@ import static org.bukkit.Bukkit.broadcastMessage;
 
 public class DrownkingOldClass extends AbstractCustomClass {
 
+    @Override
+    public ItemStack createClassSword() {
+        return InventoryManager.drownking_trident_for_inventory();
+    }
 
     @Override
     public void onProjectileLaunch(ProjectileLaunchEvent event) {

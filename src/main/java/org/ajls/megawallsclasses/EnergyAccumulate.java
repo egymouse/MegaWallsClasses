@@ -126,6 +126,10 @@ public class EnergyAccumulate {
             case 30:
                 addEnergy(damager, 12);
                 break;
+            case 311:
+                addEnergy(damager, 8);
+                SpiderEnergy.increment(damager, 2, 1, 20);
+                break;
         }
         testSkillReady(damager); //todo 代码设计太屎山了 全部改成addEnergy什么的，最好直接interface 直接用最爽了，implement的override好还是直接对Enum使用hashmap好呢？
     }
@@ -207,7 +211,8 @@ public class EnergyAccumulate {
                 addEnergy(damager, 12);
                 break;
             case 311:
-                addEnergy(damager, 20);
+                addEnergy(damager, 10); //20
+                SpiderEnergy.increment(damager, 2, 1, 20);
                 break;
         }
         testSkillReady(damager);

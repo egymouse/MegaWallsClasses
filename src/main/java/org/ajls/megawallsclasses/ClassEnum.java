@@ -38,7 +38,10 @@ public enum ClassEnum {
 //    NAC, //not a class
 
 
-    DRAGON(311, new DragonClass());  //todo 改成每个玩家一个职业instance 存储在Playerdata里面
+    DRAGON(311, new DragonClass()),  //todo 改成每个玩家一个职业instance 存储在Playerdata里面
+
+
+    PVP(1001, new PVPClass()),;
 
 
 //    static {

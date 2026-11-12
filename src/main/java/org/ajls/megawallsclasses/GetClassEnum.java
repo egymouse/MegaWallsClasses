@@ -2,6 +2,9 @@ package org.ajls.megawallsclasses;
 
 public class GetClassEnum {
     public static ClassEnum getClassEnum(int classIndex) {
+        if (true) {
+            return ClassEnum.getClassEnumByClassID(classIndex);
+        }
         switch (classIndex) {
             case 1:
                 return ClassEnum.ZOMBIE;

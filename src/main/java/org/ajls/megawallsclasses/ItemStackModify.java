@@ -1,6 +1,7 @@
 package org.ajls.megawallsclasses;
 
 import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.ajls.lib.utils.ItemStackU;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -13,11 +14,32 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemStackModify {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /////////////////////////////////
     //unbreakable
     public static ItemStack setUnbreakable(org.bukkit.inventory.ItemStack itemStack){
         // set unbreakable

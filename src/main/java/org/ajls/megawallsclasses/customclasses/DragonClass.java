@@ -2,20 +2,23 @@ package org.ajls.megawallsclasses.customclasses;
 
 import org.ajls.lib.advanced.BukkitTaskMap;
 import org.ajls.lib.advanced.HaxhMap;
-import org.ajls.megawallsclasses.EnergyAccumulate;
-import org.ajls.megawallsclasses.MegaWallsClasses;
-import org.ajls.megawallsclasses.ScoreboardsAndTeams;
+import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.*;
+import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
+import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -29,6 +32,27 @@ import static org.ajls.megawallsclasses.MegaWallsClasses.plugin;
 import static org.bukkit.Bukkit.getWorld;
 
 public class DragonClass extends AbstractCustomClass {
+
+
+    @Override
+    public ItemStack createClassSword() {
+        ItemStack classSword = ClassItemFactory.classSword(Material.IRON_SWORD);
+        classSword.addEnchantment(Enchantment.FIRE_ASPECT, 1);
+
+        return classSword;
+    }
+
+
+    @Override
+    public ItemStack createClassBow() {
+        ItemStack classBow = ClassItemFactory.classBow();
+        classBow.addEnchantment(Enchantment.POWER, 2);
+        return classBow;
+    }
+
+
+
+
     public static HaxhMap<UUID, UUID> combustPlayers_dragons = new HaxhMap<>();
 
     public static HashSet<UUID> netherFire = new HashSet<>();
@@ -85,9 +109,10 @@ public class DragonClass extends AbstractCustomClass {
 
         Vector direction = player.getLocation().getDirection().setY(0).normalize();
 
-        int sideLength = 11;
+        int sideLength = 21;  //11
 
         int radius = (sideLength - 1) / 2;
+        int radiusSquared = radius * radius;
         // 预分配列表容量以优化性能[reference:3][reference:4]
         int totalBlocks = sideLength * sideLength * sideLength;
 //        List<Block> blocks = new ArrayList<>(totalBlocks);
@@ -104,10 +129,10 @@ public class DragonClass extends AbstractCustomClass {
                     Location relativeLocation = relativeBlock.getLocation();
                     Vector diff = relativeLocation.clone().subtract(centerBlockLocation).toVector();
                     diff.setY(0);
-                    if (diff.lengthSquared() > 25) continue;
+                    if (diff.lengthSquared() > radiusSquared) continue;
                     diff.normalize();
 
-                    if (direction.dot(diff) < 0.86602540378) {
+                    if (direction.dot(diff) < 0.5) {  //0.86602540378  左右各30度
                         continue;
                     }
 
@@ -280,6 +305,18 @@ public class DragonClass extends AbstractCustomClass {
             }
         }
     }
+
+//    @Override
+//    public void initializeClassItems() {
+//        addClassItem(ItemKind.DRAGON_SWORD, () -> {
+//            ItemStack itemStack = new ItemStack(Material.DIAMOND_SWORD, 5);
+//            itemStack.addEnchantment(Enchantment.FIRE_ASPECT, 1);
+//            return ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_SAME);
+//        });
+//
+//
+//
+//    }
 
     //todo 如果同时两个龙 对同一块地板放大招
     //那么敌人踩上去 怎么算是谁点燃的

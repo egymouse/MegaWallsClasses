@@ -74,6 +74,21 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo d服龙
     //todo 更改头顶显示名称 ClientboundPlayerInfoUpdatePacket ClientboundSetPlayerTeamPacket
     //todo 修复幻变大师切换职业物品 背包不够的bug
+    // midi支持are you lost这种更多音色 映射到我的世界原版音色
+
+    //todo itemkind implement .. 用对应代码 https://chat.deepseek.com/a/chat/s/0c233cbe-2773-4952-93b4-fba03d532cf4
+    // 关闭物品栏自动保存
+    // 龙伤害范围 解决了
+    // 斧头bug修复
+    // 龙剑研究    解决了
+    // 龙攻击获取能量 解决了
+    // 方块太少了
+    // 雪人数量限制
+    // 水果三叉戟 解决了
+    // 加入洞穴蜘蛛
+
+
+    //protocollib的todo 设置糖果世界 石头是粉色混凝土，铁是白 煤炭是褐 幻变大师正常隐藏手中物品
 
 
     @Override

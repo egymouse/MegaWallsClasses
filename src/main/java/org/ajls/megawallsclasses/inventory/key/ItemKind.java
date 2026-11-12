@@ -86,6 +86,7 @@ public enum ItemKind {
 //    ELAINA_IRON_SWORD("elaina_iron_sword"),
     ELAINA_POTION("elaina_potion"),
     WARDEN_SENSOR("warden_sensor");
+//    DRAGON_SWORD;
 
     private final String id;
 

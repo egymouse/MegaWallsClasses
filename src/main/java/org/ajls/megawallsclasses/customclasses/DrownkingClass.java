@@ -2,8 +2,10 @@ package org.ajls.megawallsclasses.customclasses;
 
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.*;
+import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
@@ -22,6 +24,13 @@ import static org.ajls.megawallsclasses.MegaWallsClasses.getPlugin;
 import static org.bukkit.Bukkit.getServer;
 
 public class DrownkingClass extends AbstractCustomClass {
+
+    @Override
+    public ItemStack createClassSword() {
+        return InventoryManager.drownking_trident_for_inventory();
+    }
+
+
 
 
 

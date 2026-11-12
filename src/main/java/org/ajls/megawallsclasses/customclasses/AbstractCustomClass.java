@@ -104,6 +104,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 
     public void addClassItem(ItemKind itemKind, ItemStackProvider itemStackProvider, int totalStacks) {  //如果没indexes就默认加入第一个空位
         ItemStack itemStack = itemStackProvider.getItemStack();
+// 注意：官方文档指出，服务器目前仅支持英语。若要支持其他语言，需要替换服务端jar内的语言文件。
         ItemStackU.setStringPersistentData(itemStack, NameSpacedKeys.ITEM_TYPE, itemKind.id());  //注入pdc为了重编辑物品栏时能知道什么在什么位上
         itemKind_itemStack.put(itemKind, itemStack);
         classItemKind_totalStacks.put(itemKind, totalStacks);
