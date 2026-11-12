@@ -476,6 +476,10 @@ public class MyListener implements Listener {
                                 event.setCancelled(true);
                                 snowman_active_skill_2(player);
                             }
+                            else if (ClassEnum.getClassEnumByPlayer(player) == ClassEnum.MOLE) {
+                                event.setCancelled(true);
+                                tryActiveSkill(player, ActiveSkillTypeEnum.SWORD);
+                            }
                         }
                         else if (itemInHand == Material.CLOCK) {
                             if (gameStage == 0) {
@@ -2376,7 +2380,7 @@ public class MyListener implements Listener {
 
 
     public static HashMap<Block, UUID> sensor_warden = new HashMap<>();
-    public static HashMapInteger<UUID> warden_sensorAmount = new HashMapInteger<>(2, 0, 2);
+    public static HashMapInteger<UUID> warden_sensorAmount = new HashMapInteger<>(WardenClass.WARDEN_MAX_SENSOR_COUNT, 0, WardenClass.WARDEN_MAX_SENSOR_COUNT);
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Block block = event.getBlock();
@@ -2469,7 +2473,7 @@ public class MyListener implements Listener {
                 else {
 
                     if (warden_sensorAmount.get(playerUUID) == WardenClass.WARDEN_MAX_SENSOR_COUNT) {
-                        Cooldown.player_passiveSkill2Cooldown.put(playerUUID, 20*15);  //20*30
+                        Cooldown.player_passiveSkill2Cooldown.put(playerUUID, 20*25);  //20*30  f不知道为什么2026.11.13这里写的是20*15，统一口径成为25秒了
                     }
 
                     warden_sensorAmount.decrement(playerUUID);

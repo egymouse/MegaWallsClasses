@@ -5,6 +5,7 @@ import org.ajls.megawallsclasses.ItemStackModify;
 import org.ajls.megawallsclasses.NameSpacedKeys;
 import org.ajls.megawallsclasses.classsystem.ClassConfigKeys;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
+import org.ajls.megawallsclasses.customclasses.WardenClass;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
 import org.ajls.megawallsclasses.inventory.key.LayoutKey;
 import org.ajls.megawallsclasses.utils.PotionU;
@@ -137,7 +138,7 @@ public final class ClassItemFactory {
     }
 
     public static ItemStack wardenSensor() {
-        ItemStack item = new ItemStack(Material.SCULK_SENSOR, 2);
+        ItemStack item = new ItemStack(Material.SCULK_SENSOR, WardenClass.WARDEN_MAX_SENSOR_COUNT);
 //        setDisplayName(item, "warden_sensor");
 //        setClassItem(item);
         ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);

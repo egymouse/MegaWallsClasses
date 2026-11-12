@@ -77,6 +77,11 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 修复幻变大师切换职业物品 背包不够的bug
     // midi支持are you lost这种更多音色 映射到我的世界原版音色
 
+
+    //todo 增加传奇11连杀 增加tab显示血量
+    //todo 复活的时候慢慢显示整个人 让敌人有预备
+
+
     //todo itemkind implement .. 用对应代码 https://chat.deepseek.com/a/chat/s/0c233cbe-2773-4952-93b4-fba03d532cf4 加入布吉岛对应职业
     // 关闭物品栏自动保存 增加一个取消保存按钮
     // 龙伤害范围 解决了
@@ -89,6 +94,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     // 加入洞穴蜘蛛
     // 职业物品不能扔出 解决了
     // EXFL0SIONDisable Attack Cooldoun发现不是ENTITT_ATTACK
+    //todo 切换职业时造成的冷却和职业清单暂存，比如warden靠冷却回复sensor 但是如果换了其他职业冷却好了不会恢复sensor，而且我插件是给予调用来互相递进的，一个断全断
 
     // 龙地狱火导致自动能量累计出bug
     // java.lang.NullPointerException: null
