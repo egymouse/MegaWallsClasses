@@ -5,6 +5,7 @@ import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.classsystem.ClassConfigManager;
 import org.ajls.megawallsclasses.commands.*;
 import org.ajls.megawallsclasses.custommusic.MidiMusicPlayer;
+import org.ajls.megawallsclasses.listeners.InventoryListener;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
 import org.ajls.megawallsclasses.packetlisteners.PacketListener;
 import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
@@ -77,7 +78,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     // midi支持are you lost这种更多音色 映射到我的世界原版音色
 
     //todo itemkind implement .. 用对应代码 https://chat.deepseek.com/a/chat/s/0c233cbe-2773-4952-93b4-fba03d532cf4
-    // 关闭物品栏自动保存
+    // 关闭物品栏自动保存 解决了
     // 龙伤害范围 解决了
     // 斧头bug修复
     // 龙剑研究    解决了
@@ -115,6 +116,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         Bloody.registerPlayerDeathItems(CustomEventsOld.getPlayer_deathItems());
         ClassConfigManager.getInstance(this);  //其实也不用写，反正调用时会自动传入instance
         getServer().getPluginManager().registerEvents(new MyListener(), this);
+        getServer().getPluginManager().registerEvents(new InventoryListener(), this);
 //        LIbAPI.registerListener(new MyListener());
         new SpawnProtectionListener();
         getCommand("class").setExecutor(new ChangeClass());

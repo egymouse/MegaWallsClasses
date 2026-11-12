@@ -578,13 +578,7 @@ public class MyListener implements Listener {
             }
         }
     }
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        Player player = (Player) event.getPlayer();
-        if (player.hasMetadata("ReorderInventory")) {
-            player.removeMetadata("ReorderInventory", plugin);
-        }
-    }
+
     @EventHandler
     /*
     blast arrows
@@ -697,7 +691,6 @@ public class MyListener implements Listener {
                     setScore(player, "energy" , 0);
                     player.setLevel(0);
 
-//                    player.sendMessage(Documentation.getClassDocumentation(index));
                 }
                 else {
                     player.sendMessage(ChatColor.YELLOW + "脱战15秒后才能重选职业");
