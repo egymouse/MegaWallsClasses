@@ -65,7 +65,7 @@ public class CustomEventsOld {
             ItemStack itemStack = inventory.getItem(i);
             if (itemStack != null) {
                 inventory.clear(i);
-                if (!containsLore(itemStack, "classItem")) {
+                if (!ItemStackModify.isClassItem(itemStack)) {   //!containsLore(itemStack, "classItem")
                     player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
                 }
             }

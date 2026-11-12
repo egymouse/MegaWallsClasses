@@ -11,6 +11,7 @@ import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.customclasses.DragonClass;
+import org.ajls.megawallsclasses.customclasses.WardenClass;
 import org.ajls.megawallsclasses.displayname.DisplayNameManager;
 import org.ajls.megawallsclasses.inventory.editor.InventoryOrderEditor;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
@@ -143,10 +144,10 @@ public class MyListener implements Listener {
             BukkitScheduler bukkitScheduler = getScheduler();
             bukkitScheduler.runTaskLater(getPlugin(), ()-> {
                 player.sendMessage(ChatColor.RED +"右键钟打开菜单" + ChatColor.GREEN + "尽情和好友玩吧");
-                player.sendMessage("释放技能：经验（能量）达到100\n" +
-                        "手持下界之星，剑右键，弓箭左键\n" +
+                player.sendMessage("释放技能：经验（能量）达到100时\n" +
+                        "手持下界之星，剑右键，弓箭左键即可释放技能\n" +
                         "\n" +
-                        "指南针：左键最近敌人，右键切换队伍");  //todo 改成从resources文档中读取内容，要不然文本太多了
+                        "指南针：左键追踪最近敌人，右键切换追踪的队伍");  //todo 改成从resources文档中读取内容，要不然文本太多了
             }, 100L);
         }
 
@@ -1666,10 +1667,12 @@ public class MyListener implements Listener {
                     };
                 }
             }
-            else if (ClassEnum.getClassEnumByPlayer(player) == ClassEnum.DRAGON) {
-                if (event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
-                    DragonClass dragonClass = (DragonClass) ClassEnum.DRAGON.customClass;
-                    HashSet<UUID> dragonUUIDs = DragonClass.combustPlayers_dragons.getValues(playerUUID);
+
+
+            if (event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+                DragonClass dragonClass = (DragonClass) ClassEnum.DRAGON.customClass;
+                HashSet<UUID> dragonUUIDs = DragonClass.combustPlayers_dragons.getValues(playerUUID);
+                if (dragonUUIDs != null) {
                     for  (UUID dragonUUID : dragonUUIDs) {
                         Player dragon = Bukkit.getPlayer(dragonUUID);
                         if (dragon != null) {
@@ -2465,14 +2468,14 @@ public class MyListener implements Listener {
                 }
                 else {
 
-                    if (warden_sensorAmount.get(playerUUID) == 2) {
+                    if (warden_sensorAmount.get(playerUUID) == WardenClass.WARDEN_MAX_SENSOR_COUNT) {
                         Cooldown.player_passiveSkill2Cooldown.put(playerUUID, 20*15);  //20*30
                     }
 
                     warden_sensorAmount.decrement(playerUUID);
                     if (warden_sensorAmount.get(playerUUID) == 0) {
                         ItemStack playerItem = null;
-                        playerItem = new ItemStack(Material.COMMAND_BLOCK);  //BARRIER
+                        playerItem = new ItemStack(Material.BRICK);  //BARRIER  //COMMAND_BLOCK
                         ItemStackU.setAttributePlayerBlockRange(playerItem, -114514);
                         ItemStackU.setStringPersistentData(playerItem, NameSpacedKeys.ITEM_TYPE, "warden_sensor");
                         if (hand == EquipmentSlot.HAND) {
@@ -3173,7 +3176,7 @@ public class MyListener implements Listener {
             case 311:
                 helmet = getClassItem(Material.DIAMOND_HELMET);
                 helmet.addEnchantment(Enchantment.PROTECTION, 1);
-                helmet.addEnchantment(Enchantment.FIRE_PROTECTION, 2);
+//                helmet.addEnchantment(Enchantment.FIRE_PROTECTION, 2);  //然后就是龙的火焰保护帽子
                 boots = getClassItem(Material.GOLDEN_BOOTS);
                 boots.addEnchantment(Enchantment.PROTECTION, 3);
                 boots.addEnchantment(Enchantment.FIRE_PROTECTION, 2);

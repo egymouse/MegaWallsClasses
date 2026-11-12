@@ -36,7 +36,7 @@ public class DragonClass extends AbstractCustomClass {
 
     @Override
     public ItemStack createClassSword() {
-        ItemStack classSword = ClassItemFactory.classSword(Material.IRON_SWORD);
+        ItemStack classSword = ClassItemFactory.classSword(Material.DIAMOND_SWORD);
         classSword.addEnchantment(Enchantment.FIRE_ASPECT, 1);
 
         return classSword;
@@ -75,8 +75,11 @@ public class DragonClass extends AbstractCustomClass {
         new BukkitRunnable() {
             @Override
             public void run() {
+                if (victimPlayer == null) {
+                    this.cancel();
+                }
                 // 检查实体是否还存在且不再着火
-                if (victimPlayer.isValid() && victimPlayer.getFireTicks() <= 0) {
+                else if (victimPlayer.isValid() && victimPlayer.getFireTicks() <= 0) {
                     // 在这里编写“实体灭火”后的逻辑
                     MegaWallsClasses.getPlugin().getLogger().info(victimPlayer.getName() + " 已灭火！");
                     combustPlayers_dragons.remove(victimPlayer.getUniqueId(), combusterPlayer.getUniqueId());

@@ -77,8 +77,8 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 修复幻变大师切换职业物品 背包不够的bug
     // midi支持are you lost这种更多音色 映射到我的世界原版音色
 
-    //todo itemkind implement .. 用对应代码 https://chat.deepseek.com/a/chat/s/0c233cbe-2773-4952-93b4-fba03d532cf4
-    // 关闭物品栏自动保存 解决了
+    //todo itemkind implement .. 用对应代码 https://chat.deepseek.com/a/chat/s/0c233cbe-2773-4952-93b4-fba03d532cf4 加入布吉岛对应职业
+    // 关闭物品栏自动保存 增加一个取消保存按钮
     // 龙伤害范围 解决了
     // 斧头bug修复
     // 龙剑研究    解决了
@@ -87,7 +87,44 @@ public final class MegaWallsClasses extends JavaPlugin {
     // 雪人数量限制
     // 水果三叉戟 解决了
     // 加入洞穴蜘蛛
+    // 职业物品不能扔出 解决了
+    // EXFL0SIONDisable Attack Cooldoun发现不是ENTITT_ATTACK
 
+    // 龙地狱火导致自动能量累计出bug
+    // java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #73260 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #73276 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #74438 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #74443 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #78462 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #78497 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #83884 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #83900 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #83908 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
+    //[22:39:11 WARN]: [MegaWallsClasses] Task #83914 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
+    //java.lang.NullPointerException: null
+
+
+    //todo 玩家interact block回导致主动触发两次 那么雪人，或者后面天赋无限火力就不行
 
     //protocollib的todo 设置糖果世界 石头是粉色混凝土，铁是白 煤炭是褐 幻变大师正常隐藏手中物品
 
@@ -117,8 +154,9 @@ public final class MegaWallsClasses extends JavaPlugin {
         ClassConfigManager.getInstance(this);  //其实也不用写，反正调用时会自动传入instance
         getServer().getPluginManager().registerEvents(new MyListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
-//        LIbAPI.registerListener(new MyListener());
+        getServer().getPluginManager().registerEvents(new SpawnProtectionListener(), this);
         new SpawnProtectionListener();
+
         getCommand("class").setExecutor(new ChangeClass());
         getCommand("blue").setExecutor(new Blue());
         getCommand("red").setExecutor(new Red());
@@ -144,6 +182,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
         world.setGameRule(GameRule.NATURAL_REGENERATION, true);
+        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
 
         //newgamerule below
 //        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);

@@ -34,7 +34,7 @@ public class InventoryApplier {
         InventoryLayout layout = LayoutRepository.resolve(player, customClass);
         Map<Integer, ItemCount> layoutMap = layout.asMap();
         boolean TFImitate = isTF && customClass.getClassEnum() != ClassEnum.TRANSFIGURATION_MASTER;
-        if (!TFImitate) {  //todo 区分职业的魔女药和鱿鱼药 与 杀人的魔女药和自带鱿鱼药
+        if (TFImitate) {  //todo 区分职业的魔女药和鱿鱼药 与 杀人的魔女药和自带鱿鱼药
             for (int i2 = 0; i2 < playerInventory.getSize(); i2++) {
                 ItemStack playerItemStack = playerInventory.getItem(i2);
                 String itemCategory = ItemStackU.getStringPersistentData(playerItemStack, NameSpacedKeys.ITEM_CATEGORY);

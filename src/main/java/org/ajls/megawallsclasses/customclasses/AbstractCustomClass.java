@@ -133,7 +133,10 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
             return item;
         }, 0);
         addCommonItem(ItemKind.COMPASS, () -> {
-            return CompassItemStack.trackerCompass.clone();
+            ItemStack item =  CompassItemStack.trackerCompass.clone();
+            ItemStackModify.setClassItem(item);
+            return item;
+//            return CompassItemStack.trackerCompass.clone();
         }, 1);
         addCommonItem(ItemKind.PICKAXE, () -> {
             ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);

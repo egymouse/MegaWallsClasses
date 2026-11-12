@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.ajls.lib.advanced.BukkitTaskMap;
 import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.customclasses.WardenClass;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -57,9 +58,6 @@ public class Cooldown {
         for (UUID uuid : hashMap.keySet()) {
 
             int cooldown = hashMap.get(uuid);
-//            if (classIndex == 5) {
-//
-//            }
             cooldown = cooldown - amount;
             if (cooldown <= 0) {
                 hashMap.remove(uuid);  //todo Exception in thread "main" java.util.ConcurrentModificationException
@@ -107,7 +105,7 @@ public class Cooldown {
                                 }
                                 break;
                             case 30:
-                                if (MyListener.warden_sensorAmount.get(uuid) <= 1) {
+                                if (MyListener.warden_sensorAmount.get(uuid) < WardenClass.WARDEN_MAX_SENSOR_COUNT) {
                                     warden_sensorAmount.increment(uuid);
 //                                    player.sendMessage(ChatColor.GREEN + "你获得了一个感应器");
                                     boolean found = false;
@@ -142,15 +140,9 @@ public class Cooldown {
                                         item.setAmount(MyListener.warden_sensorAmount.get(uuid));
                                         player.getInventory().addItem(item);
                                     }
-                                }
-                                if (warden_sensorAmount.get(uuid) < 2) {
                                     hashMap.put(uuid, 20*25); //20*25
                                 }
-//                                else {
-//                                    MyListener.warden_sensorAmount.decrement(uuid);
-//                                    hashMap.put(uuid, 20);
-//                                }
-
+                                break;
                         }
                     }
                 }
