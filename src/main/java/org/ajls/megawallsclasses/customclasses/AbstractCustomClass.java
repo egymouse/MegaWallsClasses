@@ -194,7 +194,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
             return new ItemStack(Material.OAK_PLANKS, 64);
         }, 14);
         addCommonItem(ItemKind.AXE, () -> {
-            return new ItemStack(Material.IRON_AXE, 64);
+            return new ItemStack(Material.IRON_AXE, 1);
         }, 15);
         addCommonItem(ItemKind.HAY_BLOCK, () -> {
             return new ItemStack(Material.HAY_BLOCK, 16);

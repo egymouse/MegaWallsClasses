@@ -55,7 +55,7 @@ public class CaveSpiderClass extends AbstractCustomClass{
         }
         player.setVelocity(vector.multiply(velMultiplier));
 
-        player.sendMessage(ChatColor.WHITE + jumpType + " " + ChatColor.RED + "生命回复I 5s " +  ChatColor.GOLD + "伤害吸收I 5s");
+        player.sendMessage(ChatColor.DARK_PURPLE + jumpType + " " + ChatColor.RED + "生命回复I 5s " +  ChatColor.GOLD + "伤害吸收I 5s");
         addEnergy(player, -100);
         caveSpiderVenom.put(playerUUID, CAVE_SPIDER_VENOM_MAX);
 //        caveSpiderFlyby.put(playerUUID, CAVE_SPIDER_VENOM_MAX);

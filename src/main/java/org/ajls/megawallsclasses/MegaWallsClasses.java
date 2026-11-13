@@ -81,15 +81,15 @@ public final class MegaWallsClasses extends JavaPlugin {
     // midi支持are you lost这种更多音色 映射到我的世界原版音色
 
 
-    //todo 增加传奇11连杀 增加tab显示血量
+    //todo 增加传奇11连杀 增加tab显示血量 ***
     //todo 复活的时候慢慢显示整个人 让敌人有预备
     //todo itemkind implement .. 用对应代码 https://chat.deepseek.com/a/chat/s/0c233cbe-2773-4952-93b4-fba03d532cf4 加入布吉岛对应职业
     // 关闭物品栏自动保存 增加一个取消保存按钮
     // 龙伤害范围 解决了
-    // 斧头bug修复
+    // 斧头bug修复 *** 自定义物品栏默认就是64axe 解决了
     // 龙剑研究    解决了
     // 龙攻击获取能量 解决了
-    // 方块太少了
+    // 方块太少了 ***
     // 雪人数量限制
     // 水果三叉戟 解决了
     // 加入洞穴蜘蛛
@@ -101,6 +101,9 @@ public final class MegaWallsClasses extends JavaPlugin {
     // java.lang.NullPointerException: null
     // 老鼠挖砂土
     // override enable/disable class
+    //todo 除了神秘的踩人减少毒液之击（明明有小于0.1伤害 return)和毒液之击中增伤外其他都做好了
+    // 还有洞穴蜘蛛水平跳更远，竖直跳比较低手感才好
+    // 自定义物品栏顺序增加选择d服普通/传奇职业选项
     //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
     //[22:39:11 WARN]: [MegaWallsClasses] Task #73260 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
     //java.lang.NullPointerException: null
