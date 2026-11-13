@@ -576,6 +576,9 @@ public class ActiveSkills {
         player.setLevel(0);
     }
 
+
+
+
     //shaman
     public static void shaman_active_skill(Player player) {
         World world = player.getWorld();

@@ -8,6 +8,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
 import net.kyori.adventure.util.TriState;
 import org.ajls.lib.advanced.HashMapInteger;
+import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -334,7 +335,7 @@ public class PassiveSkills {
         wolf.setMaxHealth(14);
         wolf.setHealth(14);
         wolf.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, false, false));
-        wolf.setCustomName(getPlayerTeam(player).getColor() + player.getName() + "'s Wolf");
+        wolf.setCustomName(ScoreboardU.getPlayerTeamColor(player, true) + player.getName() + "'s Wolf");
         BukkitScheduler scheduler = Bukkit.getScheduler();
         scheduler.runTaskLater(MegaWallsClasses.getPlugin(), () -> {
             wolf.remove();

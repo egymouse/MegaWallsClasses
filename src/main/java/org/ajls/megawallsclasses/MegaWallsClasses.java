@@ -14,6 +14,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -27,6 +28,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
+import javax.sound.midi.InvalidMidiDataException;
+import java.io.IOException;
 import java.util.*;
 
 import static org.ajls.megawallsclasses.ActiveSkills.block_moleBlockState;
@@ -80,8 +83,6 @@ public final class MegaWallsClasses extends JavaPlugin {
 
     //todo 增加传奇11连杀 增加tab显示血量
     //todo 复活的时候慢慢显示整个人 让敌人有预备
-
-
     //todo itemkind implement .. 用对应代码 https://chat.deepseek.com/a/chat/s/0c233cbe-2773-4952-93b4-fba03d532cf4 加入布吉岛对应职业
     // 关闭物品栏自动保存 增加一个取消保存按钮
     // 龙伤害范围 解决了
@@ -95,9 +96,11 @@ public final class MegaWallsClasses extends JavaPlugin {
     // 职业物品不能扔出 解决了
     // EXFL0SIONDisable Attack Cooldoun发现不是ENTITT_ATTACK
     //todo 切换职业时造成的冷却和职业清单暂存，比如warden靠冷却回复sensor 但是如果换了其他职业冷却好了不会恢复sensor，而且我插件是给予调用来互相递进的，一个断全断
-
-    // 龙地狱火导致自动能量累计出bug
+    // 萨满虚弱0.5hp 学习基岩版java版低版本高版本区别 然后加入不同职业适配不同版本机制
+    // 龙地狱火导致自动能量累计出bug 也不知道如何稳定复现
     // java.lang.NullPointerException: null
+    // 老鼠挖砂土
+    // override enable/disable class
     //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
     //[22:39:11 WARN]: [MegaWallsClasses] Task #73260 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
     //java.lang.NullPointerException: null
@@ -158,7 +161,8 @@ public final class MegaWallsClasses extends JavaPlugin {
         setTracked_teams(tracked_teams);
         Bloody.registerPlayerDeathItems(CustomEventsOld.getPlayer_deathItems());
         ClassConfigManager.getInstance(this);  //其实也不用写，反正调用时会自动传入instance
-        getServer().getPluginManager().registerEvents(new MyListener(), this);
+        MyListener myListener = new  MyListener();
+        getServer().getPluginManager().registerEvents(myListener, this);
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
         getServer().getPluginManager().registerEvents(new SpawnProtectionListener(), this);
         new SpawnProtectionListener();
@@ -243,6 +247,18 @@ public final class MegaWallsClasses extends JavaPlugin {
 
         for (ClassEnum ce : ClassEnum.values()) {
             ce.customClass.initializeCommonItems();  //等enum全部初始化后再执行
+        }
+
+
+
+        for (Player player : getServer().getOnlinePlayers()) {
+            try {
+                myListener.onPlayerJoin(new PlayerJoinEvent(player, "插件重载的伪加入游戏"));
+            } catch (InvalidMidiDataException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

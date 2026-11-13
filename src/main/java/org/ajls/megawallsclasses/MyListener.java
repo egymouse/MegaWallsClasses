@@ -10,6 +10,7 @@ import org.ajls.megawallsclasses.commands.Energetic;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
+import org.ajls.megawallsclasses.customclasses.CaveSpiderClass;
 import org.ajls.megawallsclasses.customclasses.DragonClass;
 import org.ajls.megawallsclasses.customclasses.WardenClass;
 import org.ajls.megawallsclasses.displayname.DisplayNameManager;
@@ -480,6 +481,16 @@ public class MyListener implements Listener {
                                 event.setCancelled(true);
                                 tryActiveSkill(player, ActiveSkillTypeEnum.SWORD);
                             }
+                            else if (ClassEnum.getClassEnumByPlayer(player) == ClassEnum.CAVE_SPIDER) {
+                                event.setCancelled(true);
+                                CaveSpiderClass.caveSpiderMode.pageUp(playerUUID);
+                                if ( CaveSpiderClass.caveSpiderMode.get(playerUUID) == 0 ) {
+                                    player.sendMessage("大跳");
+                                }
+                                else {
+                                    player.sendMessage("小跳");
+                                }
+                            }
                         }
                         else if (itemInHand == Material.CLOCK) {
                             if (gameStage == 0) {
@@ -652,6 +663,10 @@ public class MyListener implements Listener {
         else if (title.equals("Domcer Legendary Class Selection")) {
             isClassSelection= true;
             classOffset = 300;
+        }
+        else if (title.equals("Domcer Class Selection")) {
+            isClassSelection= true;
+            classOffset = 200;
         }
         if (isClassSelection) {
             if (event.getClickedInventory() == null) return;
@@ -894,6 +909,9 @@ public class MyListener implements Listener {
                             case 4:
                                 player.openInventory(createDocumentsInventory(player));
                                 break;
+                            case 5:
+                                player.openInventory(createDomcerClassSelectionInventory(player));
+                                break;
                             case 6:
                                 player.openInventory(createDomcerLegendaryClassSelectionInventory(player));
                                 break;
@@ -1000,7 +1018,7 @@ public class MyListener implements Listener {
                 event.setDamage(KNOCKBACK_DAMAGE);  //todo 如果是爆炸箭只给击退，但是还有其他情况（比如自己射自己）就直接取消攻击 最好加上箭可以穿过友军 要学习我的世界原版同一个队伍的行为(比如投掷物穿过什么的或者射出的箭爆炸只给击退（这个原版代码会写吗，毕竟不存在爆炸箭这种，但是貌似逻辑确实是这样的）
                 return;
             }
-            UUID playerUUID = victim.getUniqueId();
+            UUID victimUUID = victim.getUniqueId();
             if (event.getDamager() instanceof Player) {
                 Player damager = (Player) event.getDamager();
                 UUID damagerUUID = damager.getUniqueId();
@@ -1029,14 +1047,14 @@ public class MyListener implements Listener {
                         if (getScore(damager, "class") == 15) {
                             if (elaina_mode.containsKey(damagerUUID)) {
                                 if (elaina_mode.get(damagerUUID) == 0) {
-                                    elaina_enemy.put(damagerUUID, playerUUID);
+                                    elaina_enemy.put(damagerUUID, victimUUID);
                                 }
                             }
                         }
                         if (getScore(victim, "class") == 15) {
-                            if (elaina_mode.containsKey(playerUUID)) {
-                                if (elaina_mode.get(playerUUID) == 2) {
-                                    elaina_enemy.put(playerUUID, damagerUUID);
+                            if (elaina_mode.containsKey(victimUUID)) {
+                                if (elaina_mode.get(victimUUID) == 2) {
+                                    elaina_enemy.put(victimUUID, damagerUUID);
                                 }
                             }
                         }
@@ -1065,13 +1083,36 @@ public class MyListener implements Listener {
                             case 30:
                                 HashSet<WardenDarknessTargetTimestamp> targetTimestamps = warden_darknessTargetTimestamp.getValues(damagerUUID, true);
                                 for (WardenDarknessTargetTimestamp targetTimestamp : targetTimestamps) {
-                                    if (targetTimestamp.getTargetUUID().equals(playerUUID)) {
-//                                    targetTimestamp.setTargetUUID(playerUUID);
+                                    if (targetTimestamp.getTargetUUID().equals(victimUUID)) {
+//                                    targetTimestamp.setTargetUUID(victimUUID);
                                         targetTimestamp.setTimestamp(targetTimestamp.getTimestamp() - 20);
                                         break;
                                     }
                                 }
                                 break;
+                            case 217:
+                                int venomCount = CaveSpiderClass.caveSpiderVenom.get(damagerUUID);
+                                if (venomCount > 0) {
+                                    CaveSpiderClass.caveSpiderVenom.decrement(damagerUUID);
+                                    if (!Cooldown.player_passiveSkill2Cooldown.containsKey(damagerUUID)) {
+                                        Cooldown.player_passiveSkill2Cooldown.put(damagerUUID, 60);
+                                        CaveSpiderClass.caveSpiderFlyby.put(damagerUUID, CaveSpiderClass.CAVE_SPIDER_VENOM_MAX);
+                                    }
+                                    //这里要不就是冷却还在，要么就是没冷却了重新激活，所以不用冷却判断
+                                    int flybyCount = CaveSpiderClass.caveSpiderFlyby.get(damagerUUID);
+                                    if (flybyCount > 0) {
+                                        CaveSpiderClass.caveSpiderFlyby.decrement(damagerUUID);
+                                        if (flybyCount == 1) {
+                                            addEnergy(damager, 20);
+                                            damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0, true, true));
+                                            damager.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 0, true, true));
+                                            damager.sendMessage(ChatColor.BLUE + "飞掠" + ChatColor.RED + " 生命回复I 5s" + ChatColor.AQUA + " 速度I 5s" + ChatColor.GREEN + " 能量 +20");
+                                        }
+                                    }
+                                }
+
+                                break;
+
                         }
                         switch (getScore(victim, "class")) {
 //                        case 2:
@@ -1146,14 +1187,14 @@ public class MyListener implements Listener {
                             if (getScore(damager, "class") == 15) {
                                 if (elaina_mode.containsKey(damagerUUID)) {
                                     if (elaina_mode.get(damagerUUID) == 0) {
-                                        elaina_enemy.put(damagerUUID, playerUUID);
+                                        elaina_enemy.put(damagerUUID, victimUUID);
                                     }
                                 }
                             }
                             if (getScore(victim, "class") == 15) {
-                                if (elaina_mode.containsKey(playerUUID)) {
-                                    if (elaina_mode.get(playerUUID) == 2) {
-                                        elaina_enemy.put(playerUUID, damagerUUID);
+                                if (elaina_mode.containsKey(victimUUID)) {
+                                    if (elaina_mode.get(victimUUID) == 2) {
+                                        elaina_enemy.put(victimUUID, damagerUUID);
                                     }
                                 }
                             }
@@ -1267,47 +1308,6 @@ public class MyListener implements Listener {
                     registerPlayerHit(victim, damager);
 //                    Player victim = (Player) event.getEntity();
 //                    String teamName = getPlayerTeam(damager).getName();
-//                    DamageSource damageSource = new DamageSource() {
-//                        @Override
-//                        public DamageType getDamageType() {
-//                            return DamageType.GENERIC_KILL;
-//                        }
-//
-//                        @Override
-//                        public Entity getCausingEntity() {
-//                            return damager;
-//                        }
-//
-//                        @Override
-//                        public Entity getDirectEntity() {
-//                            return arrow;
-//                        }
-//
-//                        @Override
-//                        public Location getDamageLocation() {
-//                            return arrow.getLocation();
-//                        }
-//
-//                        @Override
-//                        public Location getSourceLocation() {
-//                            return arrow.getLocation();
-//                        }
-//
-//                        @Override
-//                        public boolean isIndirect() {
-//                            return true;
-//                        }
-//
-//                        @Override
-//                        public float getFoodExhaustion() {
-//                            return 114514;
-//                        }
-//
-//                        @Override
-//                        public boolean scalesWithDifficulty() {
-//                            return false;
-//                        }
-//                    };
                     event.setDamage(0.0000000000000000000000000000000000000000000007006492321625); //0.0000000000000000000000000000000000000000000007006492321625
 //                    if (!getPlayerTeam(victim).getName().equals(teamName)) {
 //                        victim.damage(111, );
@@ -1400,14 +1400,14 @@ public class MyListener implements Listener {
                 }
 //                if (trident_drownking.containsKey(tridentUUID)) {
 ////                    UUID damagerUUID = trident_drownking.get(tridentUUID);
-//                    Player damager = (Player) trident.getShooter(); //getPlayer(playerUUID);
+//                    Player damager = (Player) trident.getShooter(); //getPlayer(victimUUID);
 //
 //
 //                }
 
             }
 
-            if (nullInvisibilityPlayers.contains(playerUUID)) {  //getScore(player, "class") == 5
+            if (nullInvisibilityPlayers.contains(victimUUID)) {  //getScore(player, "class") == 5
                 null_passive_skill_disable(victim, 3);
             }
             if (getScore(victim, "class") == 15) {
@@ -1458,8 +1458,8 @@ public class MyListener implements Listener {
         Entity entity = event.getEntity();
         Entity damager_entity = event.getDamager();
         if (entity instanceof Player) {
-            Player player = (Player) entity;
-            UUID playerUUID = player.getUniqueId();
+            Player victim = (Player) entity;
+            UUID playerUUID = victim.getUniqueId();
             if(event.getDamager() instanceof WitherSkull) {
                 WitherSkull witherSkull = (WitherSkull) event.getDamager();
                 if (dread_lord_witherSkulls.contains(witherSkull.getUniqueId())) {
@@ -1468,26 +1468,26 @@ public class MyListener implements Listener {
                     if (event.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
 //                        if (event.getEntity() instanceof Player) {
 //                            event.setCancelled(true);
-                            if (!player.equals(witherSkull.getShooter())) {
-                                if (!player_hit_dread_lord.containsKey(player.getUniqueId())) {
+                            if (!victim.equals(witherSkull.getShooter())) {
+                                if (!player_hit_dread_lord.containsKey(victim.getUniqueId())) {
 //                                    dread_lord_witherSkulls.remove(witherSkull.getUniqueId());
                                     Player damager = (Player) witherSkull.getShooter();
                                     event.setDamage(0.0000000000000000000000000000000000000000000007006492321625);
-//                                    player.damage(0.0000000000000000000000000000000000000000000007006492321625, witherSkull);
+//                                    victim.damage(0.0000000000000000000000000000000000000000000007006492321625, witherSkull);
                                     if (damager.hasPotionEffect(PotionEffectType.STRENGTH)) {
-                                        addHealth(player, -16);
+                                        addHealth(victim, -16);
                                     }
                                     else {
-                                        addHealth(player, -8);
+                                        addHealth(victim, -8);
                                     }
-                                    attackedEnergyAccumulate(player);
-                                    player_hit_dread_lord.put(player.getUniqueId(), damager.getUniqueId());
+                                    attackedEnergyAccumulate(victim);
+                                    player_hit_dread_lord.put(victim.getUniqueId(), damager.getUniqueId());
                                     BukkitScheduler scheduler = getServer().getScheduler();
                                     scheduler.scheduleSyncDelayedTask(getPlugin(), () -> {
-                                        player_hit_dread_lord.remove(player.getUniqueId()); //bug:can't be hit by other dreadlord //solve method:create a global int refer to the times skills activated, and store the number with the skull. when hit transfer that number to the player, and if the player has same number cancel hit and let skull fly pass the player
+                                        player_hit_dread_lord.remove(victim.getUniqueId()); //bug:can't be hit by other dreadlord //solve method:create a global int refer to the times skills activated, and store the number with the skull. when hit transfer that number to the victim, and if the victim has same number cancel hit and let skull fly pass the victim
                                     }, 2L);
-//                                    addHealth(player, -8);
-                                    player.sendMessage("你被死亡加载打中了");
+//                                    addHealth(victim, -8);
+                                    victim.sendMessage("你被死亡加载打中了");
                                 }
 //                            }
 //                            else {
@@ -1509,15 +1509,15 @@ public class MyListener implements Listener {
                 else if (witherSkulls.contains(witherSkull.getUniqueId())) {
                     Wither wither = (Wither) witherSkull.getShooter();
                     String teamName = wither_team.get(wither.getUniqueId());
-                    if (!getPlayerTeamName(player).equals(teamName)) {
+                    if (!getPlayerTeamName(victim).equals(teamName)) {
                         if (event.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
-                            player.sendMessage("你被凋零打中了");
-                            addFoodLevel(player, -2);
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 1, false, false));  // amplifier still don't know first 3 then 1
+                            victim.sendMessage("你被凋零打中了");
+                            addFoodLevel(victim, -2);
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 1, false, false));  // amplifier still don't know first 3 then 1
                         }
                         else if (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
-                            player.sendMessage("你被凋零炸中了");
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 1, false, false));
+                            victim.sendMessage("你被凋零炸中了");
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 1, false, false));
                         }
                     }
                 }
@@ -1539,8 +1539,13 @@ public class MyListener implements Listener {
                         if (spiderDamage > 8) {
                             spiderDamage = 8;
                         }
-                        addHealth(player, -(spiderDamage * 2));
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 1, true, true));
+                        addHealth(victim, -(spiderDamage * 2));
+                        victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 1, true, true));
+                    }
+                    else if (ClassEnum.getClassEnumByPlayer(damager) == ClassEnum.CAVE_SPIDER) {
+                        event.setDamage(0.00001);
+                        addHealth(victim, -5);
+                        victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 80, 0, true, true));
                     }
                 }
             }
@@ -1548,24 +1553,24 @@ public class MyListener implements Listener {
                 Marker marker = (Marker) damager_entity;
                 if (marker_player.containsKey(marker.getUniqueId())) {
                     UUID uuid = marker_player.get(marker.getUniqueId());
-                    attackedEnergyAccumulate(player);
+                    attackedEnergyAccumulate(victim);
 //                    BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 //                    scheduler.scheduleSyncDelayedTask(MegaWallsClasses.getPlugin(), () -> {
 //                        marker_player.remove(marker.getUniqueId());
 //                    }, 1L);
-                    if (player.getUniqueId().equals(uuid)) {
+                    if (victim.getUniqueId().equals(uuid)) {
                         event.setDamage(0.0000000000000000000000000000000000000000000007006492321625);
                     }
                 }
             }
-//            if (nullInvisibilityPlayers.contains(playerUUID)) {  //getScore(player, "class") == 5
-//                null_passive_skill_disable(player, 3);
+//            if (nullInvisibilityPlayers.contains(playerUUID)) {  //getScore(victim, "class") == 5
+//                null_passive_skill_disable(victim, 3);
 //            }
-//            if (getScore(player, "class") == 15) {
-//                elaina_passive_skill_2_disable(player);
+//            if (getScore(victim, "class") == 15) {
+//                elaina_passive_skill_2_disable(victim);
 //            }
-//            else if (getClassEnum(player) == ClassEnum.ZOMBIE) {
-//                zombie_passive_skill_1(player);
+//            else if (getClassEnum(victim) == ClassEnum.ZOMBIE) {
+//                zombie_passive_skill_1(victim);
 //            }
         }
 //        if (entity instanceof WitherSkull) {
@@ -1620,6 +1625,7 @@ public class MyListener implements Listener {
             double playerHealthBefore = player.getHealth();
             double playerHealthAfter = EventU.getFinalHealth(event);
             double damage =event.getDamage();
+            double realFinalDamage = EventU.getFinalDamage(event);
 
 
 
@@ -1633,6 +1639,15 @@ public class MyListener implements Listener {
                 else {
                     player.sendMessage(event.getFinalDamage() + " less than 4 no explosion");
                 }
+            }
+            else if (ClassEnum.getClassEnumByPlayer(player) ==  ClassEnum.CAVE_SPIDER) {
+                int realFinalDamageHearts = (int) (realFinalDamage / 2);
+                if (realFinalDamageHearts > 4) {
+                    realFinalDamageHearts = 4;
+
+                }
+                CaveSpiderClass.caveSpiderVenom.addClamp(playerUUID, realFinalDamageHearts);
+
             }
             if (ClassU.getClass(player) == 5) {
                 if (playerHealthAfter < 16) {
@@ -2534,7 +2549,16 @@ public class MyListener implements Listener {
             event.setDropItems(false);
         }
         if (getClassEnum(player) == ClassEnum.MOLE) {
-            if (material == Material.SAND || material == Material.RED_SAND || material == Material.GRAVEL || material == Material.DIRT || material == Material.GRASS_BLOCK || material == Material.DIRT_PATH || material == Material.FARMLAND) {
+            if (material == Material.SAND ||
+                material == Material.RED_SAND ||
+                material == Material.GRAVEL ||
+                material == Material.DIRT ||
+                material == Material.GRASS_BLOCK ||
+                material == Material.DIRT_PATH ||
+                material == Material.FARMLAND ||
+                material == Material.COARSE_DIRT ||
+                material == Material.MYCELIUM ||
+                material == Material.PODZOL) {
                 int previousMineCount = mole_mineCount.pageUp(playerUUID);
                 if (previousMineCount == 3) {
                     mole_passive_skill_1(player);
@@ -2800,6 +2824,7 @@ public class MyListener implements Listener {
                 case 30:
                     warden_active_skill(player);
                     break;
+
             }
             ClassEnum.getCustomClassByPlayer(player).activeSkill(player);
 //            initializeAutoEnergyAccumulation(player);
@@ -2905,6 +2930,7 @@ public class MyListener implements Listener {
         }
         Configuration configuration = plugin.getConfig();
         String playerName = player.getName();
+        UUID playerUUID = player.getUniqueId();
         PlayerInventory playerInventory = player.getInventory();
         initializeClassSpecific(player, loadAsTF);
         ItemStack helmet = setUnbreakable(new ItemStack(Material.IRON_HELMET));
@@ -3177,6 +3203,12 @@ public class MyListener implements Listener {
                 chestplate.addEnchantment(Enchantment.PROTECTION, 1);
                 InitializeClass.warden_initialize_class(player);
                 break;
+            case 217:
+                boots = getClassItem(Material.DIAMOND_BOOTS);
+                boots.addEnchantment(Enchantment.FEATHER_FALLING, 2);
+                boots.addEnchantment(Enchantment.PROTECTION, 2);
+                CaveSpiderClass.caveSpiderFlyby.put(playerUUID, CaveSpiderClass.CAVE_SPIDER_VENOM_MAX);
+                break;
             case 311:
                 helmet = getClassItem(Material.DIAMOND_HELMET);
                 helmet.addEnchantment(Enchantment.PROTECTION, 1);
@@ -3185,6 +3217,7 @@ public class MyListener implements Listener {
                 boots.addEnchantment(Enchantment.PROTECTION, 3);
                 boots.addEnchantment(Enchantment.FIRE_PROTECTION, 2);
                 boots.addEnchantment(Enchantment.FEATHER_FALLING, 2);
+                break;
 
         }
         if (!containsLore(helmet, "dont_load")) {

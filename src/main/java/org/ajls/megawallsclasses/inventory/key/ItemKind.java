@@ -52,6 +52,8 @@ public enum ItemKind {
 
 
 
+//todo 这里其实可以直接配置class+物品实际制作方法，直接在constructor里面注入到对应的abstractCustomClass里面，但是这样不同class对同一个itemKind的不同物品/同一个物品 就解决不了了
+//todo     笨蛋可以constructor  Override，多传应一个物品的注入通用map，找不到去通用map找，注入一个物品和classEnum的只注入到对应的classEnum，当然也可以classEnum改成多参数，把物品注入到多个classEnum，当然默认空构造就是每个class自己注册+提交自己物品
 
      */
     TOOLKIT("超级战墙工具箱"),
@@ -85,8 +87,10 @@ public enum ItemKind {
     ELAINA_GOLDEN_CARROT("elaina_golden_carrot"),
 //    ELAINA_IRON_SWORD("elaina_iron_sword"),
     ELAINA_POTION("elaina_potion"),
-    WARDEN_SENSOR("warden_sensor");
+    WARDEN_SENSOR("warden_sensor"),
 //    DRAGON_SWORD;
+
+    CAVE_SPIDER_SHOVEL();
 
     private final String id;
 

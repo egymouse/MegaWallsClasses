@@ -4,6 +4,7 @@ import org.ajls.lib.advanced.HaxhMap;
 import org.ajls.lib.references.Time;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
+import org.ajls.megawallsclasses.customclasses.WardenClass;
 import org.ajls.megawallsclasses.inventory.apply.InventoryApplier;
 import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
 import org.bukkit.*;
@@ -749,7 +750,9 @@ public class InitializeClass {
     public static BukkitTaskMap<UUID> warden_darkness = new BukkitTaskMap<>();
     public static HaxhMap<UUID, WardenDarknessTargetTimestamp> warden_darknessTargetTimestamp = new org.ajls.lib.advanced.HaxhMap<>();
     public static void warden_initialize_class(Player player) {
+
         UUID playerUUID = player.getUniqueId();
+        warden_sensorAmount.put(playerUUID, WardenClass.WARDEN_MAX_SENSOR_COUNT);
         BukkitScheduler scheduler = Bukkit.getScheduler();
         BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
 //            if (player.isOnline()) {

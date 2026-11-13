@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.ajls.lib.advanced.BukkitTaskMap;
 import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.lib.utils.ItemStackU;
+import org.ajls.megawallsclasses.customclasses.CaveSpiderClass;
 import org.ajls.megawallsclasses.customclasses.WardenClass;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -146,6 +147,9 @@ public class Cooldown {
                                     hashMap.put(uuid, 20*25); //20*25
                                 }
                                 break;
+                            case 217:
+                                CaveSpiderClass.caveSpiderFlyby.put(uuid, CaveSpiderClass.CAVE_SPIDER_VENOM_MAX);
+                                break;
                         }
                     }
                 }
@@ -193,6 +197,10 @@ public class Cooldown {
             case 30:
                 p2c = ChatColor.DARK_RED + "ヘブンバーンズレッド";
                 break;
+            case 217:
+                p1c = ChatColor.DARK_PURPLE + "毒液之击";
+                p2c = ChatColor.BLUE + " 飞掠";
+                break;
         }
         String finalP1c = p1c;
         String finalP2c = p2c;
@@ -230,6 +238,7 @@ public class Cooldown {
 //                        String p1n = (number1 > 0) ? "positive" : (number1 < 0) ? "negative" : "zero";
                 String p11 = "";
                 String p21 = "";
+                String p22 = "";
                 String a11 = "";
                 switch (ScoreboardsAndTeams.getScore(player, "class")) {
                     case 5:
@@ -272,11 +281,21 @@ public class Cooldown {
                         break;
                     case 30:
                         p21 = getCooldownTime(player, player_passiveSkill2Cooldown);
+                        break;
+                    case 217:
+
+                        p11 = getCooldownAmount(player, CaveSpiderClass.caveSpiderVenom, CaveSpiderClass.CAVE_SPIDER_VENOM_MAX, -1);
+                        p21 = getCooldownTime(player, player_passiveSkill2Cooldown, false, GREEN, false);
+//                        p22 =
+                        if (true || player_passiveSkill2Cooldown.containsKey(player.getUniqueId())) {
+                            p21 += "/"+ChatColor.AQUA+ CaveSpiderClass.caveSpiderFlyby.get(player.getUniqueId());
+                        }
+                        break;
                 }
 
                 //todo 用list来存储这些吧，这样也好分辨什么时候需要空格，未设置的c就跳过，相邻两个自动加空格
-                String finalString = finalA1c + a11 + finalP1c + p11 + finalP2c + p21;
-                if (!finalString.equals("")) {
+                String finalString = finalA1c + a11 + finalP1c + p11 + finalP2c + p21 + p22;
+                if (!finalString.isEmpty()) {
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(finalString));  //修复了基岩版玩家显示空actionbar的bug
                 }
 
@@ -345,17 +364,20 @@ public class Cooldown {
 //        return getCooldownTime(player, player_cooldown, true, RED);
 //    }
 
-    public static String getCooldownAmount(Player player, HashMap<UUID, Integer> player_cooldown, int cap) {
+    public static String getCooldownAmount(Player player, HashMap<UUID, Integer> player_cooldown, int cap, int ready) {
         UUID uuid = player.getUniqueId();
         String p1n = ChatColor.GREEN + " ✔";
         int amount = 0;
         if (player_cooldown.containsKey(uuid)) {
             amount = player_cooldown.get(uuid);
         }
-        if (amount != cap - 1) {
+        if (amount != ready) {
             p1n = " " + ChatColor.GRAY + String.valueOf(amount) + ChatColor.DARK_GRAY + "/" + ChatColor.GREEN + cap;
         }
         return p1n;
+    }
+    public static String getCooldownAmount(Player player, HashMap<UUID, Integer> player_cooldown, int cap) {
+        return getCooldownAmount(player, player_cooldown, cap, cap-1);
     }
 
     public static String getCooldownAmount(Player player, HashMapInteger<UUID> player_cooldown) {

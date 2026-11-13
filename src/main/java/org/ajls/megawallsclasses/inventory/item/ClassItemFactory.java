@@ -145,6 +145,13 @@ public final class ClassItemFactory {
         return mark(LayoutKey.of(ItemKind.WARDEN_SENSOR), item);
     }
 
+    public static ItemStack caveSpiderShovel() {
+        ItemStack item = new ItemStack(Material.IRON_SHOVEL, 1);
+        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);
+        return mark(LayoutKey.of(ItemKind.CAVE_SPIDER_SHOVEL), item);
+    }
+
+
     public static ItemStack mark(LayoutKey key, ItemStack item) {
 //        ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_TYPE, key.id());
         return item;  //在addItem里面自动mark了

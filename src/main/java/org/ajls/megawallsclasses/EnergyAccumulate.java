@@ -126,6 +126,10 @@ public class EnergyAccumulate {
             case 30:
                 addEnergy(damager, 12);
                 break;
+            case 217:
+                addEnergy(damager, 8);
+                SpiderEnergy.increment(damager, 2, 4, 20);
+                break;
             case 311:
                 addEnergy(damager, 8);
                 SpiderEnergy.increment(damager, 2, 1, 20);
@@ -209,6 +213,9 @@ public class EnergyAccumulate {
                 break;
             case 30:
                 addEnergy(damager, 12);
+                break;
+            case 217:
+                addEnergy(damager, 8);
                 break;
             case 311:
                 addEnergy(damager, 10); //20

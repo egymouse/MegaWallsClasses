@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Cylinder {
-    public static ArrayList<Player> getNearbyCylindricalPlayers(Player player, double distance, double radius, double count, double playerPositionOffset) {
+    public static ArrayList<Player> getNearbyCylindricalPlayers(Player player, double distance, double radius, int count, double playerPositionOffset) {
         HashMap<Double, Player> distance_player = new HashMap<>();
         World world = player.getWorld();
         Vector playerPos = player.getLocation().toVector();
@@ -32,7 +32,7 @@ public class Cylinder {
             }
         }
         ArrayList<Player> nearbyPlayers = new ArrayList<>();
-        int returnAmount = (int) Math.min(distance_player.size(), count);
+        int returnAmount = Math.min(distance_player.size(), count);
         for (int i = 0; i < returnAmount; i++) {
             double nearest_distance = Double.MAX_VALUE;
             for (double distance2 : distance_player.keySet()) {

@@ -38,6 +38,9 @@ public enum ClassEnum {
 //    NAC, //not a class
 
 
+    CAVE_SPIDER(217, new CaveSpiderClass()),
+
+
     DRAGON(311, new DragonClass()),  //todo 改成每个玩家一个职业instance 存储在Playerdata里面
 
 

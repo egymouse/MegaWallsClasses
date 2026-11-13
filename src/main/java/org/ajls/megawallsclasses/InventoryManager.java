@@ -69,6 +69,14 @@ public class InventoryManager {
         return inventory;
     }
 
+    public static Inventory createDomcerClassSelectionInventory(Player player) {
+        Inventory inventory = Bukkit.createInventory(player, 36, "Domcer Class Selection");
+        ItemStack cave_spider = new ItemStack(Material.SPIDER_EYE, 1);
+        setDisplayName(cave_spider, "洞穴蜘蛛");
+        inventory.setItem(16, cave_spider);
+        return inventory;
+    }
+
     public static Inventory createClassSelectionInventory(Player player) {
         Inventory inventory = Bukkit.createInventory(player, 36, "Select Class");
         ItemStack zombie = new ItemStack(Material.ROTTEN_FLESH, 1);
