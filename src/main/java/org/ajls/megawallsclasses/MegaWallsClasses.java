@@ -196,6 +196,12 @@ public final class MegaWallsClasses extends JavaPlugin {
         world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
         world.setGameRule(GameRule.NATURAL_REGENERATION, true);
         world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
+        world.setGameRule(GameRule.MOB_GRIEFING, true); //保证爆炸能破坏方块
+        world.setGameRule(GameRule.FIRE_DAMAGE, true);  //防止神秘地图取消这俩
+        world.setGameRule(GameRule.FALL_DAMAGE, true);
+        world.setGameRule(GameRule.DROWNING_DAMAGE, true);
+        world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,  0);
+
 
         //newgamerule below
 //        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
