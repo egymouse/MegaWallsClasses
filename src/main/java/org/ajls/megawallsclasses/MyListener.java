@@ -913,7 +913,7 @@ public class MyListener implements Listener {
                                 break;
                             case 2:
                                 if (isSelectingReorder) {
-
+                                    player.sendMessage("再点击对应的职业选择来改变对应职业的物品栏， 因为我懒得换新gui了");
                                 }
                                 else {
                                     playerSelectingReorder.add(player.getUniqueId());
@@ -1109,25 +1109,33 @@ public class MyListener implements Listener {
                                 }
                                 break;
                             case 217:
-                                int venomCount = CaveSpiderClass.caveSpiderVenom.get(damagerUUID);
-                                if (venomCount > 0) {
-                                    CaveSpiderClass.caveSpiderVenom.decrement(damagerUUID);
-                                    if (!Cooldown.player_passiveSkill2Cooldown.containsKey(damagerUUID)) {
-                                        Cooldown.player_passiveSkill2Cooldown.put(damagerUUID, 60);
-                                        CaveSpiderClass.caveSpiderFlyby.put(damagerUUID, CaveSpiderClass.CAVE_SPIDER_VENOM_MAX);
-                                    }
-                                    //这里要不就是冷却还在，要么就是没冷却了重新激活，所以不用冷却判断
-                                    int flybyCount = CaveSpiderClass.caveSpiderFlyby.get(damagerUUID);
-                                    if (flybyCount > 0) {
-                                        CaveSpiderClass.caveSpiderFlyby.decrement(damagerUUID);
-                                        if (flybyCount == 1) {
-                                            addEnergy(damager, 20);
-                                            damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0, true, true));
-                                            damager.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 0, true, true));
-                                            damager.sendMessage(ChatColor.BLUE + "飞掠" + ChatColor.RED + " 生命回复I 5s" + ChatColor.AQUA + " 速度I 5s" + ChatColor.GREEN + " 能量 +20");
+                                if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+                                    //为了排除爆炸的伤害，而且因为时序问题爆炸改成0.1伤害是后执行的，导致这个先执行了
+                                    int venomCount = CaveSpiderClass.caveSpiderVenom.get(damagerUUID);
+                                    if (venomCount > 0) {
+                                        CaveSpiderClass.caveSpiderVenom.decrement(damagerUUID);
+
+//                                        Bukkit.broadcastMessage(event.getDamage() + " " + event.getFinalDamage() + event.getCause().name() + "洞穴蜘蛛爆炸");
+                                        event.setDamage(event.getDamage()*1.2);
+//                                        Bukkit.broadcastMessage(event.getDamage() + " " + event.getFinalDamage() + event.getCause().name() + "洞穴蜘蛛爆炸");
+                                        if (!Cooldown.player_passiveSkill2Cooldown.containsKey(damagerUUID)) {
+                                            Cooldown.player_passiveSkill2Cooldown.put(damagerUUID, 60);
+                                            CaveSpiderClass.caveSpiderFlyby.put(damagerUUID, CaveSpiderClass.CAVE_SPIDER_VENOM_MAX);
+                                        }
+                                        //这里要不就是冷却还在，要么就是没冷却了重新激活，所以不用冷却判断
+                                        int flybyCount = CaveSpiderClass.caveSpiderFlyby.get(damagerUUID);
+                                        if (flybyCount > 0) {
+                                            CaveSpiderClass.caveSpiderFlyby.decrement(damagerUUID);
+                                            if (flybyCount == 1) {
+                                                addEnergy(damager, 20);
+                                                damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0, true, true));
+                                                damager.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 0, true, true));
+                                                damager.sendMessage(ChatColor.BLUE + "飞掠" + ChatColor.RED + " 生命回复I 5s" + ChatColor.AQUA + " 速度I 5s" + ChatColor.GREEN + " 能量 +20");
+                                            }
                                         }
                                     }
                                 }
+
 
                                 break;
 
