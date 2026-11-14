@@ -649,12 +649,14 @@ public class MyListener implements Listener {
 //    public void onHorseRear(Rear)
     public static HashMap<UUID, Integer> player_whichClassReorder = new HashMap<>();
     public static HashMap<UUID, Integer> player_nextClass = new HashMap<>();
+    public static HashSet<UUID> playerSelectingReorder = new HashSet<>();
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         InventoryView inventoryView = event.getView();
         Inventory topInventory = inventoryView.getTopInventory();
         Inventory bottomInventory = inventoryView.getBottomInventory();
         String title = event.getView().getTitle();
+        boolean isSelectingReorder = playerSelectingReorder.contains(event.getWhoClicked().getUniqueId());
         boolean isClassSelection = false;
         int classOffset = 0;
         if (title.equals("Select Class")) {
@@ -675,27 +677,29 @@ public class MyListener implements Listener {
                 Player player = (Player) event.getWhoClicked();
                 UUID playerUUID = player.getUniqueId();
                 int index = event.getSlot() + 1 + classOffset;
-                if (player_damagers.get(playerUUID) == null || player_damagers.get(playerUUID).isEmpty() || true) {
-                    InitializeClass.resetPlayerCondition(player);
-                    ClassU.setClass(player, index);
+
+                if (!isSelectingReorder) {
+                    if (player_damagers.get(playerUUID) == null || player_damagers.get(playerUUID).isEmpty() || true) {
+                        InitializeClass.resetPlayerCondition(player);
+                        ClassU.setClass(player, index);
 //                    setScore(player, "class", index);
 
 
-                    DisplayNameManager.refresh(player);//todo 添加幻变大师适配，以及加入所有职业的职业名称，最好做好category适配
+                        DisplayNameManager.refresh(player);//todo 添加幻变大师适配，以及加入所有职业的职业名称，最好做好category适配
 
 
-                    elaina_disable(player);
+                        elaina_disable(player);
 
-                    player.sendMessage(Documentation.getClassDocumentation(index));
+                        player.sendMessage(Documentation.getClassDocumentation(index));
 
 
-                    if (!ClassU.isTransformationMaster(player)) {
+                        if (!ClassU.isTransformationMaster(player)) {
 //                        initializeClass(player);
-                        InitializeClass.refreshClassOnChangeClass(player);
-                    }
-                    else {
-                        InitializeClass.transformation_master_initialize_class(player); // init specific and use active skill to change class
-                    }
+                            InitializeClass.refreshClassOnChangeClass(player);
+                        }
+                        else {
+                            InitializeClass.transformation_master_initialize_class(player); // init specific and use active skill to change class
+                        }
 //                    disableAutoEnergyAccumulation(player);
 ////                    initializeAutoEnergyAccumulation(player);
 ////                    initializeDeathMatchAutoEnergyAccumulation(player);
@@ -704,21 +708,27 @@ public class MyListener implements Listener {
 
 //                    InitializeClass.refreshClass(player);
 
-                    BukkitTask task = player_activeSkillReady.get(player.getUniqueId());
-                    if (task != null) {
-                        task.cancel();
-                    }
-                    setScore(player, "energy" , 0);
-                    player.setLevel(0);
+                        BukkitTask task = player_activeSkillReady.get(player.getUniqueId());
+                        if (task != null) {
+                            task.cancel();
+                        }
+                        setScore(player, "energy" , 0);
+                        player.setLevel(0);
 
-                }
-                else {
-                    player.sendMessage(ChatColor.YELLOW + "脱战15秒后才能重选职业");
-                }
+                    }
+                    else {
+                        player.sendMessage(ChatColor.YELLOW + "脱战15秒后才能重选职业");
+                    }
 
 //                player_nextClass.put(player.getUniqueId(), index); //todo 改成死亡后才能切换职业
 //                player.sendMessage(ChatColor.YELLOW + "死亡就能刷新了");
 //                refreshClass(player);
+                }
+                else {
+                    player_whichClassReorder.put(player.getUniqueId(), index);
+                    player.openInventory(InventoryOrderEditor.createClassEditor(player, ClassEnum.getCustomClassByClassID(index)));
+                }
+
             }
             event.setCancelled(true);
         }
@@ -896,12 +906,20 @@ public class MyListener implements Listener {
 //                        player.openInventory(createReorderInventory(player));
 
 //                                player.openInventory(loadReorderInventoryFromConfig(player));
+
                                 player.openInventory(InventoryOrderEditor.createCommonEditor(player));
 
                                 player.setMetadata("ReorderInventory", new FixedMetadataValue(plugin, true));
                                 break;
                             case 2:
-                                player.openInventory(createWhichClassReorderInventory(player));
+                                if (isSelectingReorder) {
+
+                                }
+                                else {
+                                    playerSelectingReorder.add(player.getUniqueId());
+                                    player.sendMessage("再点击对应的职业选择来改变对应职业的物品栏， 因为我懒得换新gui了");
+                                }
+//                                player.openInventory(createWhichClassReorderInventory(player));
                                 break;
                             case 3:
                                 player.openInventory(createTeamSelectionInventory(player));

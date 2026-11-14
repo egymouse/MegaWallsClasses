@@ -1,7 +1,10 @@
 package org.ajls.megawallsclasses.listeners;
 
+import com.google.common.util.concurrent.AbstractScheduledService;
+import org.ajls.megawallsclasses.MegaWallsClasses;
 import org.ajls.megawallsclasses.MyListener;
 import org.ajls.megawallsclasses.inventory.editor.InventoryOrderEditor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,6 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import static org.ajls.megawallsclasses.InventoryManager.createWhichClassReorderInventory;
 import static org.ajls.megawallsclasses.MegaWallsClasses.plugin;
@@ -36,8 +40,17 @@ public class InventoryListener implements Listener {
         else if (title.equals("ClassReorderInventory")) {
             int index = MyListener.player_whichClassReorder.get(player.getUniqueId());
             InventoryOrderEditor.saveClassEditor(player, topInventory, index);
-            player.openInventory(createWhichClassReorderInventory(player));
+            BukkitScheduler scheduler = Bukkit.getScheduler();
+            scheduler.runTaskLater(MegaWallsClasses.plugin, () -> {
+                player.openInventory(createWhichClassReorderInventory(player));
+            }, 0);
+
+
             player.sendMessage(ChatColor.GREEN + "职业物品栏成功保存");
+
+            if (MyListener.playerSelectingReorder.remove(player.getUniqueId())) {
+                player.sendMessage("自定义物品栏顺序退出");
+            }
         }
     }
 }
