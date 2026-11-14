@@ -143,7 +143,7 @@ public class KillsManager {
                 }
                 else {
                     for (UUID uuid : damagersSet) {
-                        addAssist(getPlayer(uuid));
+                        addAssist(uuid);
                     }
                 }
             }
@@ -207,8 +207,7 @@ public class KillsManager {
         }
     }
 
-    static void addAssist(Player player) {
-        UUID playerUUID = player.getUniqueId();
+    static void addAssist(UUID playerUUID) {
         if (player_assists.containsKey(playerUUID)) {
             player_assists.put(playerUUID, player_assists.get(playerUUID) + 1);
 //            updateFinalAssists(player);
@@ -217,6 +216,12 @@ public class KillsManager {
             player_assists.put(playerUUID, 1);
 //            updateFinalAssists(player);
         }
+    }
+    static void addAssist(Player player) {
+        if (player == null) return;
+        UUID playerUUID = player.getUniqueId();
+        addAssist(playerUUID);
+
     }
 
 

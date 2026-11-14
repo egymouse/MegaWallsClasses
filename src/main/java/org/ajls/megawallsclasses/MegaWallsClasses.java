@@ -121,36 +121,12 @@ public final class MegaWallsClasses extends JavaPlugin {
     // 指南针因为setClassItem用不了了
     // myListener次序问题 蜘蛛踩人也算能量累积
     // purpur击退直接改，伤害计算直接改 要不然*1.2就不行
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #73260 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #73276 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #74438 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #74443 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #78462 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #78497 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #83884 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #83900 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #83908 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
-    //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
-    //[22:39:11 WARN]: [MegaWallsClasses] Task #83914 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
-    //java.lang.NullPointerException: null
+    // geyser解决
+    // blocksmanager学习思路 看能增加什么好用的东西
+    // todo 猪排减少秒切会出bug，血药替换一样(因为1tick延迟的原因)
+    // todo 搞定geyser
+    // 试试packetevents
+
 
 
     //todo 玩家interact block回导致主动触发两次 那么雪人，或者后面天赋无限火力就不行

@@ -12,6 +12,7 @@ import org.bukkit.scoreboard.Team;
 import org.checkerframework.checker.units.qual.C;
 
 public class ScoreboardsAndTeams {
+    //todo 增加null check
     //create scoreboard
     public static void createScoreboard(String name) {//@Nullable String type, @Nullable String displayname
         if (Bukkit.getScoreboardManager().getMainScoreboard().getObjective(name) == null) {

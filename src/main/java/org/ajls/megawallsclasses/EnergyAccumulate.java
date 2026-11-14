@@ -237,15 +237,20 @@ public class EnergyAccumulate {
             if (!instant) {
                 task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
                     Player currentPlayer = Bukkit.getPlayer(playerUUID);
-                    MegaWallsClasses.addScore(currentPlayer, "energy", amount);
-                    testSkillReady(currentPlayer);
+                    if(currentPlayer != null) {
+                        MegaWallsClasses.addScore(currentPlayer, "energy", amount);
+                        testSkillReady(currentPlayer);
+                    }
                 }, delay, delay);
             }
             else {
                 task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
                     Player currentPlayer = Bukkit.getPlayer(playerUUID);
-                    MegaWallsClasses.addScore(currentPlayer, "energy", amount);
-                    testSkillReady(currentPlayer);
+                    if(currentPlayer != null) {
+                        MegaWallsClasses.addScore(currentPlayer, "energy", amount);
+                        testSkillReady(currentPlayer);
+                    }
+
                 }, 0, delay);
             }
 
