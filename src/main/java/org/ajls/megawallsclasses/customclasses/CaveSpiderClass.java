@@ -70,7 +70,7 @@ public class CaveSpiderClass extends AbstractCustomClass{
                 Location currentLocation = player.getLocation();
                 world.createExplosion(currentLocation, 3f, false, true, player);
             }
-        },2,1);
+        },5,1);  //2
         caveSpiderTaskMap.put(player.getUniqueId(), bukkitTask);
 
     }
