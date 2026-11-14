@@ -2514,7 +2514,7 @@ public class MyListener implements Listener {
                 else {
 
                     if (warden_sensorAmount.get(playerUUID) == WardenClass.WARDEN_MAX_SENSOR_COUNT) {
-                        Cooldown.player_passiveSkill2Cooldown.put(playerUUID, 20*25);  //20*30  f不知道为什么2026.11.13这里写的是20*15，统一口径成为25秒了
+                        Cooldown.player_passiveSkill2Cooldown.put(playerUUID, WardenClass.WARDEN_SENSOR_COOLDOWN_TICK);  //20*30  f不知道为什么2026.11.13这里写的是20*15，统一口径成为25秒了
                     }
 
                     warden_sensorAmount.decrement(playerUUID);

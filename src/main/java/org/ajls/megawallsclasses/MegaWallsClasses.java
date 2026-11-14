@@ -104,6 +104,23 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 除了神秘的踩人减少毒液之击（明明有小于0.1伤害 return)和毒液之击中增伤外其他都做好了
     // 还有洞穴蜘蛛水平跳更远，竖直跳比较低手感才好
     // 自定义物品栏顺序增加选择d服普通/传奇职业选项
+    //todo 其他插件整合一下，对原版逻辑的修改直接改服务端更好
+    // java.util.ConcurrentModificationException: null
+    //	at java.base/java.util.HashMap$HashIterator.nextNode(HashMap.java:1605) ~[?:?]
+    //	at java.base/java.util.HashMap$KeyIterator.next(HashMap.java:1628) ~[?:?]
+    //	at MegaWallsClasses-1794666667427.jar/org.ajls.megawallsclasses.Cooldown.removeCooldown(Cooldown.java:59) ~[MegaWallsClasses-1794666667427.jar:?]
+    //	at MegaWallsClasses-1794666667427.jar/org.ajls.megawallsclasses.MegaWallsClasses.lambda$onEnable$0(MegaWallsClasses.java:244) ~[MegaWallsClasses-1794666667427.jar:?]
+    //	at org.bukkit.craftbukkit.scheduler.CraftTask.run(CraftTask.java:86) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
+    //	at org.bukkit.craftbukkit.scheduler.CraftScheduler.mainThreadHeartbeat(CraftScheduler.java:475) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
+    //	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1770) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
+    //	at net.minecraft.server.dedicated.DedicatedServer.tickChildren(DedicatedServer.java:513) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
+    //	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1642) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
+    //	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1342) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
+    //	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:333) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
+    //	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+    // 指南针因为setClassItem用不了了
+    // myListener次序问题 蜘蛛踩人也算能量累积
+    // purpur击退直接改，伤害计算直接改 要不然*1.2就不行
     //[22:39:11 INFO]: [MegaWallsClasses] egymouse 已灭火！
     //[22:39:11 WARN]: [MegaWallsClasses] Task #73260 for MegaWallsClasses v1.5-SNAPSHOT generated an exception
     //java.lang.NullPointerException: null

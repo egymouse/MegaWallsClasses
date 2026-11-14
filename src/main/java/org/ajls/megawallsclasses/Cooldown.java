@@ -144,7 +144,7 @@ public class Cooldown {
                                 }
                                 //这里二次判断不是bug，是如果增加了一次还没到顶那么继续冷却
                                 if (MyListener.warden_sensorAmount.get(uuid) < WardenClass.WARDEN_MAX_SENSOR_COUNT) {
-                                    hashMap.put(uuid, 20*25); //20*25
+                                    hashMap.put(uuid, WardenClass.WARDEN_SENSOR_COOLDOWN_TICK); //20*25
                                 }
                                 break;
                             case 217:

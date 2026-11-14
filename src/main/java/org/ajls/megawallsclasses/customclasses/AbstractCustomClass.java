@@ -134,7 +134,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         }, 0);
         addCommonItem(ItemKind.COMPASS, () -> {
             ItemStack item =  CompassItemStack.trackerCompass.clone();
-            ItemStackModify.setClassItem(item);
+//            ItemStackModify.setClassItem(item);
             return item;
 //            return CompassItemStack.trackerCompass.clone();
         }, 1);

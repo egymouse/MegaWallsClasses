@@ -8,7 +8,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 public class WardenClass extends AbstractCustomClass {
-    public static int WARDEN_MAX_SENSOR_COUNT = 1;
+    public static int WARDEN_MAX_SENSOR_COUNT = 2;
+    public static int WARDEN_SENSOR_COOLDOWN_TICK = 15*20;
 
     //                classSword = getClassSword(Material.DIAMOND_SWORD);
     //                classReorderInventory.addItem(warden_initial_sensor());
