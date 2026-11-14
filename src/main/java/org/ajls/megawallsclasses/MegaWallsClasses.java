@@ -126,6 +126,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     // todo 猪排减少秒切会出bug，血药替换一样(因为1tick延迟的原因)
     // todo 搞定geyser
     // 试试packetevents
+    // todo 增加基于插件的队伍系统 更改玩家显示名称增加传奇标和职业  至少玩家不能打自己（比如射箭）（监听damage然后取消射箭的)，把职业Listener逻辑挪到对应的职业类里面
 
 
 

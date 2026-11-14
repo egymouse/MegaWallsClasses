@@ -1060,8 +1060,11 @@ public class MyListener implements Listener {
                             attacked.remove(victim.getUniqueId());
                             // Do something
                         }, 10L);
-                        attackEnergyAccumulate(damager);
-                        attackedEnergyAccumulate(victim);
+                        if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+                            attackEnergyAccumulate(damager);
+                            attackedEnergyAccumulate(victim);
+                        }
+
                         if (getScore(damager, "class") == 15) {
                             if (elaina_mode.containsKey(damagerUUID)) {
                                 if (elaina_mode.get(damagerUUID) == 0) {
