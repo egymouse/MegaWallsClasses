@@ -6,6 +6,7 @@ import org.ajls.lib.advanced.BukkitTaskMap;
 import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.customclasses.CaveSpiderClass;
+import org.ajls.megawallsclasses.customclasses.GhostRiderClass;
 import org.ajls.megawallsclasses.customclasses.WardenClass;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -56,15 +57,16 @@ public class Cooldown {
 //        for (HashMap<UUID, Integer> skillCooldown : playerCooldowns) {
 //
 //        }
-        for (UUID uuid : hashMap.keySet()) {
+        for (UUID uuid : new ArrayList<>(hashMap.keySet())) {
 
             int cooldown = hashMap.get(uuid);
             cooldown = cooldown - amount;
             if (cooldown <= 0) {
-                hashMap.remove(uuid);  //todo Exception in thread "main" java.util.ConcurrentModificationException
+                hashMap.remove(uuid);  //todo Exception in thread "main" java.util.ConcurrentModificationException  用iterator或者removeif试试
                 Player player = Bukkit.getPlayer(uuid);
                 if (player != null) {
                     int classIndex = ClassU.getClass(player);
+                    ClassEnum classEnum = ClassEnum.getClassEnumByPlayer(player);
                     if (index == 0) {  //passive1
                         switch (classIndex) {
                             case 5: //null
@@ -152,6 +154,11 @@ public class Cooldown {
                                 break;
                         }
                     }
+                    else if (index == 2) {
+                        if (classEnum == ClassEnum.GHOST_RIDER) {
+                            GhostRiderClass.ghostRiderVenom.put(uuid, 0);
+                        }
+                    }
                 }
             }
             else {
@@ -197,6 +204,9 @@ public class Cooldown {
             case 30:
                 p2c = ChatColor.DARK_RED + "ヘブンバーンズレッド";
                 break;
+            case 31:
+                a1c = "大招";
+                break;
             case 217:
                 p1c = ChatColor.DARK_PURPLE + "毒液之击";
                 p2c = ChatColor.BLUE + " 飞掠";
@@ -240,6 +250,7 @@ public class Cooldown {
                 String p21 = "";
                 String p22 = "";
                 String a11 = "";
+                String a12 = "";
                 switch (ScoreboardsAndTeams.getScore(player, "class")) {
                     case 5:
 //                        int null_mode = PassiveSkills.null_invisibility_mode.get(uuid);
@@ -282,6 +293,10 @@ public class Cooldown {
                     case 30:
                         p21 = getCooldownTime(player, player_passiveSkill2Cooldown);
                         break;
+                    case 31:
+                        a11 = getCooldownTime(player, player_activeSkillCooldown, false, GREEN, false) + "/"+ChatColor.AQUA+ GhostRiderClass.ghostRiderVenom.get(player.getUniqueId());
+//                        a12 = getCooldownAmount(player, GhostRiderClass.ghostRiderVenom, GhostRiderClass.GHOST_RIDER_VENOM_MAX, -1);
+                        break;
                     case 217:
 
                         p11 = getCooldownAmount(player, CaveSpiderClass.caveSpiderVenom, CaveSpiderClass.CAVE_SPIDER_VENOM_MAX, -1);
@@ -294,7 +309,7 @@ public class Cooldown {
                 }
 
                 //todo 用list来存储这些吧，这样也好分辨什么时候需要空格，未设置的c就跳过，相邻两个自动加空格
-                String finalString = finalA1c + a11 + finalP1c + p11 + finalP2c + p21 + p22;
+                String finalString = finalA1c + a11 + a12 + finalP1c + p11 + finalP2c + p21 + p22;
                 if (!finalString.isEmpty()) {
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(finalString));  //修复了基岩版玩家显示空actionbar的bug
                 }

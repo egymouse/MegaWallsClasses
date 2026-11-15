@@ -147,6 +147,9 @@ public class InventoryManager {
         ItemStack warden = new ItemStack(Material.SCULK_SHRIEKER);
         setDisplayName(warden, "监守者");
         setDisplayName(warden, "监守者战士");
+
+        ItemStack ghost_rider = new ItemStack(Material.CARVED_PUMPKIN);
+        setDisplayName(ghost_rider, "恶灵骑士");
         inventory.setItem(0,zombie);
         inventory.setItem(1,herobrine);
         inventory.setItem(2,skeleton);
@@ -166,6 +169,7 @@ public class InventoryManager {
         inventory.setItem(27,skeleton_lord);
         inventory.setItem(28 ,transformation_master);
         inventory.setItem(29, warden);
+        inventory.setItem(30, ghost_rider);
         return inventory;
     }
 

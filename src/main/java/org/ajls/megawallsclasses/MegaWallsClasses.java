@@ -105,19 +105,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     // 还有洞穴蜘蛛水平跳更远，竖直跳比较低手感才好
     // 自定义物品栏顺序增加选择d服普通/传奇职业选项
     //todo 其他插件整合一下，对原版逻辑的修改直接改服务端更好
-    // java.util.ConcurrentModificationException: null
-    //	at java.base/java.util.HashMap$HashIterator.nextNode(HashMap.java:1605) ~[?:?]
-    //	at java.base/java.util.HashMap$KeyIterator.next(HashMap.java:1628) ~[?:?]
-    //	at MegaWallsClasses-1794666667427.jar/org.ajls.megawallsclasses.Cooldown.removeCooldown(Cooldown.java:59) ~[MegaWallsClasses-1794666667427.jar:?]
-    //	at MegaWallsClasses-1794666667427.jar/org.ajls.megawallsclasses.MegaWallsClasses.lambda$onEnable$0(MegaWallsClasses.java:244) ~[MegaWallsClasses-1794666667427.jar:?]
-    //	at org.bukkit.craftbukkit.scheduler.CraftTask.run(CraftTask.java:86) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
-    //	at org.bukkit.craftbukkit.scheduler.CraftScheduler.mainThreadHeartbeat(CraftScheduler.java:475) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
-    //	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1770) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
-    //	at net.minecraft.server.dedicated.DedicatedServer.tickChildren(DedicatedServer.java:513) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
-    //	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1642) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
-    //	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1342) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
-    //	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:333) ~[purpur-1.21.1.jar:1.21.1-DEV-9145bd1]
-    //	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+    //todo 研究bukkitTask底层和时序 自己实现会不会更方便 如果创建多个bukkitTask会不会内存爆炸 bukkit是否维护一个优先队列管理最先要执行的task
     // 指南针因为setClassItem用不了了
     // myListener次序问题 蜘蛛踩人也算能量累积
     // purpur击退直接改，伤害计算直接改 要不然*1.2就不行
@@ -125,7 +113,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     // blocksmanager学习思路 看能增加什么好用的东西
     // todo 猪排减少秒切会出bug，血药替换一样(因为1tick延迟的原因)
     // todo 搞定geyser
-    // 试试packetevents
+    //      试试packetevents和packetWrapper
     // todo 增加基于插件的队伍系统 更改玩家显示名称增加传奇标和职业  至少玩家不能打自己（比如射箭）（监听damage然后取消射箭的)，把职业Listener逻辑挪到对应的职业类里面
 
 
@@ -133,6 +121,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 玩家interact block回导致主动触发两次 那么雪人，或者后面天赋无限火力就不行
 
     //protocollib的todo 设置糖果世界 石头是粉色混凝土，铁是白 煤炭是褐 幻变大师正常隐藏手中物品
+    //todo 重置物品栏也会导致物品栏被保存 通过调换重置和打开物品栏的顺序看能不能解决
 
 
     @Override

@@ -1,6 +1,7 @@
 package org.ajls.megawallsclasses;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+import com.google.common.collect.BiMap;
 import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.lib.utils.PlayerU;
@@ -9,10 +10,7 @@ import org.ajls.megawallsclasses.classsystem.ClassConfigKeys;
 import org.ajls.megawallsclasses.commands.Energetic;
 import org.ajls.megawallsclasses.commands.PlayerUtils;
 import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
-import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
-import org.ajls.megawallsclasses.customclasses.CaveSpiderClass;
-import org.ajls.megawallsclasses.customclasses.DragonClass;
-import org.ajls.megawallsclasses.customclasses.WardenClass;
+import org.ajls.megawallsclasses.customclasses.*;
 import org.ajls.megawallsclasses.displayname.DisplayNameManager;
 import org.ajls.megawallsclasses.inventory.editor.InventoryOrderEditor;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
@@ -765,9 +763,9 @@ public class MyListener implements Listener {
                                 break;
                             case YELLOW_CONCRETE:
 //                                saveInventoryOrder(player, createReorderInventory(player));
-                                InventoryOrderEditor.resetCommonEditor(player);
                                 event.setCancelled(true);
                                 player.closeInventory();
+                                InventoryOrderEditor.resetCommonEditor(player);
                                 player.sendMessage(ChatColor.YELLOW + "物品栏成功重置到默认");
                                 break;
                         }
@@ -800,9 +798,9 @@ public class MyListener implements Listener {
                                 break;
                             case YELLOW_CONCRETE:
 //                            saveClassInventoryOrder(player, createClassReorderInventory(player, index), index);
-                                InventoryOrderEditor.resetClassEditor(player, index);
                                 event.setCancelled(true);
                                 player.openInventory(createWhichClassReorderInventory(player));
+                                InventoryOrderEditor.resetClassEditor(player, index);
                                 player.sendMessage(ChatColor.YELLOW + "职业物品栏成功重置到默认");
                                 break;
                         }
@@ -1108,6 +1106,15 @@ public class MyListener implements Listener {
 //                                    targetTimestamp.setTargetUUID(victimUUID);
                                         targetTimestamp.setTimestamp(targetTimestamp.getTimestamp() - 20);
                                         break;
+                                    }
+                                }
+                                break;
+                            case 31:
+                                if (Cooldown.player_activeSkillCooldown.containsKey(damagerUUID)) {
+                                    int venom = GhostRiderClass.ghostRiderVenom.get(damagerUUID);
+                                    if (venom > 0) {
+                                        GhostRiderClass.ghostRiderVenom.decrement(damagerUUID);
+                                        event.setDamage(event.getDamage()*1.3);
                                     }
                                 }
                                 break;
@@ -2077,25 +2084,31 @@ public class MyListener implements Listener {
         Entity dismounted = event.getDismounted();  // horse etc
         Entity entity = event.getEntity();  // player etc
         UUID dismountedUUID = dismounted.getUniqueId();
-        if (elaina_slime.containsValue(dismountedUUID)) {
-            if (entity instanceof Player) {
-                Player player = (Player) entity;
-                elaina_passive_skill_2_disable(player);
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
+            UUID playerUUID = player.getUniqueId();
+            if (elaina_slime.containsValue(dismountedUUID)) {
+                if (entity instanceof Player) {
+                    elaina_passive_skill_2_disable(player);
+                }
+
             }
-            else {
-                broadcastMessage("为什么有其他实体那里骑史莱姆");
-            }
-        }
-        else if (skeleton_horse_undead_knight.containsKey(dismounted.getUniqueId())) {
-            Player player = getPlayer(skeleton_horse_undead_knight.get(dismounted.getUniqueId()));
-            dismounted.remove();
+            else if (skeleton_horse_undead_knight.containsKey(dismounted.getUniqueId())) {
+                dismounted.remove();
 //            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 160, 0, false, false));
-            skeleton_horse_undead_knight.remove(dismounted.getUniqueId());
-            BukkitTask task = tasks.remove(dismounted.getUniqueId());
-            if(task != null) {
-                task.cancel();
+                skeleton_horse_undead_knight.remove(dismounted.getUniqueId());
+                BukkitTask task = tasks.remove(dismounted.getUniqueId());
+                if(task != null) {
+                    task.cancel();
+                }
+            }
+            else if (GhostRiderClass.ghostRider_horse.containsKey(player.getUniqueId())) {
+                dismounted.remove();
+                Cooldown.player_passiveSkill1Cooldown.put(playerUUID, 40*20);
+                GhostRiderClass.ghostRiderHorseTaskMap.remove(player.getUniqueId());
             }
         }
+
     }
 
 //    @EventHandler
@@ -2376,6 +2389,12 @@ public class MyListener implements Listener {
                 task.cancel();
             }
         }
+//        BiMap<>
+//        else if (GhostRiderClass.ghostRider_horse.containsValue(entity.getUniqueId())) {
+//            UUID playerUUID = GhostRiderClass.ghostRider_horse.getKeys(entity)
+//            Cooldown.player_passiveSkill1Cooldown.put(playerUUID, 40*20);
+//            GhostRiderClass.ghostRiderHorseTaskMap.remove(player.getUniqueId());
+//        }
         else if (wither_team.containsKey(entityUUID)) {
             String teamName = wither_team.remove(entityUUID);
             witherDeadTeams.add(teamName);
@@ -2647,6 +2666,10 @@ public class MyListener implements Listener {
 
 
     void tryActiveSkill(Player player, ActiveSkillTypeEnum activeSkillTypeEnum) {
+        AbstractCustomClass abstractCustomClass = ClassEnum.getCustomClassByPlayer(player);
+        abstractCustomClass.tryActiveSkill(player, activeSkillTypeEnum);
+
+        UUID playerUUID = player.getUniqueId();
         if (Energetic.energeticPlayers.contains(player.getUniqueId())) {
             addEnergy(player,114514);
         }
@@ -3231,6 +3254,14 @@ public class MyListener implements Listener {
                 chestplate = getClassItem(Material.NETHERITE_CHESTPLATE);
                 chestplate.addEnchantment(Enchantment.PROTECTION, 1);
                 InitializeClass.warden_initialize_class(player);
+                break;
+            case 31:
+                helmet = getClassItem(Material.CARVED_PUMPKIN);
+                helmet.addEnchantment(Enchantment.BINDING_CURSE, 1);
+                leggings = getClassItem(Material.NETHERITE_LEGGINGS);
+                boots = getClassItem(Material.NETHERITE_BOOTS);
+                boots.addEnchantment(Enchantment.SOUL_SPEED, 1);
+                boots.addEnchantment(Enchantment.FIRE_PROTECTION, 1);
                 break;
             case 217:
                 boots = getClassItem(Material.DIAMOND_BOOTS);

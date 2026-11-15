@@ -3,6 +3,7 @@ package org.ajls.megawallsclasses.customclasses;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.*;
 import org.ajls.megawallsclasses.classsystem.ClassConfigManager;
+import org.ajls.megawallsclasses.commands.Energetic;
 import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.inventory.item.ItemStackProvider;
 import org.ajls.megawallsclasses.inventory.key.ItemKind;
@@ -20,7 +21,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
+import static org.ajls.megawallsclasses.EnergyAccumulate.addEnergy;
 import static org.ajls.megawallsclasses.ItemStackModify.*;
+import static org.ajls.megawallsclasses.ScoreboardsAndTeams.getScore;
 
 public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象类implement之前那个接口的，但算了反正一样
     private ClassEnum classEnum = null;  // 存储注入的枚举
@@ -352,6 +355,33 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 //    }
 
     public void tryActiveSkill(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {
+        if (tryActiveSkillJudge(player, activeSkillType)) {
+            tryActiveSkill2(player, activeSkillType);
+        }
+    }
+
+    public boolean tryActiveSkillJudge(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {  // //处理左键弓这些是不是activeskill而不是恶灵骑士
+        return true;
+    }
+
+    public void tryActiveSkill2(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {   //
+        if (Energetic.energeticPlayers.contains(player.getUniqueId())) {
+            addEnergy(player,114514);
+        }
+        if (tryActiveSkill2Judge(player, activeSkillType)) {
+            activeSkill(player);
+        }
+        else {
+            player.sendMessage(ChatColor.RED + "差 " + ChatColor.YELLOW + (100 - getScore(player, "energy")) + ChatColor.RED + " 能量");
+        }
+    }
+
+    public boolean tryActiveSkill2Judge(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {  //处理能量问题
+
+        if (getScore(player, "energy") >= 100 ) {
+            return true;
+        }
+        return false;
 
     }
 

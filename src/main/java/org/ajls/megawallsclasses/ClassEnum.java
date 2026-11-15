@@ -35,6 +35,7 @@ public enum ClassEnum {
     SKELETON_LORD(28, new SkeletonLordClass()),
     TRANSFIGURATION_MASTER(29, new TransfigurationMasterClass()),
     WARDEN(30, new WardenClass()),
+    GHOST_RIDER(31, new GhostRiderClass()),
 //    NAC, //not a class
 
 
