@@ -122,7 +122,7 @@ public final class MegaWallsClasses extends JavaPlugin {
 
     //protocollib的todo 设置糖果世界 石头是粉色混凝土，铁是白 煤炭是褐 幻变大师正常隐藏手中物品
     //todo 重置物品栏也会导致物品栏被保存 通过调换重置和打开物品栏的顺序看能不能解决
-
+    //todo 龙左键弓不能使用技能
 
     @Override
     public void onEnable() {

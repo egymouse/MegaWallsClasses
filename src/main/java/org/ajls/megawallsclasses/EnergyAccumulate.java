@@ -127,7 +127,7 @@ public class EnergyAccumulate {
                 addEnergy(damager, 12);
                 break;
             case 31:
-                addEnergy(damager, 8);
+                addEnergy(damager, 10);
                 break;
             case 217:
                 addEnergy(damager, 8);
@@ -218,7 +218,7 @@ public class EnergyAccumulate {
                 addEnergy(damager, 12);
                 break;
             case 31:
-                addEnergy(damager, 10);
+                addEnergy(damager, 8);
                 break;
             case 217:
                 addEnergy(damager, 8);
