@@ -376,7 +376,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         }
     }
 
-    public boolean tryActiveSkill2Judge(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {  //处理能量问题
+    public boolean tryActiveSkill2Judge(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {  //处理能量问题,直接搞一个config处理能量问题也行,特殊职业直接Override，默认就读config的能量上限就好了
 
         if (getScore(player, "energy") >= 100 ) {
             return true;

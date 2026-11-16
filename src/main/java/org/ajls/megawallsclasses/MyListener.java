@@ -122,6 +122,7 @@ public class MyListener implements Listener {
         Configuration configuration = plugin.getConfig();
         String playerName = player.getName();
         if(!player.hasPlayedBefore()) {
+            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(25.0D);
             player.setMaxHealth(40);
             player.getInventory().setItem(0, new ItemStack(Material.CLOCK));
             player.setGameMode(GameMode.SURVIVAL);  //adventure
@@ -1631,6 +1632,57 @@ public class MyListener implements Listener {
                 Bukkit.broadcastMessage("dre skull kbed by " + knockbackEntity.getName());
             }
         }
+
+
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onEntityKnockbackByEntity2(EntityKnockbackByEntityEvent event) {
+        if (event.getSourcePhase() == io.papermc.paper.event.entity.EntityKnockbackEvent.SourcePhase.ADDITIONAL_KNOCKBACK) {
+            event.setCancelled(true);
+            return;
+        }
+        LivingEntity livingEntity = event.getEntity();
+        Entity sourceEntity = event.getHitBy();
+        if (livingEntity instanceof Player) {
+            Player victimPlayer = (Player)livingEntity;
+            if (event.getCause() != io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.ENTITY_ATTACK) {
+                livingEntity.sendMessage(String.valueOf(event.getCause()) + "Disable Attack Cooldown");
+            }
+            if (sourceEntity instanceof Player) {
+                Player sourcePlayer = (Player)sourceEntity;
+                org.bukkit.util.Vector newVelocity = victimPlayer.getVelocity();
+                newVelocity.multiply(0.5D);
+                org.bukkit.util.Vector halvedVelocity = newVelocity;
+                int knockbackMultiplier = 0;
+                knockbackMultiplier += sourcePlayer.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.KNOCKBACK);
+                if (sourcePlayer.isSprinting()) {
+                    knockbackMultiplier++;
+//                    sourcePlayer.sendMessage(String.valueOf(ChatColor.GREEN) + "Sprinting is enabled");
+                } else {
+//                    sourcePlayer.sendMessage(String.valueOf(ChatColor.RED) + "Sprinting is not enabled");
+                }
+                org.bukkit.util.Vector locationDiff = victimPlayer.getLocation().subtract(sourcePlayer.getLocation()).toVector();
+                locationDiff.setY(0);
+                while (locationDiff.lengthSquared() < 1.0E-4D) {
+                    double d0 = (Math.random() - Math.random()) * 0.01D;
+                    double d1 = (Math.random() - Math.random()) * 0.01D;
+                    locationDiff.setX(d0);
+                    locationDiff.setZ(d1);
+                }
+                locationDiff.normalize();
+                locationDiff.multiply(0.4D);
+                locationDiff.setY(0.4D);
+                newVelocity.add(locationDiff);
+                if (newVelocity.getY() > 0.4000000059604645D)
+                    newVelocity.setY(0.4000000059604645D);
+                if (knockbackMultiplier > 0) {
+                    org.bukkit.util.Vector knockback2 = new org.bukkit.util.Vector(-Math.sin(sourcePlayer.getLocation().getYaw() * 3.1415927D / 180.0D) * knockbackMultiplier * 0.5D, 0.1D, Math.cos((sourcePlayer.getLocation().getYaw() * 3.1415927F / 180.0F)) * knockbackMultiplier * 0.5D);
+                    newVelocity.add(knockback2);
+                }
+                event.setKnockback(newVelocity.clone().subtract(victimPlayer.getVelocity()));
+            }
+        }
     }
 
 
@@ -2672,18 +2724,6 @@ public class MyListener implements Listener {
         UUID playerUUID = player.getUniqueId();
         if (Energetic.energeticPlayers.contains(player.getUniqueId())) {
             addEnergy(player,114514);
-        }
-        if (ClassEnum.getClassEnumByPlayer(player) == ClassEnum.DRAGON) {
-            if (activeSkillTypeEnum == ActiveSkillTypeEnum.BOW) {
-                DragonClass.switchMode(player);
-            }
-            else {
-                if (getScore(player, "energy") >= 100 ) {
-                    activeSkill(player);
-                }
-
-            }
-            return;
         }
         if (getScore(player, "energy") >= 100 ) {
 //            if (MegaWallsClasses.getScore(player, "energy") >= 100 ) {

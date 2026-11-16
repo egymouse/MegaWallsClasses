@@ -100,6 +100,14 @@ public class DragonClass extends AbstractCustomClass {
     }
 
 
+    @Override
+    public boolean tryActiveSkillJudge(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {
+        if (activeSkillType == MyListener.ActiveSkillTypeEnum.BOW) {
+            switchMode(player);
+            return false;
+        }
+        return true;
+    }
 
     public static HashMap<Location, DragonNetherrackData> netherrack_data = new HashMap<>();
     @Override
