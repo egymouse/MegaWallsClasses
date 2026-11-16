@@ -1647,7 +1647,8 @@ public class MyListener implements Listener {
         if (livingEntity instanceof Player) {
             Player victimPlayer = (Player)livingEntity;
             if (event.getCause() != io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.ENTITY_ATTACK) {
-                livingEntity.sendMessage(String.valueOf(event.getCause()) + "Disable Attack Cooldown");
+                livingEntity.sendMessage(String.valueOf(event.getCause()) + "Disable Attack Cooldown发现不是ENTITY_ATTACK(自定义kb)");
+                //todo 学习我的世界kb，包括爆炸的Kb，还有玩家对生物，生物对玩家的kb
             }
             if (sourceEntity instanceof Player) {
                 Player sourcePlayer = (Player)sourceEntity;
@@ -2154,7 +2155,7 @@ public class MyListener implements Listener {
                     task.cancel();
                 }
             }
-            else if (GhostRiderClass.ghostRider_horse.containsKey(player.getUniqueId())) {
+            else if (GhostRiderClass.ghostRiderHorse_player.contains(dismounted.getUniqueId())) {
                 dismounted.remove();
                 Cooldown.player_passiveSkill1Cooldown.put(playerUUID, 40*20);
                 GhostRiderClass.ghostRiderHorseTaskMap.remove(player.getUniqueId());
@@ -2410,7 +2411,7 @@ public class MyListener implements Listener {
     public void onEntityDeath(EntityDeathEvent event){
         Entity entity = event.getEntity();
         UUID entityUUID = entity.getUniqueId();
-        if (entity instanceof Player) {
+        if (entity instanceof Player) {  //todo 没用吧，除非addHealth那里手动call一下
             Player player = (Player) entity;
             if (skeleton_lord_player.containsValue(player.getUniqueId())) {
                 for (UUID uuid : skeleton_lord_player.keySet()) {
@@ -2441,12 +2442,11 @@ public class MyListener implements Listener {
                 task.cancel();
             }
         }
-//        BiMap<>
-//        else if (GhostRiderClass.ghostRider_horse.containsValue(entity.getUniqueId())) {
-//            UUID playerUUID = GhostRiderClass.ghostRider_horse.getKeys(entity)
-//            Cooldown.player_passiveSkill1Cooldown.put(playerUUID, 40*20);
-//            GhostRiderClass.ghostRiderHorseTaskMap.remove(player.getUniqueId());
-//        }
+        else if (GhostRiderClass.ghostRiderHorse_player.contains(entity.getUniqueId())) {
+            UUID playerUUID = GhostRiderClass.ghostRiderHorse_player.get(entity.getUniqueId());
+            Cooldown.player_passiveSkill1Cooldown.put(playerUUID, 40*20);
+            GhostRiderClass.ghostRiderHorseTaskMap.remove(playerUUID);
+        }
         else if (wither_team.containsKey(entityUUID)) {
             String teamName = wither_team.remove(entityUUID);
             witherDeadTeams.add(teamName);

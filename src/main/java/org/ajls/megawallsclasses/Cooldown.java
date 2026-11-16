@@ -205,6 +205,7 @@ public class Cooldown {
                 p2c = ChatColor.DARK_RED + "ヘブンバーンズレッド";
                 break;
             case 31:
+                p1c = ChatColor.WHITE + " 秦始黄芪北极熊";
                 a1c = "大招";
                 break;
             case 217:
@@ -294,6 +295,7 @@ public class Cooldown {
                         p21 = getCooldownTime(player, player_passiveSkill2Cooldown);
                         break;
                     case 31:
+                        p11 = getCooldownTime(player, player_passiveSkill2Cooldown);
                         a11 = getCooldownTime(player, player_activeSkillCooldown, false, GREEN, false) + "/"+ChatColor.AQUA+ GhostRiderClass.ghostRiderVenom.get(player.getUniqueId());
 //                        a12 = getCooldownAmount(player, GhostRiderClass.ghostRiderVenom, GhostRiderClass.GHOST_RIDER_VENOM_MAX, -1);
                         break;
