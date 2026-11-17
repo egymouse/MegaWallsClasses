@@ -16,6 +16,7 @@ public class FloodFillU {
 
 
     //todo 研究这个算法经历了什么历史更迭 比如birth direction算法 还有学习网上洪水填充算法
+    //todo 直接维护两层的方块更新壳不就可以了，相对速度是2，最多进入到对方身体下第二格，去除重复后用birthDir向外面延伸，同时解决正负的问题（来源和去向，探究有什么区别，奇偶性校验）
     public static HashSet<Location> floodFillRespawn(Location location, int distance) {
         HashSet<Vector> directions = new HashSet<>();
         directions.add(new Vector(-1 ,0, 0));

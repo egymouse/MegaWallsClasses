@@ -237,7 +237,11 @@ public class ActiveSkills {
             Vector start = new Vector(player.getEyeLocation().getX(), player.getEyeLocation().getY(), player.getEyeLocation().getZ()); // start vector from origin to player
             Configuration configuration = plugin.getConfig();
             for (int i = 0; i <= 114514; i++) {
+                if (start.getY() < -100 || start.getY() > 400) {
+                    break;
+                }
                 Location loc = new Location(player.getWorld(), start.getX(), start.getY(), start.getZ());
+
 //                World world = loc.getWorld();
                 int chunkX = loc.getBlockX() >> 4; // Equivalent to dividing by 16
                 int chunkZ = loc.getBlockZ() >> 4;

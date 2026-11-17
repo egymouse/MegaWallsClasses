@@ -1,8 +1,7 @@
 package org.ajls.megawallsclasses.inventory.item;
 
 import org.ajls.lib.utils.ItemStackU;
-import org.ajls.megawallsclasses.ItemStackModify;
-import org.ajls.megawallsclasses.NameSpacedKeys;
+import org.ajls.megawallsclasses.*;
 import org.ajls.megawallsclasses.classsystem.ClassConfigKeys;
 import org.ajls.megawallsclasses.customclasses.AbstractCustomClass;
 import org.ajls.megawallsclasses.customclasses.WardenClass;
@@ -149,6 +148,18 @@ public final class ClassItemFactory {
         ItemStack item = new ItemStack(Material.IRON_SHOVEL, 1);
         ItemStackU.setStringPersistentData(item, NameSpacedKeys.ITEM_CATEGORY, AbstractCustomClass.CLASS_DIFF);
         return mark(LayoutKey.of(ItemKind.CAVE_SPIDER_SHOVEL), item);
+    }
+
+    public static ItemStack ghostRiderPumpkin() {
+        ItemStack helmet = InitializeClass.getClassItem(Material.CARVED_PUMPKIN, false);
+        helmet.addEnchantment(Enchantment.BINDING_CURSE, 1);
+        return helmet;
+    }
+
+    public static ItemStack ghostRiderLantern() {
+        ItemStack helmet = InitializeClass.getClassItem(Material.JACK_O_LANTERN, false);
+        helmet.addEnchantment(Enchantment.BINDING_CURSE, 1);
+        return helmet;
     }
 
 

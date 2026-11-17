@@ -4,6 +4,7 @@ import org.ajls.cactusgenerator.cosmetics.Bloody;
 import org.ajls.lib.utils.ScoreboardU;
 import org.ajls.megawallsclasses.classsystem.ClassConfigManager;
 import org.ajls.megawallsclasses.commands.*;
+import org.ajls.megawallsclasses.customclasses.GhostRiderClass;
 import org.ajls.megawallsclasses.custommusic.MidiMusicPlayer;
 import org.ajls.megawallsclasses.listeners.InventoryListener;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
@@ -11,6 +12,7 @@ import org.ajls.megawallsclasses.packetlisteners.PacketListener;
 import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
@@ -124,6 +126,9 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 重置物品栏也会导致物品栏被保存 通过调换重置和打开物品栏的顺序看能不能解决
     // 自定义kb貌似弓箭也会触发，毕竟sprintingEnable disable会显示，但是不知道为什么event.getCause() != io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.ENTITY_ATTACK)判断的debug没显示
 
+
+
+    //todo 下马没有冷却 activeskill忘记触发统一路径 导致幻变出bug 灵魂沙没有凋零 cooldown上马也会触发 监守者cd砍 不是15s 龙弓左键
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -227,6 +232,34 @@ public final class MegaWallsClasses extends JavaPlugin {
                 Cooldown.removeCooldown(cooldown, 1, i);
             }
             PlayerDataManager.tick();
+            Iterator<Map.Entry<Location, GhostRiderClass.GhostRiderBlockData>> it =
+                    GhostRiderClass.location_GhostRiderBlockData.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Location, GhostRiderClass.GhostRiderBlockData> entry = it.next();
+                Location location = entry.getKey();
+                GhostRiderClass.GhostRiderBlockData blockData = entry.getValue();
+                boolean canRemove = blockData.tick();
+                if (canRemove) {
+                    it.remove();
+                }
+            }
+//            for (Map.Entry<Location, GhostRiderClass.GhostRiderBlockData> entry : GhostRiderClass.location_GhostRiderBlockData.entrySet()) {
+//                Location location = entry.getKey();
+//                GhostRiderClass.GhostRiderBlockData blockData = entry.getValue();
+//                boolean canRemove = blockData.tick();
+//                if (canRemove) {
+//                    entry.
+//                }
+//            }
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                Location location = player.getLocation().add(0, -0.1, 0);
+                Location blockLocation = location.toBlockLocation();
+                GhostRiderClass.GhostRiderBlockData  ghostRiderBlockData = GhostRiderClass.location_GhostRiderBlockData.get(blockLocation);
+                if (ghostRiderBlockData != null) {
+                    ghostRiderBlockData.apply(player);
+                }
+
+            }
 //            for (HashMap<UUID, Integer> cooldown : Cooldown.playerCooldowns) {
 //                Cooldown.removeCooldown(cooldown, 1);
 //            }

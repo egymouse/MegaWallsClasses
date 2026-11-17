@@ -251,6 +251,7 @@ public class DragonClass extends AbstractCustomClass {
     }
 
     public static void tryNetherrackCombust(Player player) {
+        //todo 排除旁观玩家
         Block floorBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
         Location floorLoc = floorBlock.getLocation();
 

@@ -8,6 +8,7 @@ import org.ajls.lib.utils.ItemStackU;
 import org.ajls.megawallsclasses.customclasses.CaveSpiderClass;
 import org.ajls.megawallsclasses.customclasses.GhostRiderClass;
 import org.ajls.megawallsclasses.customclasses.WardenClass;
+import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -157,6 +158,9 @@ public class Cooldown {
                     else if (index == 2) {
                         if (classEnum == ClassEnum.GHOST_RIDER) {
                             GhostRiderClass.ghostRiderVenom.put(uuid, 0);
+                            if (!GhostRiderClass.ghostRiderHorse_player.containsValue(uuid)) {
+                                player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
+                            }
                         }
                     }
                 }
@@ -295,7 +299,7 @@ public class Cooldown {
                         p21 = getCooldownTime(player, player_passiveSkill2Cooldown);
                         break;
                     case 31:
-                        p11 = getCooldownTime(player, player_passiveSkill2Cooldown);
+                        p11 = getCooldownTime(player, player_passiveSkill1Cooldown);
                         a11 = getCooldownTime(player, player_activeSkillCooldown, false, GREEN, false) + "/"+ChatColor.AQUA+ GhostRiderClass.ghostRiderVenom.get(player.getUniqueId());
 //                        a12 = getCooldownAmount(player, GhostRiderClass.ghostRiderVenom, GhostRiderClass.GHOST_RIDER_VENOM_MAX, -1);
                         break;

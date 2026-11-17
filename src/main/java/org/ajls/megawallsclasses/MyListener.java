@@ -13,6 +13,7 @@ import org.ajls.megawallsclasses.container.WardenDarknessTargetTimestamp;
 import org.ajls.megawallsclasses.customclasses.*;
 import org.ajls.megawallsclasses.displayname.DisplayNameManager;
 import org.ajls.megawallsclasses.inventory.editor.InventoryOrderEditor;
+import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
 import org.ajls.megawallsclasses.nmsmodify.SnowGolemShoot;
 import org.ajls.megawallsclasses.nmsmodify.TamedTeleport;
@@ -1843,7 +1844,7 @@ public class MyListener implements Listener {
         Location locationTo = event.getTo();
 
         Player player = event.getPlayer();
-        DragonClass.tryNetherrackCombust(player);  //todo 不行 要时时刻刻更新玩家最大着火tick
+        DragonClass.tryNetherrackCombust(player);  //todo 不行 要时时刻刻更新玩家最大着火tick 或者玩家结束着火探测一下，龙大招消失根据时间差更新一下 感觉都很麻烦，特别是还有恶灵骑士覆盖和其他龙覆盖
     }
 
 //    @Deprecated
@@ -2155,10 +2156,14 @@ public class MyListener implements Listener {
                     task.cancel();
                 }
             }
-            else if (GhostRiderClass.ghostRiderHorse_player.contains(dismounted.getUniqueId())) {
+            else if (GhostRiderClass.ghostRiderHorse_player.containsKey(dismounted.getUniqueId())) {
+                GhostRiderClass.ghostRiderHorse_player.remove(dismounted.getUniqueId());
                 dismounted.remove();
                 Cooldown.player_passiveSkill1Cooldown.put(playerUUID, 40*20);
                 GhostRiderClass.ghostRiderHorseTaskMap.remove(player.getUniqueId());
+                if (!Cooldown.player_activeSkillCooldown.containsValue(playerUUID)) {
+                    player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
+                }
             }
         }
 
@@ -2442,10 +2447,16 @@ public class MyListener implements Listener {
                 task.cancel();
             }
         }
-        else if (GhostRiderClass.ghostRiderHorse_player.contains(entity.getUniqueId())) {
-            UUID playerUUID = GhostRiderClass.ghostRiderHorse_player.get(entity.getUniqueId());
+        else if (GhostRiderClass.ghostRiderHorse_player.containsKey(entity.getUniqueId())) {
+            UUID playerUUID = GhostRiderClass.ghostRiderHorse_player.remove(entity.getUniqueId());
             Cooldown.player_passiveSkill1Cooldown.put(playerUUID, 40*20);
             GhostRiderClass.ghostRiderHorseTaskMap.remove(playerUUID);
+            if (!Cooldown.player_activeSkillCooldown.containsValue(playerUUID)) {
+                Player player = Bukkit.getPlayer(playerUUID);
+                if (player != null) {
+                    player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
+                }
+            }
         }
         else if (wither_team.containsKey(entityUUID)) {
             String teamName = wither_team.remove(entityUUID);

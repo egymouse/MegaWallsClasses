@@ -349,7 +349,7 @@ public class InitializeClass {
         return getClassItem(material, true);
     }
     //重点在于获取装备
-    static ItemStack getClassItem(Material material, boolean addUnbreakingEnchant) {
+    public static ItemStack getClassItem(Material material, boolean addUnbreakingEnchant) {
         ItemStack classItem = new ItemStack(material);
 //        setDisplayName(classHelmet, "iron_sword");
         setUnbreakable(classItem);
