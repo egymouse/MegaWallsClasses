@@ -107,7 +107,7 @@ public class MyListener implements Listener {
 //    HashMap<Player, ArrayList> skeleton_lord_player = new HashMap<>();
     ArrayList<UUID> attacked = new ArrayList<>(); // player attacked by others and invincible
     HashMap<UUID, Location> player_deathLocation = new HashMap<>();
-    static HashMap<UUID, BukkitTask> player_activeSkillReady = new HashMap<>();
+    public static HashMap<UUID, BukkitTask> player_activeSkillReady = new HashMap<>();
 
     public static final double KNOCKBACK_DAMAGE = 0;
     @EventHandler
@@ -2929,7 +2929,6 @@ public class MyListener implements Listener {
                     break;
 
             }
-            ClassEnum.getCustomClassByPlayer(player).activeSkill(player);
 //            initializeAutoEnergyAccumulation(player);
             if (ClassU.isTransformationMaster(player) && (EnergyAccumulate.getEnergy(player) == 0 || activeSuccess) ) { // snowman should use return boolean to judge
                 transformation_master_active_skill(player);

@@ -111,7 +111,7 @@ public class DragonClass extends AbstractCustomClass {
 
     public static HashMap<Location, DragonNetherrackData> netherrack_data = new HashMap<>();
     @Override
-    public void activeSkill(Player player) {
+    public boolean activeSkill(Player player) {
         Location location = player.getLocation();
         Block centerBlock = location.getBlock();
         Location centerBlockLocation = centerBlock.getLocation();
@@ -192,6 +192,8 @@ public class DragonClass extends AbstractCustomClass {
         addEnergy(player, -100);
 
 //        return blocks;
+
+        return true;
 
 
 

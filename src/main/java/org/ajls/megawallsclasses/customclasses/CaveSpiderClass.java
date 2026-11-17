@@ -39,7 +39,7 @@ public class CaveSpiderClass extends AbstractCustomClass{
     public static BukkitTaskMap<UUID> caveSpiderTaskMap = new BukkitTaskMap<>();
 
     @Override
-    public void activeSkill(Player player) {
+    public boolean activeSkill(Player player) {
         UUID playerUUID = player.getUniqueId();
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 0, true, true));
         player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 100 , 0, true, true));
@@ -72,6 +72,7 @@ public class CaveSpiderClass extends AbstractCustomClass{
             }
         },5,1);  //2
         caveSpiderTaskMap.put(player.getUniqueId(), bukkitTask);
+        return true;
 
     }
 

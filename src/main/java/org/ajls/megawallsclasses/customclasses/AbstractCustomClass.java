@@ -12,18 +12,41 @@ import org.ajls.trackercompass.CompassItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
+import static org.ajls.megawallsclasses.ActiveSkills.*;
+import static org.ajls.megawallsclasses.ActiveSkills.creeper_active_skill;
+import static org.ajls.megawallsclasses.ActiveSkills.drownking_active_skill;
+import static org.ajls.megawallsclasses.ActiveSkills.entity_303_active_skill;
+import static org.ajls.megawallsclasses.ActiveSkills.mole_active_skill;
+import static org.ajls.megawallsclasses.ActiveSkills.shaman_active_skill;
+import static org.ajls.megawallsclasses.ActiveSkills.skeleton_lord_active_skill_1;
+import static org.ajls.megawallsclasses.ActiveSkills.skeleton_lord_active_skill_2;
+import static org.ajls.megawallsclasses.ActiveSkills.spider_active_skill;
+import static org.ajls.megawallsclasses.ActiveSkills.squid_active_skill;
+import static org.ajls.megawallsclasses.ActiveSkills.transformation_master_active_skill;
+import static org.ajls.megawallsclasses.ActiveSkills.undead_knight_active_skill;
+import static org.ajls.megawallsclasses.ActiveSkills.warden_active_skill;
 import static org.ajls.megawallsclasses.EnergyAccumulate.addEnergy;
+import static org.ajls.megawallsclasses.GamemodeUtils.isPlayerPlayable;
 import static org.ajls.megawallsclasses.ItemStackModify.*;
+import static org.ajls.megawallsclasses.MegaWallsClasses.getPlugin;
 import static org.ajls.megawallsclasses.ScoreboardsAndTeams.getScore;
+import static org.ajls.megawallsclasses.ScoreboardsAndTeams.setScore;
+import static org.bukkit.Bukkit.getServer;
+import static org.bukkit.Bukkit.getWorld;
 
 public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象类implement之前那个接口的，但算了反正一样
     private ClassEnum classEnum = null;  // 存储注入的枚举
@@ -369,7 +392,7 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
             addEnergy(player,114514);
         }
         if (tryActiveSkill2Judge(player, activeSkillType)) {
-            activeSkill(player);
+            tryActiveSkill3(player, activeSkillType);
         }
         else {
             player.sendMessage(ChatColor.RED + "差 " + ChatColor.YELLOW + (100 - getScore(player, "energy")) + ChatColor.RED + " 能量");
@@ -385,8 +408,30 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
 
     }
 
-    public void activeSkill(Player player) {
 
+    public void tryActiveSkill3(Player player, MyListener.ActiveSkillTypeEnum activeSkillType) {
+        if (isPlayerPlayable(player)) {
+            boolean activeSuccess = false;
+
+            activeSuccess = ClassEnum.getCustomClassByPlayer(player).activeSkill(player);
+            if (ClassU.isTransformationMaster(player) && (EnergyAccumulate.getEnergy(player) == 0 || activeSuccess) ) { // snowman should use return boolean to judge
+                transformation_master_active_skill(player);
+            }
+            addEnergy(player, 0);  //自动刷新能量状态 1 反正放大招都要扣能量 当然不排除有职业附近没有敌人释放失败 但是这样省心
+        }
+        else {
+            player.sendMessage("死了还想通灵?");
+        }
+        if (getScore(player, "energy") < 100) {
+            BukkitTask task = MyListener.player_activeSkillReady.remove(player.getUniqueId());
+            if (task != null) {
+                task.cancel();
+            }
+        }
+    }
+
+    public boolean activeSkill(Player player) {
+        return true;
     }
 
     // ===================== 新增：三叉戟发射事件方法 =====================

@@ -111,7 +111,7 @@ public class GhostRiderClass extends AbstractCustomClass{
     //todo 还要解决合并问题，同一个大招会叠之前的招 不合并到时候查询爆炸 可以把性能压力分散到每一个tick而不是最后消失那一刻
 
     @Override
-    public void activeSkill(Player player) {
+    public boolean activeSkill(Player player) {
         player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
         if (!player.isInsideVehicle()) {  //todo 可以绕过
             UUID playerUUID = player.getUniqueId();
@@ -137,10 +137,14 @@ public class GhostRiderClass extends AbstractCustomClass{
 
                 }
             }
+
         }
         else {
 
         }
+        return true;
+
+
 
     }
 

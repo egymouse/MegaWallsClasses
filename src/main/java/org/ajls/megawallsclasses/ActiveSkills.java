@@ -883,7 +883,7 @@ public class ActiveSkills {
 //        player.damage(1, );
     }
 
-    static void squid_active_skill(Player player) {
+    public static void squid_active_skill(Player player) {
         player.sendMessage(ChatColor.RED + "squid主动名字忘记了 " + ChatColor.RED + "HP " + ChatColor.GREEN + "+7");
 //        player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 140, 0));
         ArrayList<Player> affected_players = herobrineGetNearbyPlayers(player, 5, 114514);
