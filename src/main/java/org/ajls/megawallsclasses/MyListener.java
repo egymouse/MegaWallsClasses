@@ -1,7 +1,6 @@
 package org.ajls.megawallsclasses;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
-import com.google.common.collect.BiMap;
 import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.lib.utils.PlayerU;
@@ -250,7 +249,7 @@ public class MyListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        BukkitTaskUtils.cancelTask(uuid, Cooldown.player_cooldownTask);
+        Cooldown.player_cooldownTask.remove(uuid);
         BukkitTaskUtils.cancelTask(uuid, cancelWhenOfflineTask);
     }
 
@@ -2159,8 +2158,8 @@ public class MyListener implements Listener {
             else if (GhostRiderClass.ghostRiderHorse_player.containsKey(dismounted.getUniqueId())) {
                 GhostRiderClass.ghostRiderHorse_player.remove(dismounted.getUniqueId());
                 dismounted.remove();
-                Cooldown.player_passiveSkill1Cooldown.put(playerUUID, 40*20);
-                GhostRiderClass.ghostRiderHorseTaskMap.remove(player.getUniqueId());
+                Cooldown.player_passiveSkill1Cooldown.put(playerUUID, GhostRiderClass.GHOST_RIDER_HORSE_COOLDOWN);
+                GhostRiderClass.ghostRider_HorseTaskMap.remove(player.getUniqueId());
                 if (!Cooldown.player_activeSkillCooldown.containsValue(playerUUID)) {
                     player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
                 }
@@ -2432,7 +2431,7 @@ public class MyListener implements Listener {
             if(task != null) { // task found
                 task.cancel();
             }
-            BukkitTaskUtils.cancelTask(entity, skeleton_pathFindTask);
+            skeleton_pathFindTask.remove(entity.getUniqueId());
         }
         else if (skeleton_general_skeleton_lord.containsKey(entity.getUniqueId())) {
             skeleton_general_skeleton_lord.remove(entity.getUniqueId());
@@ -2449,8 +2448,8 @@ public class MyListener implements Listener {
         }
         else if (GhostRiderClass.ghostRiderHorse_player.containsKey(entity.getUniqueId())) {
             UUID playerUUID = GhostRiderClass.ghostRiderHorse_player.remove(entity.getUniqueId());
-            Cooldown.player_passiveSkill1Cooldown.put(playerUUID, 40*20);
-            GhostRiderClass.ghostRiderHorseTaskMap.remove(playerUUID);
+            Cooldown.player_passiveSkill1Cooldown.put(playerUUID, GhostRiderClass.GHOST_RIDER_HORSE_COOLDOWN);
+            GhostRiderClass.ghostRider_HorseTaskMap.remove(playerUUID);
             if (!Cooldown.player_activeSkillCooldown.containsValue(playerUUID)) {
                 Player player = Bukkit.getPlayer(playerUUID);
                 if (player != null) {
@@ -3310,7 +3309,7 @@ public class MyListener implements Listener {
                 helmet.addEnchantment(Enchantment.BINDING_CURSE, 1);
                 leggings = getClassItem(Material.NETHERITE_LEGGINGS);
                 boots = getClassItem(Material.NETHERITE_BOOTS);
-                boots.addEnchantment(Enchantment.SOUL_SPEED, 1);
+                boots.addEnchantment(Enchantment.SOUL_SPEED, 3);
                 boots.addEnchantment(Enchantment.FIRE_PROTECTION, 1);
                 break;
             case 217:

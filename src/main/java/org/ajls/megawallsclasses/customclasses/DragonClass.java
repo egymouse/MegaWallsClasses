@@ -148,7 +148,7 @@ public class DragonClass extends AbstractCustomClass {
                     }
 
                     BlockState blockState = relativeBlock.getState();
-                    DragonNetherrackData dragonNetherrackData = new DragonNetherrackData(blockState, playerUUID);
+                    DragonNetherrackData dragonNetherrackData = new DragonNetherrackData(blockState, playerUUID);  //todo 这里应该先检查一些Location的map里面有没有这个data，然后直接获取
                     dragonNetherrackData.increase();
                     netherrack_data.put(relativeLocation, dragonNetherrackData);
 
@@ -166,7 +166,7 @@ public class DragonClass extends AbstractCustomClass {
 // 之后判断
                         BlockState newState = oldState.getBlock().getState();
 
-                        boolean changed = hasBlockStateChanged(oldState, newState);
+                        boolean changed = hasBlockStateChanged(oldState, newState);  //todo 也有bug，比如别人挖了然后重新放一个一样的
 
                         if (dragonNetherrackData.decrease()) {  //最后一个持续的技能了，结束了就真的结束了
                             if (changed) {

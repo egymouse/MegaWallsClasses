@@ -92,7 +92,7 @@ public enum ClassEnum {
         ClassEnum classEnum = ClassID_ClassEnum.get(classID);
         if (classEnum == null) {
 //            Bukkit.broadcastMessage("有人无职转生了bruh");
-            Bukkit.broadcastMessage("有人正在尝试新职业");
+            Bukkit.broadcastMessage("有人正在尝试新职业" + classID);
 //            throw new IllegalArgumentException("无效的职业ID：" + classID);
             return NONE;
         }

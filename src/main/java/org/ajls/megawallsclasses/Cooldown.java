@@ -12,6 +12,7 @@ import org.ajls.megawallsclasses.inventory.item.ClassItemFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -160,6 +161,9 @@ public class Cooldown {
                             GhostRiderClass.ghostRiderVenom.put(uuid, 0);
                             if (!GhostRiderClass.ghostRiderHorse_player.containsValue(uuid)) {
                                 player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
+                            }
+                            else {
+                                GhostRiderClass.switchHorse(player, false);
                             }
                         }
                     }

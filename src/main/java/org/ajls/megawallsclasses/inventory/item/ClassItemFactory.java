@@ -158,7 +158,7 @@ public final class ClassItemFactory {
 
     public static ItemStack ghostRiderLantern() {
         ItemStack helmet = InitializeClass.getClassItem(Material.JACK_O_LANTERN, false);
-        helmet.addEnchantment(Enchantment.BINDING_CURSE, 1);
+        helmet.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
         return helmet;
     }
 
