@@ -83,6 +83,7 @@ public class GhostRiderClass extends AbstractCustomClass{
 
     public static HashMapInteger<UUID> ghostRiderVenom = new HashMapInteger<>(GHOST_RIDER_VENOM_MAX, 0, 0);
     //todo 还要解决合并问题，同一个大招会叠之前的招 不合并到时候查询爆炸 可以把性能压力分散到每一个tick而不是最后消失那一刻
+    //todo 还有同一个玩家高级别的要覆盖低级别的 比如黑曜石>灵魂沙>地狱岩，当然不同玩家就自由覆盖
     public static HashSet<UUID> ghostRiderChangeHorse = new HashSet<>();
 
     @Override
@@ -105,6 +106,8 @@ public class GhostRiderClass extends AbstractCustomClass{
                     for (int z = location.getBlockZ() - 2; z <= location.getBlockZ() + 2; z++) {
                         Location blockLocation = new Location(location.getWorld(), x, y, z);
                         Block block = blockLocation.getBlock();
+//                        Location realBlockLocation = block.getLocation();
+//                        blockLocation = realBlockLocation;
                         if (block.isPassable()) continue;
                         GhostRiderBlockData ghostRiderBlockData = new GhostRiderBlockData();
                         if (location_GhostRiderBlockData.containsKey(blockLocation)) {
@@ -128,13 +131,17 @@ public class GhostRiderClass extends AbstractCustomClass{
 
 
     public static void switchHorse(Player player, boolean isFusion) {
-        AbstractHorse abstractHorse = getHorse(player, isFusion);
+        if (true) return;
+        //一般来说调用这个method的都是有马的
+
 
         if (ghostRiderHorse_player.containsValue(player.getUniqueId())) {
-            UUID horseUUID = ghostRiderHorse_player.removeByValue(player.getUniqueId());
+            ghostRiderHorse_player.removeByValue(player.getUniqueId());  //先移除再注册
+            AbstractHorse abstractHorse = getHorse(player, isFusion);
+
             ghostRiderHorse_player.put(abstractHorse.getUniqueId(), player.getUniqueId());
 
-            GhostRiderBukkitRunnable ghostRiderBukkitRunnable = ((GhostRiderBukkitRunnable) ghostRider_HorseTaskMap.get(player.getUniqueId()));
+            GhostRiderBukkitRunnable ghostRiderBukkitRunnable = ((GhostRiderBukkitRunnable) ghostRider_HorseTaskMap.get(player.getUniqueId()));  //.getRunnable()
 //                ghostRiderChangeHorse.add(player.getUniqueId());
             abstractHorse.setPassenger(player);  //这一步应该调用entityDismout导致老马被删除？必须要加一个免死金牌啊 好吧不会因为ghostRiderHorse_player查不到了
 
@@ -179,13 +186,13 @@ public class GhostRiderClass extends AbstractCustomClass{
         player.sendMessage(ChatColor.DARK_PURPLE + " bruhbruh" + ChatColor.RED + "生命回复I 5s " +  ChatColor.GOLD + "伤害吸收I 5s");
         UUID playerUUID = player.getUniqueId();
 
-        Cooldown.player_activeSkillCooldown.put(playerUUID, Cooldown.player_passiveSkill1Cooldown.get(playerUUID) + GHOST_RIDER_FUSION_EXTRA_TIME);
+        Cooldown.player_activeSkillCooldown.put(playerUUID, Cooldown.player_passiveSkill1Cooldown.getOrDefault((playerUUID), 0) + GHOST_RIDER_FUSION_EXTRA_TIME);
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 12*5, 2));
         player.getWorld().strikeLightningEffect(player.getLocation());
     }
 
 
-    public static class GhostRiderBukkitRunnable extends BukkitRunnable {
+    public static class GhostRiderBukkitRunnable implements Runnable {
         public AbstractHorse getHorse() {
             return horse;
         }
@@ -255,6 +262,19 @@ public class GhostRiderClass extends AbstractCustomClass{
 
 
         public void put(UUID uuid, int offset, BlockState originalBlockState, GhostRiderSkillType ghostRiderSkillType) {
+            if (!ghostRiderPlayerSkills.isEmpty()) {
+                GhostRiderPlayerSkill ghostRiderPlayerSkill = ghostRiderPlayerSkills.getLast();
+                if (ghostRiderPlayerSkill.getPlayerUUID().equals(uuid)) {
+                    if (ghostRiderPlayerSkill.getGhostRiderSkillType().ordinal() <= ghostRiderSkillType.ordinal()) {
+                        ghostRiderPlayerSkill.setTimeStamp(Bukkit.getCurrentTick() + offset);
+                        ghostRiderPlayerSkill.setGhostRiderSkillType(ghostRiderSkillType);
+                        return;
+                    }
+                    else {
+                        return;  //就算时间更长的低级也return  //todo 搞和我的世界药水效果一样，高级的在上面 长时间低级的在下面但是也存在（比如你喝力量2 后喝无限试时间力量1），然后后来的在前面敌人的上面
+                    }
+                }
+            }
             ghostRiderPlayerSkills.add(new GhostRiderPlayerSkill(uuid, Bukkit.getCurrentTick() + offset, originalBlockState, ghostRiderSkillType));
         }
 

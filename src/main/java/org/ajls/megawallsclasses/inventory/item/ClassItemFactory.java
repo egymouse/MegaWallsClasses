@@ -151,8 +151,8 @@ public final class ClassItemFactory {
     }
 
     public static ItemStack ghostRiderPumpkin() {
-        ItemStack helmet = InitializeClass.getClassItem(Material.CARVED_PUMPKIN, false);
-        helmet.addEnchantment(Enchantment.BINDING_CURSE, 1);
+        ItemStack helmet = InitializeClass.getClassItem(Material.JACK_O_LANTERN, false);
+        helmet.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
         return helmet;
     }
 

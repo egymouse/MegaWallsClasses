@@ -129,6 +129,7 @@ public final class MegaWallsClasses extends JavaPlugin {
 
 
     //todo 下马没有冷却 activeskill忘记触发统一路径 导致幻变出bug 灵魂沙没有凋零 cooldown上马也会触发 监守者cd砍 不是15s 龙弓左键
+    //todo 龙火 ghostRider火 一直伤害 还有凋零一直不造成伤害 加上雕刻南瓜伪装
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -254,6 +255,8 @@ public final class MegaWallsClasses extends JavaPlugin {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 Location location = player.getLocation().add(0, -0.1, 0);
                 Location blockLocation = location.toBlockLocation();
+                blockLocation.setYaw(0);
+                blockLocation.setPitch(0);
                 GhostRiderClass.GhostRiderBlockData  ghostRiderBlockData = GhostRiderClass.location_GhostRiderBlockData.get(blockLocation);
                 if (ghostRiderBlockData != null) {
                     ghostRiderBlockData.apply(player);
