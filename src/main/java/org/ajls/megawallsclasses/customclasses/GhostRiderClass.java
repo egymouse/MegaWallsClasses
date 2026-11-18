@@ -237,7 +237,7 @@ public class GhostRiderClass extends AbstractCustomClass{
 
                         //  //todo 这里fusion可以根据set的马是什么类型来判断
                         boolean isFusion = ghostRiderHorse_player.containsValue(player.getUniqueId()) && Cooldown.player_activeSkillCooldown.containsKey(player.getUniqueId());
-                        Material blockMaterial = Material.NETHERRACK;
+                        Material blockMaterial = Material.NETHERITE_BLOCK;
                         GhostRiderSkillType ghostRiderSkillType = GhostRiderSkillType.NETHERRACK;
                         if (isFusion) {
                             blockMaterial = Material.OBSIDIAN;
@@ -325,10 +325,10 @@ public class GhostRiderClass extends AbstractCustomClass{
                 GhostRiderSkillType ghostRiderSkillType =  ghostRiderPlayerSkill.getGhostRiderSkillType();
                 if (ghostRiderSkillType == null) continue;
                 else if (ghostRiderSkillType == GhostRiderSkillType.NETHERRACK) {
-
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 0 , true, true));
                 }
                 else if (ghostRiderSkillType == GhostRiderSkillType.SOUL_SAND) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 0 , true, true));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 1 , true, true));
                 }
                 else if (ghostRiderSkillType == GhostRiderSkillType.OBSIDIAN) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 0 , true, true));
