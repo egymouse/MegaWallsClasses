@@ -3305,8 +3305,7 @@ public class MyListener implements Listener {
                 InitializeClass.warden_initialize_class(player);
                 break;
             case 31:
-                helmet = getClassItem(Material.CARVED_PUMPKIN, false);
-                helmet.addEnchantment(Enchantment.BINDING_CURSE, 1);
+                helmet = ClassItemFactory.ghostRiderPumpkin();
                 leggings = getClassItem(Material.NETHERITE_LEGGINGS);
                 boots = getClassItem(Material.NETHERITE_BOOTS);
                 boots.addEnchantment(Enchantment.SOUL_SPEED, 3);

@@ -16,7 +16,6 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -30,6 +29,8 @@ public class GhostRiderClass extends AbstractCustomClass{
     public static BukkitTaskMap<UUID> ghostRider_HorseTaskMap = new BukkitTaskMap<>();  //todo 绑定到玩家，毕竟马会变，玩家可不会
 //    HashMap<Integer, > timeStamp_blockData
     public static LinkedHashMap<Location, GhostRiderBlockData> location_GhostRiderBlockData = new LinkedHashMap<>();
+
+    public static BukkitTaskMap<UUID> ghostRider_activeSkillTaskMap = new BukkitTaskMap<>();
 
 
     public static void tick() {
@@ -59,6 +60,7 @@ public class GhostRiderClass extends AbstractCustomClass{
         AbstractHorse abstractHorse;
         World world = player.getWorld();
         if (Cooldown.player_activeSkillCooldown.containsKey(playerUUID)) {
+            ghostRider_activeSkillTaskMap.remove(playerUUID);
             fusion(player);
             abstractHorse = getHorse(player, true);
         }
@@ -88,39 +90,48 @@ public class GhostRiderClass extends AbstractCustomClass{
 
     @Override
     public boolean activeSkill(Player player) {
+        UUID playerUUID = player.getUniqueId();
         boolean isFusion = ghostRiderHorse_player.containsValue(player.getUniqueId());
         if (isFusion) {
+            ghostRider_activeSkillTaskMap.remove(player.getUniqueId());
             fusion(player);
             switchHorse(player, true);
         }
         else {
-            UUID playerUUID = player.getUniqueId();
             player.sendMessage(ChatColor.DARK_PURPLE + " bruh" + ChatColor.RED + "生命回复I 5s " +  ChatColor.GOLD + "伤害吸收I 5s");
             player.getInventory().setHelmet(ClassItemFactory.ghostRiderLantern());
             addEnergy(player, -100);
             ghostRiderVenom.put(playerUUID, GHOST_RIDER_VENOM_MAX);
-            Location location = player.getLocation();
             Cooldown.player_activeSkillCooldown.put(player.getUniqueId(), GHOST_RIDER_ACTIVE_SKILL_TIME);
-            for (int x = location.getBlockX() - 2; x <= location.getBlockX() + 2; x++) {
-                for (int y = location.getBlockY() - 2; y <= location.getBlockY() + 2; y++) {
-                    for (int z = location.getBlockZ() - 2; z <= location.getBlockZ() + 2; z++) {
-                        Location blockLocation = new Location(location.getWorld(), x, y, z);
-                        Block block = blockLocation.getBlock();
+
+
+
+            BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+            BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
+                Location location = player.getLocation();
+                for (int x = location.getBlockX() - 2; x <= location.getBlockX() + 2; x++) {
+                    for (int y = location.getBlockY() - 2; y <= location.getBlockY() + 2; y++) {
+                        for (int z = location.getBlockZ() - 2; z <= location.getBlockZ() + 2; z++) {
+                            Location blockLocation = new Location(location.getWorld(), x, y, z);
+                            Block block = blockLocation.getBlock();
 //                        Location realBlockLocation = block.getLocation();
 //                        blockLocation = realBlockLocation;
-                        if (block.isPassable()) continue;
-                        GhostRiderBlockData ghostRiderBlockData = new GhostRiderBlockData();
-                        if (location_GhostRiderBlockData.containsKey(blockLocation)) {
-                            ghostRiderBlockData = location_GhostRiderBlockData.get(blockLocation);  //todo 如果存在直接改就行了不用put回去
+                            if (block.isPassable()) continue;
+                            GhostRiderBlockData ghostRiderBlockData = new GhostRiderBlockData();
+                            if (location_GhostRiderBlockData.containsKey(blockLocation)) {
+                                ghostRiderBlockData = location_GhostRiderBlockData.get(blockLocation);  //todo 如果存在直接改就行了不用put回去
+                            }
+                            ghostRiderBlockData.put(playerUUID, GHOST_RIDER_SOUL_SAND_DISAPPEAR_TIME, block.getState(), GhostRiderSkillType.SOUL_SAND);
+                            location_GhostRiderBlockData.put(blockLocation, ghostRiderBlockData);
+                            block.setType(Material.SOUL_SAND, false);
                         }
-                        ghostRiderBlockData.put(playerUUID, GHOST_RIDER_SOUL_SAND_DISAPPEAR_TIME, block.getState(), GhostRiderSkillType.SOUL_SAND);
-                        location_GhostRiderBlockData.put(blockLocation, ghostRiderBlockData);
-                        block.setType(Material.SOUL_SAND, false);
+
+
                     }
-
-
                 }
-            }
+            }, 0, 1);
+            ghostRider_activeSkillTaskMap.put(playerUUID, task);
+
         }
 
         return true;

@@ -129,7 +129,27 @@ public final class MegaWallsClasses extends JavaPlugin {
 
 
     //todo 下马没有冷却 activeskill忘记触发统一路径 导致幻变出bug 灵魂沙没有凋零 cooldown上马也会触发 监守者cd砍 不是15s 龙弓左键
-    //todo 龙火 ghostRider火 一直伤害 还有凋零一直不造成伤害 加上雕刻南瓜伪装
+    //todo 龙火 ghostRider火 一直伤害 还有凋零一直不造成伤害 加上雕刻南瓜伪装 ghostRider方块优先级怎么搞 还有和不同职业的 马更改外观
+    //todo 剑扔出去 ghostRider持续灵魂沙 addHealth注册玩家攻击 POtionEffect架构研究
+
+    //todo ## 解决方案
+    //
+    //### 方案 A：只是不想看到警告（推荐，离线服）
+    //
+    //关闭服务端的皮肤异步拉取：
+    //Purpur 配置 `purpur.yml`
+    //
+    //```
+    //settings:
+    //  fetch-profiles: false
+    //```
+    //
+    //重启服务端，就不会再去请求 Mojang API，这条警告消失，缺点：玩家无法加载正版皮肤。
+    // [23:54:27 WARN]: Couldn't look up profile properties for 1d7bdb9b-f332-38a4-8d7d-89298a2b6b4b
+    //com.mojang.authlib.exceptions.MinecraftClientException: Failed to read value <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+    //<html xmlns='http://www.w3.org/1999/xhtml'>
+    //
+    //<head>
     @Override
     public void onEnable() {
         // Plugin startup logic
