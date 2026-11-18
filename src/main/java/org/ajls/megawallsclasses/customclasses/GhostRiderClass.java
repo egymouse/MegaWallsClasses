@@ -104,35 +104,12 @@ public class GhostRiderClass extends AbstractCustomClass{
             player.getInventory().setHelmet(ClassItemFactory.ghostRiderLantern());
 
             ghostRiderVenom.put(playerUUID, GHOST_RIDER_VENOM_MAX);
+            activeNormalSkillTask(player);
 
 
 
 
-            BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-            BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
-                Location location = player.getLocation();
-                for (int x = location.getBlockX() - 2; x <= location.getBlockX() + 2; x++) {
-                    for (int y = location.getBlockY() - 2; y <= location.getBlockY() + 2; y++) {
-                        for (int z = location.getBlockZ() - 2; z <= location.getBlockZ() + 2; z++) {
-                            Location blockLocation = new Location(location.getWorld(), x, y, z);
-                            Block block = blockLocation.getBlock();
-//                        Location realBlockLocation = block.getLocation();
-//                        blockLocation = realBlockLocation;
-                            if (block.isPassable()) continue;
-                            GhostRiderBlockData ghostRiderBlockData = new GhostRiderBlockData();
-                            if (location_GhostRiderBlockData.containsKey(blockLocation)) {
-                                ghostRiderBlockData = location_GhostRiderBlockData.get(blockLocation);  //todo 如果存在直接改就行了不用put回去
-                            }
-                            ghostRiderBlockData.put(playerUUID, GHOST_RIDER_SOUL_SAND_DISAPPEAR_TIME, block.getState(), GhostRiderSkillType.SOUL_SAND);
-                            location_GhostRiderBlockData.put(blockLocation, ghostRiderBlockData);
-                            block.setType(Material.SOUL_SAND, false);
-                        }
 
-
-                    }
-                }
-            }, 0, 1);
-            ghostRider_activeSkillTaskMap.put(playerUUID, task);
 
         }
 
@@ -140,6 +117,36 @@ public class GhostRiderClass extends AbstractCustomClass{
 
 
 
+    }
+
+    public static void activeNormalSkillTask(Player player) {
+        if (player == null) return;
+        UUID playerUUID = player.getUniqueId();
+        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
+            Location location = player.getLocation();
+            for (int x = location.getBlockX() - 2; x <= location.getBlockX() + 2; x++) {
+                for (int y = location.getBlockY() - 2; y <= location.getBlockY() + 2; y++) {
+                    for (int z = location.getBlockZ() - 2; z <= location.getBlockZ() + 2; z++) {
+                        Location blockLocation = new Location(location.getWorld(), x, y, z);
+                        Block block = blockLocation.getBlock();
+//                        Location realBlockLocation = block.getLocation();
+//                        blockLocation = realBlockLocation;
+                        if (block.isPassable()) continue;
+                        GhostRiderBlockData ghostRiderBlockData = new GhostRiderBlockData();
+                        if (location_GhostRiderBlockData.containsKey(blockLocation)) {
+                            ghostRiderBlockData = location_GhostRiderBlockData.get(blockLocation);  //todo 如果存在直接改就行了不用put回去
+                        }
+                        ghostRiderBlockData.put(playerUUID, GHOST_RIDER_SOUL_SAND_DISAPPEAR_TIME, block.getState(), GhostRiderSkillType.SOUL_SAND);
+                        location_GhostRiderBlockData.put(blockLocation, ghostRiderBlockData);
+                        block.setType(Material.SOUL_SAND, false);
+                    }
+
+
+                }
+            }
+        }, 0, 1);
+        ghostRider_activeSkillTaskMap.put(playerUUID, task);
     }
 
 

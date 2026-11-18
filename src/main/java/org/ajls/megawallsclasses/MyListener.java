@@ -2163,6 +2163,9 @@ public class MyListener implements Listener {
                 if (!Cooldown.player_activeSkillCooldown.containsValue(playerUUID)) {
                     player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
                 }
+                else {
+                    GhostRiderClass.activeNormalSkillTask(player);
+                }
             }
         }
 
@@ -2450,12 +2453,16 @@ public class MyListener implements Listener {
             UUID playerUUID = GhostRiderClass.ghostRiderHorse_player.remove(entity.getUniqueId());
             Cooldown.player_passiveSkill1Cooldown.put(playerUUID, GhostRiderClass.GHOST_RIDER_HORSE_COOLDOWN);
             GhostRiderClass.ghostRider_HorseTaskMap.remove(playerUUID);
-            if (!Cooldown.player_activeSkillCooldown.containsValue(playerUUID)) {
-                Player player = Bukkit.getPlayer(playerUUID);
-                if (player != null) {
+            Player player = Bukkit.getPlayer(playerUUID);
+            if (player != null) {
+                if (!Cooldown.player_activeSkillCooldown.containsValue(playerUUID)) {
                     player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
                 }
+                else {
+                    GhostRiderClass.activeNormalSkillTask(player);
+                }
             }
+
         }
         else if (wither_team.containsKey(entityUUID)) {
             String teamName = wither_team.remove(entityUUID);
