@@ -93,6 +93,7 @@ public class GhostRiderClass extends AbstractCustomClass{
 
         UUID playerUUID = player.getUniqueId();
         boolean isFusion = ghostRiderHorse_player.containsValue(player.getUniqueId());
+        addEnergy(player, -100);
         if (isFusion) {
             ghostRider_activeSkillTaskMap.remove(player.getUniqueId());
             fusion(player);
@@ -101,7 +102,7 @@ public class GhostRiderClass extends AbstractCustomClass{
         else {
             player.sendMessage(ChatColor.DARK_PURPLE + " bruh" + ChatColor.RED + "生命回复I 5s " +  ChatColor.GOLD + "伤害吸收I 5s");
             player.getInventory().setHelmet(ClassItemFactory.ghostRiderLantern());
-            addEnergy(player, -100);
+
             ghostRiderVenom.put(playerUUID, GHOST_RIDER_VENOM_MAX);
 
 
@@ -148,7 +149,7 @@ public class GhostRiderClass extends AbstractCustomClass{
 
         if (ghostRiderHorse_player.containsValue(player.getUniqueId())) {
             ghostRiderHorse_player.removeByValue(player.getUniqueId());  //先移除再注册
-            AbstractHorse abstractHorse = getHorse(player, isFusion);
+            AbstractHorse abstractHorse = getHorse(player, isFusion);  //todo 这时候玩家在马上，应该用马的位置
 
             ghostRiderHorse_player.put(abstractHorse.getUniqueId(), player.getUniqueId());
 
@@ -199,6 +200,7 @@ public class GhostRiderClass extends AbstractCustomClass{
 
         Cooldown.player_activeSkillCooldown.put(playerUUID, Cooldown.player_activeSkillCooldown.getOrDefault((playerUUID), 0) + GHOST_RIDER_FUSION_EXTRA_TIME);
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 12*5, 2));
+//        player.getActivePotionEffects()
         player.getWorld().strikeLightningEffect(player.getLocation());
     }
 

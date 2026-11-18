@@ -132,6 +132,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 下马没有冷却 activeskill忘记触发统一路径 导致幻变出bug 灵魂沙没有凋零 cooldown上马也会触发 监守者cd砍 不是15s 龙弓左键
     //todo 龙火 ghostRider火 一直伤害 还有凋零一直不造成伤害 加上雕刻南瓜伪装 ghostRider方块优先级怎么搞 还有和不同职业的 马更改外观
     //todo 剑扔出去 ghostRider持续灵魂沙 addHealth注册玩家攻击 POtionEffect架构研究
+    //todo ghostRider融合后如果马没了 不会触发灵魂沙
 
     //todo ## 解决方案
     //

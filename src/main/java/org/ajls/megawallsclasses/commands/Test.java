@@ -39,7 +39,9 @@ public class Test implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            player.getWorld().createExplosion(player.getLocation(), 3f, false, true, player);
+            Bukkit.getScheduler().runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
+                player.setFireTicks(2);
+            }, 0, 1);
         }
 
         return true;
