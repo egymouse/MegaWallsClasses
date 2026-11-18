@@ -197,7 +197,7 @@ public class GhostRiderClass extends AbstractCustomClass{
         player.sendMessage(ChatColor.DARK_PURPLE + " bruhbruh" + ChatColor.RED + "生命回复I 5s " +  ChatColor.GOLD + "伤害吸收I 5s");
         UUID playerUUID = player.getUniqueId();
 
-        Cooldown.player_activeSkillCooldown.put(playerUUID, Cooldown.player_passiveSkill1Cooldown.getOrDefault((playerUUID), 0) + GHOST_RIDER_FUSION_EXTRA_TIME);
+        Cooldown.player_activeSkillCooldown.put(playerUUID, Cooldown.player_activeSkillCooldown.getOrDefault((playerUUID), 0) + GHOST_RIDER_FUSION_EXTRA_TIME);
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 12*5, 2));
         player.getWorld().strikeLightningEffect(player.getLocation());
     }
