@@ -68,11 +68,11 @@ public class GhostRiderClass extends AbstractCustomClass{
             abstractHorse = getHorse(player, false);
         }
 
-        GhostRiderBukkitRunnable ghostRiderBukkitRunnable = new GhostRiderBukkitRunnable(player, abstractHorse);
+        GhostRiderRunnable ghostRiderRunnable = new GhostRiderRunnable(player, abstractHorse);
 
 
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), ghostRiderBukkitRunnable, 0L, 1L);
+        BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), ghostRiderRunnable, 0L, 1L);
 
         ghostRider_HorseTaskMap.put(playerUUID, task);
         player.getInventory().setHelmet(ClassItemFactory.ghostRiderLantern());
@@ -86,7 +86,6 @@ public class GhostRiderClass extends AbstractCustomClass{
     public static HashMapInteger<UUID> ghostRiderVenom = new HashMapInteger<>(GHOST_RIDER_VENOM_MAX, 0, 0);
     //todo 还要解决合并问题，同一个大招会叠之前的招 不合并到时候查询爆炸 可以把性能压力分散到每一个tick而不是最后消失那一刻
     //todo 还有同一个玩家高级别的要覆盖低级别的 比如黑曜石>灵魂沙>地狱岩，当然不同玩家就自由覆盖
-    public static HashSet<UUID> ghostRiderChangeHorse = new HashSet<>();
 
     @Override
     public boolean activeSkill(Player player) {
@@ -142,7 +141,6 @@ public class GhostRiderClass extends AbstractCustomClass{
 
 
     public static void switchHorse(Player player, boolean isFusion) {
-        if (true) return;
         //一般来说调用这个method的都是有马的
 
 
@@ -152,12 +150,12 @@ public class GhostRiderClass extends AbstractCustomClass{
 
             ghostRiderHorse_player.put(abstractHorse.getUniqueId(), player.getUniqueId());
 
-            GhostRiderBukkitRunnable ghostRiderBukkitRunnable = ((GhostRiderBukkitRunnable) ghostRider_HorseTaskMap.get(player.getUniqueId()));  //.getRunnable()
-//                ghostRiderChangeHorse.add(player.getUniqueId());
-            abstractHorse.setPassenger(player);  //这一步应该调用entityDismout导致老马被删除？必须要加一个免死金牌啊 好吧不会因为ghostRiderHorse_player查不到了
+            GhostRiderRunnable ghostRiderBukkitRunnable = (GhostRiderRunnable) (ghostRider_HorseTaskMap.get(player.getUniqueId()).getRunnable());  //.getRunnable()
 
             AbstractHorse oldHorse = ghostRiderBukkitRunnable.getHorse();
             oldHorse.remove();
+
+
             ghostRiderBukkitRunnable.setHorse(abstractHorse);
         }
     }
@@ -203,7 +201,7 @@ public class GhostRiderClass extends AbstractCustomClass{
     }
 
 
-    public static class GhostRiderBukkitRunnable implements Runnable {
+    public static class GhostRiderRunnable implements Runnable {
         public AbstractHorse getHorse() {
             return horse;
         }
@@ -215,7 +213,7 @@ public class GhostRiderClass extends AbstractCustomClass{
         public AbstractHorse horse;
         public Player player;// todo 处理玩家下线
 
-        public GhostRiderBukkitRunnable(Player player, AbstractHorse horse) {
+        public GhostRiderRunnable(Player player, AbstractHorse horse) {
             this.horse = horse;
             this.player = player;
         }
