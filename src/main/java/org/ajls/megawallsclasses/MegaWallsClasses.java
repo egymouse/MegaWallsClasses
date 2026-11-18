@@ -7,6 +7,7 @@ import org.ajls.megawallsclasses.commands.*;
 import org.ajls.megawallsclasses.customclasses.GhostRiderClass;
 import org.ajls.megawallsclasses.custommusic.MidiMusicPlayer;
 import org.ajls.megawallsclasses.listeners.InventoryListener;
+import org.ajls.megawallsclasses.listeners.PlayerDropItemListener;
 import org.ajls.megawallsclasses.listeners.spawnprotection.SpawnProtectionListener;
 import org.ajls.megawallsclasses.packetlisteners.PacketListener;
 import org.ajls.megawallsclasses.playerdata.PlayerDataManager;
@@ -176,7 +177,7 @@ public final class MegaWallsClasses extends JavaPlugin {
         MyListener myListener = new  MyListener();
         getServer().getPluginManager().registerEvents(myListener, this);
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
-        getServer().getPluginManager().registerEvents(new SpawnProtectionListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), this);
         new SpawnProtectionListener();
 
         getCommand("class").setExecutor(new ChangeClass());
