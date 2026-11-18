@@ -89,6 +89,8 @@ public class GhostRiderClass extends AbstractCustomClass{
 
     @Override
     public boolean activeSkill(Player player) {
+        Cooldown.player_activeSkillCooldown.put(player.getUniqueId(), GHOST_RIDER_ACTIVE_SKILL_TIME);
+
         UUID playerUUID = player.getUniqueId();
         boolean isFusion = ghostRiderHorse_player.containsValue(player.getUniqueId());
         if (isFusion) {
@@ -101,7 +103,7 @@ public class GhostRiderClass extends AbstractCustomClass{
             player.getInventory().setHelmet(ClassItemFactory.ghostRiderLantern());
             addEnergy(player, -100);
             ghostRiderVenom.put(playerUUID, GHOST_RIDER_VENOM_MAX);
-            Cooldown.player_activeSkillCooldown.put(player.getUniqueId(), GHOST_RIDER_ACTIVE_SKILL_TIME);
+
 
 
 
