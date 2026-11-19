@@ -28,7 +28,7 @@ public class GhostRiderClass extends AbstractCustomClass{
     };
     public static BukkitTaskMap<UUID> ghostRider_HorseTaskMap = new BukkitTaskMap<>();  //todo 绑定到玩家，毕竟马会变，玩家可不会
 //    HashMap<Integer, > timeStamp_blockData
-    public static LinkedHashMap<Location, GhostRiderBlockData> location_GhostRiderBlockData = new LinkedHashMap<>();
+    public static HashMap<Location, GhostRiderBlockData> location_GhostRiderBlockData = new LinkedHashMap<>();
 
     public static BukkitTaskMap<UUID> ghostRider_activeSkillTaskMap = new BukkitTaskMap<>();
 
@@ -137,9 +137,11 @@ public class GhostRiderClass extends AbstractCustomClass{
                         if (location_GhostRiderBlockData.containsKey(blockLocation)) {
                             ghostRiderBlockData = location_GhostRiderBlockData.get(blockLocation);  //todo 如果存在直接改就行了不用put回去
                         }
-                        ghostRiderBlockData.put(playerUUID, GHOST_RIDER_SOUL_SAND_DISAPPEAR_TIME, block.getState(), GhostRiderSkillType.SOUL_SAND);
+                        boolean success = ghostRiderBlockData.put(playerUUID, GHOST_RIDER_SOUL_SAND_DISAPPEAR_TIME, block.getState(), GhostRiderSkillType.SOUL_SAND);
                         location_GhostRiderBlockData.put(blockLocation, ghostRiderBlockData);
-                        block.setType(Material.SOUL_SAND, false);
+                        if (success) {
+                            block.setType(Material.SOUL_SAND, false);
+                        }
                     }
 
 
@@ -252,17 +254,16 @@ public class GhostRiderClass extends AbstractCustomClass{
                             blockMaterial = Material.OBSIDIAN;
                             ghostRiderSkillType = GhostRiderSkillType.OBSIDIAN;
                         }
-                        if (location_GhostRiderBlockData.containsKey(blockLocation)) {
-                            GhostRiderBlockData ghostRiderBlockData = location_GhostRiderBlockData.get(blockLocation);
-                            ghostRiderBlockData.put(playerUUID, GHOST_RIDER_NETHERRACK_DISAPPEAR_TIME, block.getState(), ghostRiderSkillType);
-                            location_GhostRiderBlockData.putLast(blockLocation, ghostRiderBlockData);
-                        } else {
-                            GhostRiderBlockData ghostRiderBlockData = new GhostRiderBlockData();
-                            ghostRiderBlockData.put(playerUUID, GHOST_RIDER_NETHERRACK_DISAPPEAR_TIME, block.getState(), ghostRiderSkillType);
-                            location_GhostRiderBlockData.put(blockLocation, ghostRiderBlockData);
 
+                        GhostRiderBlockData ghostRiderBlockData = new GhostRiderBlockData();
+                        if (location_GhostRiderBlockData.containsKey(blockLocation)) {
+                            ghostRiderBlockData = location_GhostRiderBlockData.get(blockLocation);
                         }
-                        block.setType(blockMaterial, false);
+                        boolean success = ghostRiderBlockData.put(playerUUID, GHOST_RIDER_NETHERRACK_DISAPPEAR_TIME, block.getState(), ghostRiderSkillType);
+                        location_GhostRiderBlockData.put(blockLocation, ghostRiderBlockData);
+                        if (success) {
+                            block.setType(blockMaterial, false);
+                        }
                     }
                 }
             }
@@ -281,21 +282,22 @@ public class GhostRiderClass extends AbstractCustomClass{
 
 
 
-        public void put(UUID uuid, int offset, BlockState originalBlockState, GhostRiderSkillType ghostRiderSkillType) {
+        public boolean put(UUID uuid, int offset, BlockState originalBlockState, GhostRiderSkillType ghostRiderSkillType) {
             if (!ghostRiderPlayerSkills.isEmpty()) {
                 GhostRiderPlayerSkill ghostRiderPlayerSkill = ghostRiderPlayerSkills.getLast();
                 if (ghostRiderPlayerSkill.getPlayerUUID().equals(uuid)) {
                     if (ghostRiderPlayerSkill.getGhostRiderSkillType().ordinal() <= ghostRiderSkillType.ordinal()) {
                         ghostRiderPlayerSkill.setTimeStamp(Bukkit.getCurrentTick() + offset);
                         ghostRiderPlayerSkill.setGhostRiderSkillType(ghostRiderSkillType);
-                        return;
+                        return true;
                     }
                     else {
-                        return;  //就算时间更长的低级也return  //todo 搞和我的世界药水效果一样，高级的在上面 长时间低级的在下面但是也存在（比如你喝力量2 后喝无限试时间力量1），然后后来的在前面敌人的上面
+                        return false;  //就算时间更长的低级也return  //todo 搞和我的世界药水效果一样，高级的在上面 长时间低级的在下面但是也存在（比如你喝力量2 后喝无限试时间力量1），然后后来的在前面敌人的上面
                     }
                 }
             }
             ghostRiderPlayerSkills.add(new GhostRiderPlayerSkill(uuid, Bukkit.getCurrentTick() + offset, originalBlockState, ghostRiderSkillType));
+            return true;
         }
 
 
