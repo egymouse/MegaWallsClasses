@@ -2160,7 +2160,7 @@ public class MyListener implements Listener {
                 dismounted.remove();
                 Cooldown.player_passiveSkill1Cooldown.put(playerUUID, GhostRiderClass.GHOST_RIDER_HORSE_COOLDOWN);
                 GhostRiderClass.ghostRider_HorseTaskMap.remove(player.getUniqueId());
-                if (!Cooldown.player_activeSkillCooldown.containsValue(playerUUID)) {
+                if (!Cooldown.player_activeSkillCooldown.containsKey(playerUUID)) {
                     player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
                 }
                 else {
@@ -2455,7 +2455,7 @@ public class MyListener implements Listener {
             GhostRiderClass.ghostRider_HorseTaskMap.remove(playerUUID);
             Player player = Bukkit.getPlayer(playerUUID);
             if (player != null) {
-                if (!Cooldown.player_activeSkillCooldown.containsValue(playerUUID)) {
+                if (!Cooldown.player_activeSkillCooldown.containsKey(playerUUID)) {
                     player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
                 }
                 else {
