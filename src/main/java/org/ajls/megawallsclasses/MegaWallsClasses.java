@@ -255,25 +255,7 @@ public final class MegaWallsClasses extends JavaPlugin {
                 Cooldown.removeCooldown(cooldown, 1, i);
             }
             PlayerDataManager.tick();
-            Iterator<Map.Entry<Location, GhostRiderClass.GhostRiderBlockData>> it =
-                    GhostRiderClass.location_GhostRiderBlockData.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<Location, GhostRiderClass.GhostRiderBlockData> entry = it.next();
-                Location location = entry.getKey();
-                GhostRiderClass.GhostRiderBlockData blockData = entry.getValue();
-                boolean canRemove = blockData.tick();
-                if (canRemove) {
-                    it.remove();
-                }
-            }
-//            for (Map.Entry<Location, GhostRiderClass.GhostRiderBlockData> entry : GhostRiderClass.location_GhostRiderBlockData.entrySet()) {
-//                Location location = entry.getKey();
-//                GhostRiderClass.GhostRiderBlockData blockData = entry.getValue();
-//                boolean canRemove = blockData.tick();
-//                if (canRemove) {
-//                    entry.
-//                }
-//            }
+
             for (Player player : Bukkit.getOnlinePlayers()) {
                 Location location = player.getLocation().add(0, -0.1, 0);
                 Location blockLocation = location.toBlockLocation();
@@ -285,11 +267,17 @@ public final class MegaWallsClasses extends JavaPlugin {
                 }
 
             }
-//            for (HashMap<UUID, Integer> cooldown : Cooldown.playerCooldowns) {
-//                Cooldown.removeCooldown(cooldown, 1);
-//            }
-//            Cooldown.removeCooldown(Cooldown.player_passiveSkill1Cooldown, 1);
-//            Cooldown.removeCooldown(Cooldown.player_passiveSkill2Cooldown, 1);
+            Iterator<Map.Entry<Location, GhostRiderClass.GhostRiderBlockData>> it =
+                    GhostRiderClass.location_GhostRiderBlockData.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Location, GhostRiderClass.GhostRiderBlockData> entry = it.next();
+                Location location = entry.getKey();
+                GhostRiderClass.GhostRiderBlockData blockData = entry.getValue();
+                boolean canRemove = blockData.tick();
+                if (canRemove) {
+                    it.remove();
+                }
+            }
         }, 1, 1);
 //        BlocksModify.fill(configuration.getInt("locations.loc_map_min.x"), configuration.getInt("locations.loc_map_min.y"), configuration.getInt("locations.loc_map_min.z"), configuration.getInt("locations.loc_map_max.x"), configuration.getInt("locations.loc_map_max.y"), configuration.getInt("locations.loc_map_max.z"));configuration.getInt("locations.loc_map_min.x"), configuration.getInt("locations.loc_map_min.y"), configuration.getInt("locations.loc_map_min.z"), configuration.getInt("locations.loc_map_max.x"), configuration.getInt("locations.loc_map_max.y"), configuration.getInt("locations.loc_map_max.z")
         BlocksModify.setBiome(configuration.getInt("locations.loc_map_min.x"), configuration.getInt("locations.loc_map_min.y"), configuration.getInt("locations.loc_map_min.z"), configuration.getInt("locations.loc_map_max.x"), configuration.getInt("locations.loc_map_max.y"), configuration.getInt("locations.loc_map_max.z"), Biome.SNOWY_PLAINS);
