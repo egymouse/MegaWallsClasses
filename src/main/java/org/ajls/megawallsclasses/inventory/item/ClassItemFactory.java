@@ -86,6 +86,7 @@ public final class ClassItemFactory {
         );
 
         addLore(item, ClassConfigKeys.CUSTOM_POTION);
+        addLore(item, ClassConfigKeys.SPEED_POTION);
 
         setMaxStackSize(item, amount);
         setClassItem(item);

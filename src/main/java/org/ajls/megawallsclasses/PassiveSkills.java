@@ -15,8 +15,10 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -364,6 +366,22 @@ public class PassiveSkills {
 
     public static BukkitTaskMap<UUID> elainaFly = new BukkitTaskMap<>();
     public static HashMap<UUID, UUID> elaina_slime = new HashMap<>();
+
+    public static boolean isSpeedPotion(ItemStack item) {
+        if (item == null) return false;
+        // 先判断是不是药水类物品
+        if (item.getType() != org.bukkit.Material.POTION
+                && item.getType() != org.bukkit.Material.SPLASH_POTION
+                && item.getType() != org.bukkit.Material.LINGERING_POTION) {
+            return false;
+        }
+        if (!item.hasItemMeta()) return false;
+        if (!(item.getItemMeta() instanceof PotionMeta meta)) return false;
+
+        // 新版：getBasePotionType()
+        return meta.getBasePotionType() == PotionType.SWIFTNESS;
+    }
+
     public static void elaina_passive_skill_2(Player player) {
         World world = player.getWorld();
         Location location = player.getLocation();

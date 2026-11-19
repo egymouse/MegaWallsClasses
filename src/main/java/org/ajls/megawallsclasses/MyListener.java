@@ -279,11 +279,11 @@ public class MyListener implements Listener {
             }
             if (getScore(player, "class") == 15) {
                 int times = HashMapUtils.hashMapIncrease(playerUUID, elaina_switchHotbarTimes);
-                    if(containsLore(item, "speed_potion") ) {  //&& !Cooldown.player_passiveSkill2Cooldown.containsKey(playerUUID)
+                    if(PassiveSkills.isSpeedPotion(item) ) {  //&& !Cooldown.player_passiveSkill2Cooldown.containsKey(playerUUID)
                         BukkitScheduler scheduler = getServer().getScheduler();
                         scheduler.runTaskLater(getPlugin(), () -> {
                             if (times == elaina_switchHotbarTimes.get(playerUUID)) {
-                                if (containsLore(player.getInventory().getItemInMainHand(), "speed_potion") && !Cooldown.player_passiveSkill2Cooldown.containsKey(playerUUID)) {
+                                if (PassiveSkills.isSpeedPotion(player.getInventory().getItemInMainHand()) && !Cooldown.player_passiveSkill2Cooldown.containsKey(playerUUID)) {
                                     elaina_passive_skill_2(player);
                                     Cooldown.player_passiveSkill2Cooldown.put(playerUUID, 500);
                                 }
