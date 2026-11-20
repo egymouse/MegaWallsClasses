@@ -428,7 +428,7 @@ public class MidiMusicPlayer {
             }
             else {
                 player.playSound(player, sound, SoundCategory.RECORDS, volume, finalNotePitch);
-//                player.sendMessage("Playing sound: " + sound + " with pitch: " + finalNotePitch);
+//                player.sendMessage("Playing sound: " + sound + " with pitch: " + finalNotePitch + " " +  offset);
             }
 
 //            Bukkit.getScheduler().runTask(plugin, () -> {

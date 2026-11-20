@@ -958,13 +958,13 @@ public class MyListener implements Listener {
         Inventory inventory = event.getClickedInventory();
         // 2. Shift+点击 快捷移动 -> 取消
         if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-            event.setCancelled(true);
+//            event.setCancelled(true);
 //            player.sendMessage("§c不能将物品移动到自己的物品栏！");
             player.sendMessage("是重新排列新物品栏内物品，而不是将物品放到自己物品栏");
             return false;
         }
         else if (inventory.equals(player.getInventory())) {
-            event.setCancelled(true);
+//            event.setCancelled(true);
             player.sendMessage("是重新排列新物品栏内物品，而不是将物品放到自己物品栏");
             return false;
         }

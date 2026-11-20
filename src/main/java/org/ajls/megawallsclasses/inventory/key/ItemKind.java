@@ -77,6 +77,8 @@ public enum ItemKind {
     HEAL_POTION("heal_potion"),
 
     SQUID_POTION("squid_potion_everyone"),
+    SHOVEL("shovel"),
+    HOE("hoe"),
 
     // 职业特殊物品
     SNOWMAN_SHOVEL("snowman_shovel"),

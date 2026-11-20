@@ -215,10 +215,10 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         }, 12);
         addCommonItem(ItemKind.COBBLESTONE, () -> {
             return new ItemStack(Material.COBBLESTONE, 64);
-        }, 3);
+        }, 3, 19, 20, 21);
         addCommonItem(ItemKind.PLANKS, () -> {
             return new ItemStack(Material.OAK_PLANKS, 64);
-        }, 14);
+        }, 14, 22, 23, 24);
         addCommonItem(ItemKind.AXE, () -> {
             return new ItemStack(Material.IRON_AXE, 1);
         }, 15);
@@ -228,6 +228,12 @@ public abstract class AbstractCustomClass {  //emmm其实可以把这个抽象�
         addCommonItem(ItemKind.SQUID_POTION, () -> {
             return ClassItemFactory.squidPotion();
         }, 4);
+        addCommonItem(ItemKind.SHOVEL, () -> {
+            return new ItemStack(Material.IRON_SHOVEL, 1);
+        }, 17);
+        addCommonItem(ItemKind.HOE, () -> {
+            return new ItemStack(Material.IRON_HOE, 1);
+        }, 18);
 
 
         initializeClassItems();
