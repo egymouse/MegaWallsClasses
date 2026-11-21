@@ -105,7 +105,7 @@ public class GhostRiderClass extends AbstractCustomClass{
 
             ghostRiderVenom.put(playerUUID, GHOST_RIDER_VENOM_MAX);
             player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 145114, 0 , true, true));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 145114, 1 , true, true));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 145114, 0 , true, true));
             activeNormalSkillTask(player);
 
 
@@ -344,7 +344,7 @@ public class GhostRiderClass extends AbstractCustomClass{
                     player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 1 , true, true));
                 }
                 else if (ghostRiderSkillType == GhostRiderSkillType.OBSIDIAN) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 0 , true, true));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 0 , true, true));//没用的，只是帅而已，火焰等效凋零2了
                     if (player.getFireTicks() < 60) {
                         player.setFireTicks(60);  //todo 龙的弓和大招也一样
                     }
