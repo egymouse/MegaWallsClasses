@@ -26,10 +26,7 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Math.*;
@@ -918,7 +915,8 @@ public class ActiveSkills {
 
     public static void skeleton_lord_active_skill_2(Player player) {
 //         MyListener.addHealth(player, -20);
-         UUID playerUniqueId = player.getUniqueId();
+        UUID playerUniqueId = player.getUniqueId();
+        int i = 0;
         for (UUID uuid : skeleton_skeleton_lord.keySet()) {
             if (playerUniqueId.equals(skeleton_skeleton_lord.get(uuid))) {
                 Entity entity = Bukkit.getEntity(uuid);
@@ -931,6 +929,8 @@ public class ActiveSkills {
                     entity.remove();
                 }
             }
+            i++;
+            if (i >= 4) break; //已经处理4个了
         }
         skeleton_skeleton_lord.clear();
         skeleton_lord_create_skeleton_general(player);
@@ -938,6 +938,7 @@ public class ActiveSkills {
         player.sendMessage(ChatColor.RED + "治疗之环 " + ChatColor.RED + "HP " + ChatColor.GREEN + "+7");
         ScoreboardsAndTeams.setScore(player, "energy", 0);
         player.setLevel(0);
+        skeleton_lord_active_skill_1(player, 1);
 //        autoEnergyAccumulation(player, 1, 20);
     }
 
@@ -949,8 +950,8 @@ public class ActiveSkills {
         LivingEntity entity = (LivingEntity) world.spawnEntity(player.getLocation(), EntityType.SKELETON);
         Skeleton skeleton = (Skeleton) entity;
         skeleton_skeleton_lord.put(entity.getUniqueId(), player.getUniqueId());
-        entity.setMaxHealth(40);
-        entity.setHealth(40);
+//        entity.setMaxHealth(40);
+//        entity.setHealth(40);
         entity.setCustomName(player.getName() + "'s Skeleton");
 //        entity.setCustomNameVisible(true);
         entity.getEquipment().setHelmet(setUnbreakable(MegaWallsClasses.setColor(new ItemStack(Material.LEATHER_HELMET), Color.WHITE)));
@@ -958,14 +959,15 @@ public class ActiveSkills {
         entity.getEquipment().setLeggings(setUnbreakable(MegaWallsClasses.setColor(new ItemStack(Material.LEATHER_LEGGINGS), Color.WHITE)));
         entity.getEquipment().setBoots(setUnbreakable(MegaWallsClasses.setColor(new ItemStack(Material.LEATHER_BOOTS), Color.WHITE)));
         ItemStack stone_sword = new ItemStack(Material.STONE_SWORD);
+        stone_sword = new ItemStack(Material.GOLDEN_SWORD);  //比木剑帅
         stone_sword.addEnchantment(Enchantment.KNOCKBACK, 2);
         stone_sword = setUnbreakable(stone_sword);
         entity.getEquipment().setItemInMainHand(stone_sword);
-        entity.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false));
+        entity.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, false, false));
 //        getPlayerTeam(player).addEntry(String.valueOf(entity));
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
-            MyListener.addHealth(entity, 1);
+//            MyListener.addHealth(entity, 1);
         }, 20L, 20);
         tasks.put(entity.getUniqueId(), task);
         task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
@@ -1011,6 +1013,7 @@ public class ActiveSkills {
         entity.getEquipment().setLeggings(setUnbreakable(diamond_leggings));
         entity.getEquipment().setBoots(setUnbreakable(diamond_boots));
 //        getPlayerTeam(player).addEntry(String.valueOf(entity));
+        entity.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false));
 
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 //        BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {

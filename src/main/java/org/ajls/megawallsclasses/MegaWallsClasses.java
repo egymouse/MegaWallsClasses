@@ -266,6 +266,16 @@ public final class MegaWallsClasses extends JavaPlugin {
                     ghostRiderBlockData.apply(player);
                 }
 
+
+                ClassEnum classEnum = ClassEnum.getClassEnumByPlayer(player);
+                if (classEnum == ClassEnum.SKELETON_LORD) {
+                    ArrayList<Player> players = MyListener.getNearbyPlayers(player, 114514, 1);
+                    if (players != null && players.size() > 0) {
+                        MyListener.skeleton_lord_player.put(player.getUniqueId(), players.get(0).getUniqueId());
+                    }
+
+                }
+
             }
             Iterator<Map.Entry<Location, GhostRiderClass.GhostRiderBlockData>> it =
                     GhostRiderClass.location_GhostRiderBlockData.entrySet().iterator();

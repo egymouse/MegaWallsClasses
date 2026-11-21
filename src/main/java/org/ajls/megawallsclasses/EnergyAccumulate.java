@@ -119,9 +119,11 @@ public class EnergyAccumulate {
                 addEnergy(damager, 20);
                 break;
             case 28:
-                if (damager.getInventory().getItemInMainHand().getType() == Material.STICK) {
-                    MegaWallsClasses.addScore(damager, "energy", 7);
-                }
+                addEnergy(damager, 17);
+//                if (damager.getInventory().getItemInMainHand().getType() == Material.STICK) {
+//                    MegaWallsClasses.addScore(damager, "energy", 7);
+//                }
+                SpiderEnergy.increment(damager, 2, 5, 20);
                 break;
             case 30:
                 addEnergy(damager, 12);

@@ -2919,10 +2919,11 @@ public class MyListener implements Listener {
                         }
                     }
                     if (number == 3) {
+//                        skeleton_lord_active_skill_1(player, 1);
                         skeleton_lord_active_skill_1(player, 1);
                     }
                     else if (number <= 2) {
-                        skeleton_lord_active_skill_1(player, 2);
+                        skeleton_lord_active_skill_1(player, 1);
                     }
                     else if (number >= 4) {
 //                        if (player.getHealth() > 20) {

@@ -9,7 +9,7 @@ public class SkeletonLordClass extends AbstractCustomClass{
     @Override
     public ItemStack createClassSword() {
         ItemStack classSword = ClassItemFactory.classSword(Material.STICK, false);  //you can't add unbreaking on a stick
-        classSword.addUnsafeEnchantment(Enchantment.SHARPNESS, 4);
+        classSword.addUnsafeEnchantment(Enchantment.SHARPNESS, 9);
         return classSword;
     }
 }

@@ -331,7 +331,7 @@ public class InitializeClass {
                 autoEnergyAccumulation(player, 17, 20);
                 break;
             case 28:
-                autoEnergyAccumulation(player, 1, 20);
+//                autoEnergyAccumulation(player, 1, 20);
                 break;
         }
     }
