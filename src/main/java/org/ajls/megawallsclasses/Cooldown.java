@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -157,6 +158,7 @@ public class Cooldown {
                     else if (index == 2) {
                         if (classEnum == ClassEnum.GHOST_RIDER) {
                             GhostRiderClass.ghostRiderVenom.put(uuid, 0);
+                            player.removePotionEffect(PotionEffectType.RESISTANCE);
                             if (!GhostRiderClass.ghostRiderHorse_player.containsValue(uuid)) {
                                 player.getInventory().setHelmet(ClassItemFactory.ghostRiderPumpkin());
                                 GhostRiderClass.ghostRider_activeSkillTaskMap.remove(uuid);

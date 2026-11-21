@@ -81,7 +81,7 @@ public class GhostRiderClass extends AbstractCustomClass{
 
 
 
-    public static int GHOST_RIDER_VENOM_MAX = 3;
+    public static int GHOST_RIDER_VENOM_MAX = 114514;
 
     public static HashMapInteger<UUID> ghostRiderVenom = new HashMapInteger<>(GHOST_RIDER_VENOM_MAX, 0, 0);
     //todo 还要解决合并问题，同一个大招会叠之前的招 不合并到时候查询爆炸 可以把性能压力分散到每一个tick而不是最后消失那一刻
@@ -104,6 +104,8 @@ public class GhostRiderClass extends AbstractCustomClass{
             player.getInventory().setHelmet(ClassItemFactory.ghostRiderLantern());
 
             ghostRiderVenom.put(playerUUID, GHOST_RIDER_VENOM_MAX);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 145114, 0 , true, true));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 145114, 1 , true, true));
             activeNormalSkillTask(player);
 
 

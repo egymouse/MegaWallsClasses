@@ -1114,8 +1114,8 @@ public class MyListener implements Listener {
                                 if (Cooldown.player_activeSkillCooldown.containsKey(damagerUUID)) {
                                     int venom = GhostRiderClass.ghostRiderVenom.get(damagerUUID);
                                     if (venom > 0) {
-                                        GhostRiderClass.ghostRiderVenom.decrement(damagerUUID);
-                                        event.setDamage(event.getDamage()*1.3);
+//                                        GhostRiderClass.ghostRiderVenom.decrement(damagerUUID);
+                                        event.setDamage(event.getDamage()*1.43);
                                     }
                                 }
                                 break;
