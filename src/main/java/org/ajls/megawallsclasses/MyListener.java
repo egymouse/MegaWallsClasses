@@ -2634,6 +2634,7 @@ public class MyListener implements Listener {
                             block.setType(Material.AIR);
                         }
                     }, 25*20L); //30* 25
+                    player.sendMessage(ChatColor.DARK_RED + "聆听中...");
                 }
 
 
@@ -2707,6 +2708,7 @@ public class MyListener implements Listener {
                     Player warden = getPlayer(wardenUUID);
                     if (isPlayerPlayableEnemy(warden, player)) {
                         addEnergy(warden, 3);  //1 //5
+
 //                        player.sendMessage("The sculk sensor has detected you!");
                         player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 0, false, false));
                     }

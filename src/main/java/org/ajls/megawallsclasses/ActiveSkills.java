@@ -6,6 +6,7 @@ import org.ajls.lib.advanced.HaxhMap;
 import org.ajls.lib.advanced.hashMap.HashMapDouble;
 import org.ajls.lib.utils.PlayerU;
 import org.ajls.lib.utils.ScoreboardU;
+import org.ajls.megawallsclasses.customclasses.WardenClass;
 import org.ajls.megawallsclasses.maths.Cylinder;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -1097,7 +1098,7 @@ public class ActiveSkills {
         player.sendTitle("", className);
     }
 
-    public static int WARDEN_ACTIVE_SKILL_COOLDOWN = 5*20;
+
 
     public static boolean warden_active_skill(Player player) {
         UUID playerUUID = player.getUniqueId();
@@ -1114,7 +1115,7 @@ public class ActiveSkills {
 //                world.spawnParticle(Particle.SONIC_BOOM, hitPlayer.getLocation(), 1);
             }
             addEnergy(player, -100);
-            Cooldown.player_activeSkillCooldown.put(playerUUID, WARDEN_ACTIVE_SKILL_COOLDOWN);
+            Cooldown.player_activeSkillCooldown.put(playerUUID, WardenClass.WARDEN_ACTIVE_SKILL_COOLDOWN);
 
             player.sendMessage(ChatColor.RED + "warden主动名字忘记了 " + ChatColor.RED + "HP " + ChatColor.GREEN + "+7");
             world.playSound( player.getLocation(), Sound.ENTITY_WARDEN_SONIC_BOOM, 1, 1);
