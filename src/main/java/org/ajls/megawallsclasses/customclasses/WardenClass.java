@@ -19,6 +19,12 @@ public class WardenClass extends AbstractCustomClass {
     //一看就太强了，坦克还有神秘d剑和力量1
 
     @Override
+    public ItemStack createClassSword() {
+        ItemStack classSword = ClassItemFactory.classSword(Material.DIAMOND_SWORD);
+        return classSword;
+    }
+
+    @Override
     public void initializeClassItems() {
         addClassItem(ItemKind.WARDEN_SENSOR, () -> {
             return ClassItemFactory.wardenSensor();

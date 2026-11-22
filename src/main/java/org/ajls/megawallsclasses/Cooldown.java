@@ -23,7 +23,6 @@ import java.util.*;
 
 import static org.ajls.megawallsclasses.MyListener.n5ll_invisibility;
 import static org.ajls.megawallsclasses.MyListener.warden_sensorAmount;
-import static org.bukkit.ChatColor.*;
 
 public class Cooldown {
     public static HashMap<UUID, Integer> player_passiveSkill1Cooldown = new HashMap<>();
@@ -186,10 +185,10 @@ public class Cooldown {
         HashSet<HashMap<UUID, Integer>> class_cooldowns = new HashSet<>();
         switch (ScoreboardsAndTeams.getScore(player, "class")) {
             case 5:
-                p1c = GRAY + "间隐";
+                p1c = ChatColor.GRAY + "间隐";
                 break;
             case 9:
-                p1c = DARK_GRAY + "凋零箭矢";
+                p1c = ChatColor.DARK_GRAY + "凋零箭矢";
 //                class_cooldowns.add(player_passiveSkill1Cooldown);
                 break;
             case 10:
@@ -212,7 +211,8 @@ public class Cooldown {
                 p2c = ChatColor.DARK_RED + "鱿鱼复生";
                 break;
             case 30:
-                p2c = ChatColor.DARK_RED + "ヘブンバーンズレッド";
+                a1c = ChatColor.DARK_AQUA + "音波尖啸";
+                p2c = ChatColor.DARK_RED + " 聆听";
                 break;
             case 31:
                 p1c = ChatColor.WHITE + " 秦始黄芪北极熊";
@@ -283,7 +283,7 @@ public class Cooldown {
 //                class_cooldowns.add(player_passiveSkill1Cooldown);
                         break;
                     case 10:
-                        a11 = getCooldownTime(player, player_activeSkillCooldown, true, GREEN, true);// active skill 1 first word
+                        a11 = getCooldownTime(player, player_activeSkillCooldown, true, ChatColor.GREEN, true);// active skill 1 first word
                         break;
                     case 12:
                         p11 = getCooldownAmount(player, PassiveSkills.shaman_heroism, 5);
@@ -302,17 +302,18 @@ public class Cooldown {
                         p21 = getCooldownTime(player, player_passiveSkill2Cooldown);
                         break;
                     case 30:
+                        a11 = getCooldownTime(player, player_activeSkillCooldown, true, ChatColor.RED, true);
                         p21 = getCooldownTime(player, player_passiveSkill2Cooldown);
                         break;
                     case 31:
                         p11 = getCooldownTime(player, player_passiveSkill1Cooldown);
-                        a11 = getCooldownTime(player, player_activeSkillCooldown, false, GREEN, false) + "/"+ChatColor.AQUA+ GhostRiderClass.ghostRiderVenom.get(player.getUniqueId());
+                        a11 = getCooldownTime(player, player_activeSkillCooldown, false, ChatColor.GREEN, false) + "/"+ChatColor.AQUA+ GhostRiderClass.ghostRiderVenom.get(player.getUniqueId());
 //                        a12 = getCooldownAmount(player, GhostRiderClass.ghostRiderVenom, GhostRiderClass.GHOST_RIDER_VENOM_MAX, -1);
                         break;
                     case 217:
 
                         p11 = getCooldownAmount(player, CaveSpiderClass.caveSpiderVenom, CaveSpiderClass.CAVE_SPIDER_VENOM_MAX, -1);
-                        p21 = getCooldownTime(player, player_passiveSkill2Cooldown, false, GREEN, false);
+                        p21 = getCooldownTime(player, player_passiveSkill2Cooldown, false, ChatColor.GREEN, false);
 //                        p22 =
                         if (true || player_passiveSkill2Cooldown.containsKey(player.getUniqueId())) {
                             p21 += "/"+ChatColor.AQUA+ CaveSpiderClass.caveSpiderFlyby.get(player.getUniqueId());
@@ -380,7 +381,7 @@ public class Cooldown {
     }
 
     public static String getCooldownTime(Player player, HashMap<UUID, Integer> player_cooldown) {
-        return getCooldownTime(player, player_cooldown, true, RED, false);
+        return getCooldownTime(player, player_cooldown, true, ChatColor.RED, false);
     }
 
     public static String getCooldownTime(Player player, HashMap<UUID, Integer> player_cooldown, boolean tick_or_cross, ChatColor defaultColor, boolean isActive) {

@@ -1097,7 +1097,14 @@ public class ActiveSkills {
         player.sendTitle("", className);
     }
 
-    public static void warden_active_skill(Player player) {
+    public static int WARDEN_ACTIVE_SKILL_COOLDOWN = 5*20;
+
+    public static boolean warden_active_skill(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        if (Cooldown.player_activeSkillCooldown.containsKey(player)) {
+            player.sendMessage(ChatColor.RED + "冷却还没好");
+            return false;
+        }
         World world = player.getWorld();
         ArrayList<Player> players = Cylinder.getNearbyCylindricalPlayers(player, 15, 2, 114514, 0);
         if (!players.isEmpty()) {
@@ -1107,6 +1114,7 @@ public class ActiveSkills {
 //                world.spawnParticle(Particle.SONIC_BOOM, hitPlayer.getLocation(), 1);
             }
             addEnergy(player, -100);
+            Cooldown.player_activeSkillCooldown.put(playerUUID, WARDEN_ACTIVE_SKILL_COOLDOWN);
 
             player.sendMessage(ChatColor.RED + "warden主动名字忘记了 " + ChatColor.RED + "HP " + ChatColor.GREEN + "+7");
             world.playSound( player.getLocation(), Sound.ENTITY_WARDEN_SONIC_BOOM, 1, 1);
@@ -1123,10 +1131,12 @@ public class ActiveSkills {
                 world.spawnParticle(Particle.SONIC_BOOM, loc, 1);
                 start = start.add(vector);
             }
+            return true;
         }
         else {
             player.sendMessage(ChatColor.YELLOW + "准心15格内 " + ChatColor.RED + "没有敌人");
             player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_LISTENING_ANGRY, 1, 1);
+            return false;
         }
 
 

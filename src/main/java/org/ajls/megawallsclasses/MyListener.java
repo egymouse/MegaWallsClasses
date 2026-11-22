@@ -2602,7 +2602,7 @@ public class MyListener implements Listener {
         else if(ClassU.getClassEnum(player) == ClassEnum.WARDEN) {
             if (block.getType() == Material.SCULK_SENSOR) {
                 SculkSensor sculkSensor = (SculkSensor) block.getState();
-                sculkSensor.setListenerRange(24); //10
+                sculkSensor.setListenerRange(10); //10  //24
                 sculkSensor.update(true);
                 if (warden_sensorAmount.get(playerUUID) <= 0) {
                     event.setCancelled(true);
