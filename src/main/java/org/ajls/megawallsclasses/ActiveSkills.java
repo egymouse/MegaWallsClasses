@@ -916,12 +916,14 @@ public class ActiveSkills {
     public static void skeleton_lord_active_skill_2(Player player) {
 //         MyListener.addHealth(player, -20);
         UUID playerUniqueId = player.getUniqueId();
-        int i = 0;
+        int i = 0;  //todo 这个要改 毕竟维护两个map了
         Iterator<UUID> it = skeleton_skeleton_lord.keySet().iterator();
+        HashSet<UUID> setToRemove = new HashSet<>();
         while (it.hasNext() && i < 4) {
             UUID skeletonUUID = it.next();
+            setToRemove.add(skeletonUUID);
             UUID ownerUUID = skeleton_skeleton_lord.get(skeletonUUID);
-            it.remove(); // 迭代器删除，避免 ConcurrentModificationException
+//            it.remove(); // 迭代器删除，避免 ConcurrentModificationException
             if (playerUniqueId.equals(ownerUUID)) {
                 Entity entity = Bukkit.getEntity(skeletonUUID);
                 BukkitTask task = tasks.remove(skeletonUUID);
@@ -936,12 +938,16 @@ public class ActiveSkills {
             i++;
         }
 
+        for (UUID skeletonUUID : setToRemove) {
+            skeleton_skeleton_lord.remove(skeletonUUID);
+        }
+
         skeleton_lord_create_skeleton_general(player);
         getWorld("world").playSound(player, Sound.ENTITY_ZOMBIE_HURT, 1, 1);
         player.sendMessage(ChatColor.RED + "治疗之环 " + ChatColor.RED + "HP " + ChatColor.GREEN + "+7");
         ScoreboardsAndTeams.setScore(player, "energy", 0);
         player.setLevel(0);
-        skeleton_lord_active_skill_1(player, 1);
+//        skeleton_lord_active_skill_1(player, 1);
 //        autoEnergyAccumulation(player, 1, 20);
     }
 
@@ -974,8 +980,8 @@ public class ActiveSkills {
         }, 20L, 20);
         tasks.put(entity.getUniqueId(), task);
         task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
-            if (skeleton_lord_player.containsKey(player.getUniqueId())) {
-                Player marked = Bukkit.getPlayer(skeleton_lord_player.get(player.getUniqueId()));
+            Player marked = getMarked(player);
+            if (marked != null) {
                 skeleton.setTarget(marked);
             }
             else {
@@ -983,13 +989,19 @@ public class ActiveSkills {
                 skeleton.setTarget(null);
             }
 
+
         }, 0, 1);
         skeleton_pathFindTask.put(player.getUniqueId(), task);
     }
 
     static void skeleton_lord_create_skeleton_general(Player player) {
-        World world = player.getWorld();
-        LivingEntity entity = (LivingEntity) world.spawnEntity(player.getLocation(), EntityType.SKELETON);
+        Location spawnLocation = player.getLocation();
+        Player initialMarked = getMarked(player);
+        if (initialMarked != null) {
+            spawnLocation = initialMarked.getLocation();
+        }
+        World world = spawnLocation.getWorld();
+        LivingEntity entity = (LivingEntity) world.spawnEntity(spawnLocation, EntityType.SKELETON);
         Skeleton skeleton = (Skeleton) entity;
         skeleton_general_skeleton_lord.put(entity.getUniqueId(), player.getUniqueId());
         entity.setCustomName(player.getName() + "'s Skeleton General");
@@ -1024,8 +1036,8 @@ public class ActiveSkills {
 //        }, 20L, 20);
 //        tasks.put(entity.getUniqueId(), task);
         BukkitTask task = scheduler.runTaskTimer(MegaWallsClasses.getPlugin(), () -> {
-            if (skeleton_lord_player.containsKey(player.getUniqueId())) {
-                Player marked = Bukkit.getPlayer(skeleton_lord_player.get(player.getUniqueId()));
+            Player marked = getMarked(player);
+            if (marked != null) {
                 skeleton.setTarget(marked);
             }
             else {
@@ -1035,6 +1047,13 @@ public class ActiveSkills {
 
         }, 0, 1);
         skeleton_pathFindTask.put(player.getUniqueId(), task);
+    }
+
+
+    private static Player getMarked(Player player) {
+        UUID markedUUID = skeleton_lord_player.get(player.getUniqueId());
+        if (markedUUID == null) {return null;}
+        return Bukkit.getPlayer(markedUUID);
     }
 
     //transformation master

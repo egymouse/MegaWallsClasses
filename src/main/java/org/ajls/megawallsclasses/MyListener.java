@@ -2918,23 +2918,24 @@ public class MyListener implements Listener {
                 case 28:
                     int number = 0;
                     UUID skeleton_lord_uuid = player.getUniqueId();
-                    for (UUID uuid : skeleton_skeleton_lord.valueSet()) {
+                    for (UUID uuid : skeleton_skeleton_lord.values()) {
                         if (uuid.equals(skeleton_lord_uuid)) {
                             number ++;
                         }
                     }
-                    if (number == 3) {
+                    if (number >= 3) {
 //                        skeleton_lord_active_skill_1(player, 1);
-                        skeleton_lord_active_skill_1(player, 1);
+//                        skeleton_lord_active_skill_1(player, 1);
+                        skeleton_lord_active_skill_2(player);
                     }
                     else if (number <= 2) {
                         skeleton_lord_active_skill_1(player, 1);
                     }
-                    else if (number >= 4) {
-//                        if (player.getHealth() > 20) {
-                        skeleton_lord_active_skill_2(player);
-//                        }
-                    }
+//                    else if (number >= 4) {
+////                        if (player.getHealth() > 20) {
+//                        skeleton_lord_active_skill_2(player);
+////                        }
+//                    }
                     break;
                 case 30:
                     warden_active_skill(player);

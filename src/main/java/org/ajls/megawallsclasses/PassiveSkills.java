@@ -780,7 +780,7 @@ public class PassiveSkills {
     //skeleton_lord
     public static void skeleton_lord_passive_skill_2(Player damager, Player player) {
         if (random(1,100) <= 12) {
-            player.addPotionEffect((new PotionEffect(PotionEffectType.NAUSEA, 60, 0, false, false)));
+            player.addPotionEffect((new PotionEffect(PotionEffectType.NAUSEA, 100, 0, false, false)));  //60
             player.addPotionEffect((new PotionEffect(PotionEffectType.SLOWNESS, 100, 0, false, false)));
             player.addPotionEffect((new PotionEffect(PotionEffectType.WEAKNESS, 100 , 0, false, false)));
         }
