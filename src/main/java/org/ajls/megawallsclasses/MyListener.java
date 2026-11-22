@@ -3,6 +3,7 @@ package org.ajls.megawallsclasses;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import org.ajls.lib.advanced.HashMapInteger;
 import org.ajls.lib.advanced.HaxhMap;
+import org.ajls.lib.collections.HashManyToOneMap;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.lib.utils.PlayerU;
 import org.ajls.lib.utils.ScoreboardU;
@@ -101,8 +102,8 @@ public class MyListener implements Listener {
     public static HashMap<UUID, UUID> snowGolem_snowman = new HashMap<>();
     public static HashMap<UUID, BukkitTask> snowGolem_shootTask = new HashMap<>();
     public static HashMap<UUID, Integer> elaina_switchHotbarTimes = new HashMap<>();
-    public static HaxhMap<UUID, UUID> skeleton_skeleton_lord = new HaxhMap<>(); // find the skeleton lord of that skeleton
-    public static HashMap<UUID, UUID> skeleton_general_skeleton_lord = new HashMap<>(); // skeleton general
+    public static HashManyToOneMap<UUID, UUID> skeleton_skeleton_lord = new HashManyToOneMap<>(); // find the skeleton lord of that skeleton
+    public static HashManyToOneMap<UUID, UUID> skeleton_general_skeleton_lord = new HashManyToOneMap<>(); // skeleton general
     static HashMap<UUID, UUID> skeleton_lord_player= new HashMap<>(); // find the player that skeleton lord marked
 //    HashMap<Player, ArrayList> skeleton_lord_player = new HashMap<>();
     ArrayList<UUID> attacked = new ArrayList<>(); // player attacked by others and invincible
