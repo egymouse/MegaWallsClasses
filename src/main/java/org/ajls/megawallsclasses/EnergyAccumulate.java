@@ -119,7 +119,7 @@ public class EnergyAccumulate {
                 addEnergy(damager, 20);
                 break;
             case 28:
-                addEnergy(damager, 17);
+                addEnergy(damager, 10);
 //                if (damager.getInventory().getItemInMainHand().getType() == Material.STICK) {
 //                    MegaWallsClasses.addScore(damager, "energy", 7);
 //                }

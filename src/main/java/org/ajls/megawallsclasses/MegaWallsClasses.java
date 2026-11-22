@@ -274,6 +274,13 @@ public final class MegaWallsClasses extends JavaPlugin {
                         MyListener.skeleton_lord_player.put(player.getUniqueId(), players.get(0).getUniqueId());
                     }
 
+
+                    if (MyListener.skeleton_general_skeleton_lord.containsValue(player.getUniqueId())) {
+                        if (Bukkit.getCurrentTick() % 100 == 0) {
+                            MyListener.addHealth(player, -1.5);
+                        }
+                    }
+
                 }
 
             }

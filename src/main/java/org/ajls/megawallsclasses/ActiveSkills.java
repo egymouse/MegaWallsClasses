@@ -917,10 +917,14 @@ public class ActiveSkills {
 //         MyListener.addHealth(player, -20);
         UUID playerUniqueId = player.getUniqueId();
         int i = 0;
-        for (UUID uuid : skeleton_skeleton_lord.keySet()) {
-            if (playerUniqueId.equals(skeleton_skeleton_lord.get(uuid))) {
-                Entity entity = Bukkit.getEntity(uuid);
-                BukkitTask task = tasks.remove(uuid);
+        Iterator<UUID> it = skeleton_skeleton_lord.keySet().iterator();
+        while (it.hasNext() && i < 4) {
+            UUID skeletonUUID = it.next();
+            UUID ownerUUID = skeleton_skeleton_lord.get(skeletonUUID);
+            it.remove(); // 迭代器删除，避免 ConcurrentModificationException
+            if (playerUniqueId.equals(ownerUUID)) {
+                Entity entity = Bukkit.getEntity(skeletonUUID);
+                BukkitTask task = tasks.remove(skeletonUUID);
                 if (task != null) {
                     task.cancel();
                 }
@@ -930,9 +934,8 @@ public class ActiveSkills {
                 }
             }
             i++;
-            if (i >= 4) break; //已经处理4个了
         }
-        skeleton_skeleton_lord.clear();
+
         skeleton_lord_create_skeleton_general(player);
         getWorld("world").playSound(player, Sound.ENTITY_ZOMBIE_HURT, 1, 1);
         player.sendMessage(ChatColor.RED + "治疗之环 " + ChatColor.RED + "HP " + ChatColor.GREEN + "+7");

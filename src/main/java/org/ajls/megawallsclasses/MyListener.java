@@ -2,6 +2,7 @@ package org.ajls.megawallsclasses;
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import org.ajls.lib.advanced.HashMapInteger;
+import org.ajls.lib.advanced.HaxhMap;
 import org.ajls.lib.utils.ItemStackU;
 import org.ajls.lib.utils.PlayerU;
 import org.ajls.lib.utils.ScoreboardU;
@@ -100,7 +101,7 @@ public class MyListener implements Listener {
     public static HashMap<UUID, UUID> snowGolem_snowman = new HashMap<>();
     public static HashMap<UUID, BukkitTask> snowGolem_shootTask = new HashMap<>();
     public static HashMap<UUID, Integer> elaina_switchHotbarTimes = new HashMap<>();
-    public static HashMap<UUID, UUID> skeleton_skeleton_lord = new HashMap<>(); // find the skeleton lord of that skeleton
+    public static HaxhMap<UUID, UUID> skeleton_skeleton_lord = new HaxhMap<>(); // find the skeleton lord of that skeleton
     public static HashMap<UUID, UUID> skeleton_general_skeleton_lord = new HashMap<>(); // skeleton general
     static HashMap<UUID, UUID> skeleton_lord_player= new HashMap<>(); // find the player that skeleton lord marked
 //    HashMap<Player, ArrayList> skeleton_lord_player = new HashMap<>();
@@ -1099,6 +1100,9 @@ public class MyListener implements Listener {
                                 break;
                             case 28:
                                 skeleton_lord_passive_skill_2(damager, victim);
+                                if (skeleton_skeleton_lord.containsValue(damagerUUID)) {
+                                    event.setDamage(event.getDamage() * 0.7);
+                                }
                                 break;
                             case 30:
                                 HashSet<WardenDarknessTargetTimestamp> targetTimestamps = warden_darknessTargetTimestamp.getValues(damagerUUID, true);
@@ -2913,7 +2917,7 @@ public class MyListener implements Listener {
                 case 28:
                     int number = 0;
                     UUID skeleton_lord_uuid = player.getUniqueId();
-                    for (UUID uuid : skeleton_skeleton_lord.values()) {
+                    for (UUID uuid : skeleton_skeleton_lord.valueSet()) {
                         if (uuid.equals(skeleton_lord_uuid)) {
                             number ++;
                         }
