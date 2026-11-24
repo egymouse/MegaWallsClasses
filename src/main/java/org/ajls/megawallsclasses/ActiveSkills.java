@@ -1006,8 +1006,8 @@ public class ActiveSkills {
         Skeleton skeleton = (Skeleton) entity;
         skeleton_general_skeleton_lord.put(entity.getUniqueId(), player.getUniqueId());
         entity.setCustomName(player.getName() + "'s Skeleton General");
-        entity.setMaxHealth(60);
-        entity.setHealth(60);
+//        entity.setMaxHealth(60);
+//        entity.setHealth(60);
         ItemStack diamond_helmet = new ItemStack(Material.DIAMOND_HELMET);
         diamond_helmet.addEnchantment(Enchantment.PROTECTION, 1);
         diamond_helmet = setUnbreakable(diamond_helmet);
