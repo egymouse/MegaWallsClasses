@@ -133,6 +133,7 @@ public final class MegaWallsClasses extends JavaPlugin {
     //todo 龙火 ghostRider火 一直伤害 还有凋零一直不造成伤害 加上雕刻南瓜伪装 ghostRider方块优先级怎么搞 还有和不同职业的 马更改外观
     //todo 剑扔出去 ghostRider持续灵魂沙 addHealth注册玩家攻击 POtionEffect架构研究
     //todo ghostRider融合后如果马没了 不会触发灵魂沙
+    //todo 监守者聆听到人会显示信息， 对应的人也会显示 行踪暴露 然后只有不发光了再被聆听才会继续触发 需要可更新的优先队列（一个绑定hashmap，之后获取二叉堆的地址更新）
 
     //todo ## 解决方案
     //
@@ -277,7 +278,7 @@ public final class MegaWallsClasses extends JavaPlugin {
 
                     if (MyListener.skeleton_general_skeleton_lord.containsValue(player.getUniqueId())) {
                         if (Bukkit.getCurrentTick() % 100 == 0) {
-                            MyListener.addHealth(player, -1.5);
+//                            MyListener.addHealth(player, -1.5);
                         }
                     }
 

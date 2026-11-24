@@ -1053,7 +1053,7 @@ public class MyListener implements Listener {
 //                Player victim = (Player) event.getEntity();
                 if (PlayerU.isPlayerPlayableEnemy(victim, damager)) {
                     registerPlayerHit(victim, damager);
-                    Rating.loser_winnerMap.addWeight(victim, damager, finalDamage);
+                    Rating.loser_winnerMap.addWeight(victim, damager, finalDamage);  //todo 计算弓箭 移到更改*0.7这类伤害之后 所有职业大招注册这个+注册攻击K头
                     if (!attacked.contains(victim.getUniqueId())) {
                         attacked.add(victim.getUniqueId());
                         BukkitScheduler scheduler = getServer().getScheduler();
@@ -1102,7 +1102,7 @@ public class MyListener implements Listener {
                             case 28:
                                 skeleton_lord_passive_skill_2(damager, victim);
                                 if (skeleton_skeleton_lord.containsValue(damagerUUID)) {
-                                    event.setDamage(event.getDamage() * 0.7);
+                                    event.setDamage(event.getDamage() );  //* 0.7
                                 }
                                 break;
                             case 30:

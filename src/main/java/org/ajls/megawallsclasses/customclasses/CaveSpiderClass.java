@@ -53,7 +53,9 @@ public class CaveSpiderClass extends AbstractCustomClass{
             jumpType = "小跳";
             velMultiplier = 1.2;
         }
-        player.setVelocity(vector.multiply(velMultiplier));
+        vector.setX(vector.getX() * 1.2);
+        vector.setZ(vector.getZ() * 1.2);
+        player.setVelocity(player.getVelocity().add(vector.multiply(velMultiplier)));
 
         player.sendMessage(ChatColor.DARK_PURPLE + jumpType + " " + ChatColor.RED + "生命回复I 5s " +  ChatColor.GOLD + "伤害吸收I 5s");
         addEnergy(player, -100);
